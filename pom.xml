@@ -154,6 +154,7 @@
 						<id>attach-javadocs</id>
 						<configuration>
 							<outputDirectory>${project.build.directory}/javadoc</outputDirectory>
+							<source>1.8</source>
 						</configuration>
 						<goals>
 							<goal>jar</goal>
