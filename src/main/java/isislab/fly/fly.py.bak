@@ -1,0 +1,274 @@
+#! /usr/bin/env python3
+
+from typing import TypeVar, Generic
+from logging import Logger
+
+import networkx as nx
+
+# The type used to represent nodes (or 'vertices') into a graph.
+V = TypeVar('V')
+
+# The type used to represent edges into a graph.
+E = TypeVar('E')
+
+class Graph():
+    """A class used to represent a graph for use into FLY language.
+
+    It basically wraps the NetworkX representation of graphs according to FLY API for graphs.
+
+    Attributes
+    ----------
+    graph : nx.Graph
+        the Graph object from NetworkX
+
+    """
+
+    # TODO consider documenting methods into class docblock
+
+    # initializer
+    def __init__(self, is_directed=False, is_weighted=False) -> None:
+        """
+        """
+        self.graph = nx.DiGraph() if is_directed else nx.Graph()
+        self.is_directed = is_directed
+        self.is_weighted = is_weighted
+
+    # TODO properly write utility methods like repr and str
+
+    def __repr__(self):
+        return "{" + str(self.graph.nodes) + ", " + str(self.graph.edges) + "}"
+
+#    def __str__(self):
+#        pass
+
+    def clear(self) -> None:
+        """
+        """
+        self.graph.clear()
+
+    #
+    # Nodes
+    #
+
+    def add_node(self, node: V) -> None:
+        """
+        """
+        self.graph.add_node(node)
+
+    def add_nodes(self, nodes: list) -> None:
+        """
+        """
+        self.graph.add_nodes_from(nodes)
+
+#    def add_nodes(self, *nodes: V) -> None:
+#        """
+#        """
+#        for node in nodes:
+#            self.add_node(node)
+
+    def node_degree(self, node: V) -> int:
+        """
+        """
+        return self.graph.degree(node)
+
+    def neighbourhood(self, node: V) -> list:
+        """
+        """
+        return list(self.graph.adj[node])
+
+    def node_set(self) -> list:
+        """
+        """
+        return list(self.graph.nodes)
+
+    def num_nodes(self) -> int:
+        """
+        """
+        return self.graph.order()
+
+    def remove_node(self, node: V) -> None:
+        """
+        """
+        self.graph.remove_node(node)
+
+    def has_node(self, node: V) -> bool:
+        """
+        """
+        return self.graph.has_node(node)
+
+    #
+    # Edges
+    #
+
+    def add_edge(self, first_node: V, second_node: V) -> None:
+        """
+        """
+        self.graph.add_edge(first_node, second_node)
+
+    def get_edge(self, first_node: V, second_node: V) -> E:
+        """
+        """
+        return self.graph.edges[first_node, second_node]
+
+    def edge_set(self) -> list:
+        """
+        """
+        return list(self.graph.edges)
+
+    def num_edges(self) -> int:
+        """
+        """
+        return self.graph.size()
+
+    def get_edge_weight(self, first_node: V, second_node: V) -> float: # TODO verify
+        """
+        """
+        return self.graph[first_node][second_node]['weight'] if self.is_weighted else 1.0
+
+    def set_edge_weight(self, first_node: V, second_node: V, weight: float) -> None: # TODO verify
+        """
+        """
+        self.graph[first_node][second_node]['weight'] = weight if self.is_weighted else 1.0
+
+    def remove_edge(self, first_node: V, second_node: V) -> None:
+        """
+        """
+        self.graph.remove_edge(first_node, second_node)
+
+    def has_edge(self, first_node: V, second_node: V) -> bool:
+        """
+        """
+        return self.graph.has_edge(first_node, second_node)
+
+    #
+    # I/O
+    #
+    # TODO check for weight management
+
+    @staticmethod
+    def import_graph(path: str, separator: str, is_directed=False, is_weighted=False) -> object:
+        """
+        """
+        fly_graph = Graph(is_directed=is_directed, is_weighted=is_weighted)
+        fly_graph.graph = nx.read_weighted_edgelist(path, delimiter=separator) if is_weighted else nx.read_edgelist(path, delimiter=separator, data=False)
+        return fly_graph
+
+    @staticmethod
+    def export_graph(fly_graph: object, path: str, separator: str, is_directed=False, is_weighted=False) -> None:
+        """
+        """
+        nx.write_weighted_edgelist(fly_graph.graph, path, delimiter=separator) #if is_weighted else nx.write_edgelist(fly_graph.graph, path, delimiter=separator)
+
+    #
+    # Graph traversal
+    #
+
+    def bfs_edges(self, root_node: V) -> list:
+        """
+        """
+        return list(nx.bfs_edges(self.graph, root_node))
+
+    def bfs_nodes(self, root_node: V) -> list: # TODO test
+        """
+        """
+        return [root_node] + [v for u, v in nx.bfs_edges(self.graph, root_node)]
+
+    def bfs_tree(self, root_node: V) -> object: # TODO test
+        """
+        """
+        tree = Graph()
+        tree.graph.add_edges_from(self.bfs_edges(root_node))
+        tree.graph.add_nodes_from(self.bfs_nodes(root_node))
+        return tree
+
+    def dfs_edges(self, root_node: V) -> list:
+        """
+        """
+        return list(nx.dfs_edges(self.graph, source=root_node))
+
+    def dfs_nodes(self, root_node: V) -> list:
+        """
+        """
+        return [root_node] + [v for u, v in nx.dfs_edges(self.graph, source=root_node)]
+
+    def dfs_tree(self, root_node: V) -> object:
+        """
+        """
+        tree = Graph()
+        tree.graph.add_edges_from(self.dfs_edges(root_node))
+        tree.graph.add_nodes_from(self.dfs_nodes(root_node))
+        return tree
+
+    #
+    # Connectivity
+    #
+
+    def is_connected(self) -> bool:
+        """
+        """
+        return nx.is_connected(self.graph)
+
+    def is_strongly_connected(self) -> bool:
+        """
+        """
+        return nx.is_strongly_connected(self.graph)
+
+    def connected_components(self) -> list:
+        """
+        """
+        return list(set for set in nx.connected_components(self.graph))
+
+    def connected_subgraphs(self) -> list: # TODO list of FLY graphs
+        """
+        """
+        subgraphs = list()
+        for set in nx.connected_components(self.graph):
+            subgraph = self.__class__.graph()
+            subgraphs.append()
+        return subgraphs # TODO check
+#        return list(self.graph.subgraph(set).copy() for set in nx.connected_components(self.graph))
+
+    def number_connected_components(self) -> int:
+        """
+        """
+        return nx.number_connected_components(self.graph)
+
+    def node_connected_component(self, node: V) -> list:
+        """
+        """
+        return nx.node_connected_component(self.graph, node)
+
+    def strongly_connected_components(self) -> list:
+        """
+        """
+        return list(set for set in nx.kosaraju_strongly_connected_components(self.graph))
+
+    def strongly_connected_graphs(self) -> list: # TODO list of FLY graphs
+        """
+        """
+#        return list(self.__class__().graph = (self.graph.subgraph(set).copy for set in nx.kosaraju_strongly_connected_components(self.graph)))
+
+    #
+    # DAG and topological sorting
+    #
+
+    def is_dag(self) -> bool:
+        """
+        """
+        return nx.is_directed_acyclic_graph(self.graph)
+
+    def topological_sort(self) -> list:
+        """
+        """
+        return list(nx.topological_sort(self.graph))
+
+    #
+    # Minimum spanning tree
+    #
+
+    def get_mst(self) -> object:
+        """
+        """
+        mst = self.__class__()
+        mst.graph = nx.minimum_spanning_tree(self.graph, algorithm='prim')
+        return mst
