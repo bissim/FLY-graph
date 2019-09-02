@@ -41,7 +41,7 @@ import org.jgrapht.io.CSVFormat;
  * It basically wraps the JGraphT representation of graphs according to FLY
  * API for graphs.
  * 
- * @author Simone Bisogno <s.bisogno10@studenti.unisa.it>
+ * @author Simone Bisogno (s.bisogno10@studenti.unisa.it)
  * 
  * @param <V> Type for nodes
  * @param <E> Type for edges
