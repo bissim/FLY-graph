@@ -173,7 +173,7 @@ public class Graph<V, E>
 	/**
 	 * The <code>nodeInDegree(V)</code> method returns the 'in' degree of
 	 * specified node, as long as it belongs to the graph.
-	 * <br></br>
+	 * <br>
 	 * By 'in' degree of a node one denotes how many edges have the node
 	 * as their target.
 	 * 
@@ -188,7 +188,7 @@ public class Graph<V, E>
 	/**
 	 * The <code>nodeOutDegree(V)</code> method returns the 'out' degree of
 	 * specified node, as long as it belongs to the graph.
-	 * <br></br>
+	 * <br>
 	 * By 'out' degree of a node one denotes how many edges have the node
 	 * as their source.
 	 * 
@@ -215,7 +215,7 @@ public class Graph<V, E>
 	/**
 	 * The <code>nodeInEdges(V)</code> method returns the 'in' edges of
 	 * specified node, as long as it belongs to the graph.
-	 * <br></br>
+	 * <br>
 	 * By 'in' edges of a node one denotes the edges having the node as
 	 * their target.
 	 * 
@@ -230,7 +230,7 @@ public class Graph<V, E>
 	/**
 	 * The <code>nodeOutEdges(V)</code> method returns the 'out' edges of
 	 * specified node, as long as it belongs to the graph.
-	 * <br></br>
+	 * <br>
 	 * By 'out' edges of a node one denotes the edges having the node as
 	 * their source.
 	 * 
@@ -442,12 +442,12 @@ public class Graph<V, E>
 	 * boolean)</code> method imports a graph from a file at specified path;
 	 * class object for nodes has to be specified, along with two boolean
 	 * values denoting whether graph is directed or weighted.
-	 * <br></br>
+	 * <br>
 	 * Source file has to be in CSV format: specifically, it has to be an
 	 * <em>edge list</em> file listing the edges of graph (and, optionally,
-	 * their weight) in such a fashion:<br></br><br></br>
-	 * <code>a b 2.3</code><br></br>
-	 * <code>b c 1.8</code><br></br><br></br>
+	 * their weight) in such a fashion:<br><br>
+	 * <code>a b 2.3</code><br>
+	 * <code>b c 1.8</code><br><br>
 	 * In this example, two weighted edges have been defined, separated by
 	 * space character. Weight has to be specified or not according to
 	 * relative boolean value passed.
@@ -525,9 +525,9 @@ public class Graph<V, E>
 	 * boolean)</code> method exports the graph to a file at a specified path.
 	 * Destination file will be in CSV format: specifically, it will be an
 	 * <em>edge list</em> file listing the edges of graph (and, optionally,
-	 * their weight) in such a fashion:<br></br><br></br>
-	 * <code>a b 2.3</code><br></br>
-	 * <code>b c 1.8</code><br></br><br></br>
+	 * their weight) in such a fashion:<br><br>
+	 * <code>a b 2.3</code><br>
+	 * <code>b c 1.8</code><br><br>
 	 * 
 	 * @param <V> The class for nodes.
 	 * @param <E> The class for edges.
