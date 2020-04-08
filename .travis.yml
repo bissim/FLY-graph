@@ -1,7 +1,8 @@
 language: java
 install: true
 jdk:
-  - oraclejdk11
+  - oraclejdk8
 script:
+  - cd java/
   - mvn -T $(nproc) clean package
 
