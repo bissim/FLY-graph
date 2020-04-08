@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Spliterator;
 import java.util.Spliterators;
+import java.util.function.Supplier;
 import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 
@@ -19,20 +20,17 @@ import org.jgrapht.alg.spanning.PrimMinimumSpanningTree;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.builder.GraphTypeBuilder;
-import org.jgrapht.io.ImportException;
-import org.jgrapht.io.VertexProvider;
 import org.jgrapht.traverse.BreadthFirstIterator;
 import org.jgrapht.traverse.DepthFirstIterator;
 import org.jgrapht.traverse.TopologicalOrderIterator;
 import org.jgrapht.util.SupplierUtil;
 
-import org.jgrapht.io.CSVImporter;
-import org.jgrapht.io.ComponentNameProvider;
-import org.jgrapht.io.EdgeProvider;
-import org.jgrapht.io.ExportException;
-import org.jgrapht.io.GraphExporter;
-import org.jgrapht.io.CSVExporter;
-import org.jgrapht.io.CSVFormat;
+import org.jgrapht.nio.ImportException;
+import org.jgrapht.nio.ExportException;
+import org.jgrapht.nio.GraphExporter;
+import org.jgrapht.nio.csv.CSVImporter;
+import org.jgrapht.nio.csv.CSVExporter;
+import org.jgrapht.nio.csv.CSVFormat;
 
 /**
  * <code>Graph&lt;V, E&gt;</code> is a class used to represent a graph for
@@ -477,16 +475,14 @@ public class Graph<V, E>
 	{
 		Graph<V, E> flyGraph = new Graph<V, E>(nodeClass, isDirected, isWeighted);
 
-		@SuppressWarnings("unchecked")
-		VertexProvider<V> vertexProvider =
-				(id, attributes) -> (V) id;
-		EdgeProvider<V, E> edgeProvider =
-				(from, to, label, attributes) ->
-					flyGraph.graph.getEdgeSupplier().get();
+//		@SuppressWarnings("unchecked")
+//		VertexProvider<V> vertexProvider =
+//				(id, attributes) -> (V) id;
+//		EdgeProvider<V, E> edgeProvider =
+//				(from, to, label, attributes) ->
+//					flyGraph.graph.getEdgeSupplier().get();
 
 		CSVImporter<V, E> importer = new CSVImporter<>(
-						vertexProvider,
-						edgeProvider,
 						CSVFormat.EDGE_LIST,
 						separator.charAt(0)
 				);
@@ -543,18 +539,18 @@ public class Graph<V, E>
 	)
 			throws Exception
 	{
-		ComponentNameProvider<V> vertexIdProvider =
-				new ComponentNameProvider<V>()
-				{
-					public String getName(V id)
-					{
-						return id.toString();
-					}
-				};
+//		ComponentNameProvider<V> vertexIdProvider =
+//				new ComponentNameProvider<V>()
+//				{
+//					public String getName(V id)
+//					{
+//						return id.toString();
+//					}
+//				};
 
 		GraphExporter<V, E> exporter =
 				new CSVExporter<>(
-						vertexIdProvider,
+						(V v) -> v.toString(),
 						CSVFormat.EDGE_LIST,
 						separator.charAt(0)
 				);
@@ -1241,19 +1237,39 @@ public class Graph<V, E>
 
 		if (isDirected)
 		{
-			builder = GraphTypeBuilder.directed();
+			builder = GraphTypeBuilder.<V, E>directed();
 		}
 		else
 		{
-			builder = GraphTypeBuilder.undirected();
+			builder = GraphTypeBuilder.<V, E>undirected();
 		}
 
-		return builder
+		// apply other graph attributed
+		builder
 				.weighted(isWeighted)
 				.edgeClass(edgeClass)
-				.vertexSupplier(SupplierUtil.createSupplier(nodeClass))
-				.edgeSupplier(SupplierUtil.createSupplier(edgeClass))
-				.buildGraph();
+				.vertexClass(nodeClass)
+				.edgeSupplier(SupplierUtil.createSupplier(edgeClass));
+
+		// determine the node supplier to use
+		if (nodeClass == String.class)
+		{
+			builder.vertexSupplier(() -> (V) SupplierUtil.createStringSupplier().get());
+		}
+		else if (nodeClass == Integer.class)
+		{
+			builder.vertexSupplier((Supplier<V>) SupplierUtil.createIntegerSupplier());
+		}
+		else if (nodeClass == Long.class)
+		{
+			builder.vertexSupplier((Supplier<V>) SupplierUtil.createLongSupplier());
+		}
+		else
+		{
+			builder.vertexSupplier(SupplierUtil.createSupplier(nodeClass));
+		}
+
+		return builder.buildGraph();
 	}
 
 	/**

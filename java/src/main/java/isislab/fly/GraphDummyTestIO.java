@@ -93,49 +93,50 @@ public class GraphDummyTestIO
 		Graph<String, Object> importedDGraph = null;
 		Graph<String, Object> importedWGraph = null;
 		Graph<String, Object> importedWDGraph = null;
-		String dataPath = "./../../../../../data/";
+		String dataPath = "../data/";
 		String graphPath = dataPath + "graph.py.edgelist";
 		String dgraphPath = dataPath + "digraph.py.edgelist";
 		String wgraphPath = dataPath + "wgraph.py.edgelist";
 		String wdgraphPath = dataPath + "wdgraph.py.edgelist";
+		final String SEPARATOR = " ";
+		final Class<String> NODE_CLASS = String.class;
 		try
 		{
+			out.println("Importing " + graphPath + "...");
 			importedGraph = Graph.importGraph(
 					graphPath,
-					" ", // separator character
-					String.class, // node class
+					SEPARATOR, // separator character
+					NODE_CLASS, // node class
 					false, // is weighted?
 					false // is directed?
 			);
 
+			out.println("Importing " + dgraphPath + "...");
 			importedDGraph = Graph.importGraph(
 					dgraphPath,
-					" ",
-					String.class,
+					SEPARATOR,
+					NODE_CLASS,
 					false,
 					true
 			);
 
+			out.println("Importing " + wgraphPath + "...");
 			importedWGraph = Graph.importGraph(
 					wgraphPath,
-					" ",
-					String.class,
+					SEPARATOR,
+					NODE_CLASS,
 					true,
 					false
 			);
 
+			out.println("Importing " + wdgraphPath + "...");
 			importedWDGraph = Graph.importGraph(
 					wdgraphPath,
-					" ",
-					String.class,
+					SEPARATOR,
+					NODE_CLASS,
 					true,
 					true
 			);
-
-			Graph.exportGraph(graph, graphPath, " ");
-			Graph.exportGraph(digraph, dgraphPath, " ");
-			Graph.exportGraph(wgraph, wgraphPath, " ");
-			Graph.exportGraph(wdgraph, wdgraphPath, " ");
 		}
 		catch (Exception e)
 		{
@@ -157,7 +158,26 @@ public class GraphDummyTestIO
 				"Weight of (a, e) edge from weighted directed graph: " +
 				importedWDGraph.getEdgeWeight("a", "e")
 		);
-
+		try
+		{
+			out.println("Exporting " + graphPath + "...");
+			Graph.exportGraph(graph, graphPath, " ");
+			out.println("Exporting " + dgraphPath + "...");
+			Graph.exportGraph(digraph, dgraphPath, " ");
+			out.println("Exporting " + wgraphPath + "...");
+			Graph.exportGraph(wgraph, wgraphPath, " ");
+			out.println("Exporting " + wdgraphPath + "...");
+			Graph.exportGraph(wdgraph, wdgraphPath, " ");
+		}
+		catch (Exception e)
+		{
+			err.println(
+					e.getClass().getSimpleName() +
+					": " +
+					e.getLocalizedMessage()
+			);
+		}
+		out.println("Graphs have been successfully exported!");
 	}
 
 }
