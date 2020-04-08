@@ -31,6 +31,21 @@
 		<jgraphtVersion>1.4.0</jgraphtVersion>
 	</properties>
 
+	<repositories>
+		<!-- snapshot repositories -->
+		<repository>
+			<id>maven-snapshots</id>
+			<url>http://oss.sonatype.org/content/repositories/snapshots</url>
+			<layout>default</layout>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.jgrapht</groupId>
@@ -45,7 +60,7 @@
 		<dependency>
 			<groupId>org.jgrapht</groupId>
 			<artifactId>jgrapht-io</artifactId>
-			<version>${jgraphtVersion}</version>
+			<version>1.4.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.johnpoth</groupId>

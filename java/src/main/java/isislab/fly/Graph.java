@@ -4,8 +4,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Spliterator;
 import java.util.Spliterators;
@@ -26,6 +30,7 @@ import org.jgrapht.traverse.TopologicalOrderIterator;
 import org.jgrapht.util.SupplierUtil;
 
 import org.jgrapht.nio.ImportException;
+import org.jgrapht.nio.Attribute;
 import org.jgrapht.nio.ExportException;
 import org.jgrapht.nio.GraphExporter;
 import org.jgrapht.nio.csv.CSVImporter;
@@ -377,6 +382,18 @@ public class Graph<V, E>
 		return this.graph.edgeSet().size();
 	}
 
+	// TODO comment
+	public V getEdgeSource(E e)
+	{
+		return this.graph.getEdgeSource(e);
+	}
+
+	// TODO comment
+	public V getEdgeTarget(E e)
+	{
+		return this.graph.getEdgeTarget(e);
+	}
+
 	/**
 	 * The <code>getEdgeWeight(V, V)</code> method returns the weight of
 	 * edge specified by the two given nodes.
@@ -486,6 +503,11 @@ public class Graph<V, E>
 						CSVFormat.EDGE_LIST,
 						separator.charAt(0)
 				);
+		// easy fix for real graph import
+		// as per https://stackoverflow.com/questions/61089620/
+		// effective since JGraphT 1.4.1
+		// remove imported graph conversion after enabling this line
+		importer.setVertexFactory(id -> (V) id);
 
 		// tell importer that graph to import is weighted
 		if (isWeighted)
@@ -502,7 +524,7 @@ public class Graph<V, E>
 		}
 		catch (ImportException e)
 		{
-			// we need to hide ImpoertException because
+			// we need to hide ImportException because
 			// caller mustn't be aware of the use of
 			// JGraphT library, that's why we're relaunching
 			// it as a messaged RuntimeException
@@ -512,6 +534,24 @@ public class Graph<V, E>
 					e.getLocalizedMessage()
 			);
 		}
+
+		// convert imported indexed graph to effective labeled one
+		// as per https://stackoverflow.com/questions/60461351/
+//		Map<V, Map<String, Attribute>> attrs = new HashMap<>();
+//		importer.addVertexAttributeConsumer((p, a) -> {
+//		    Map<String, Attribute> map = attrs.computeIfAbsent(p.getFirst(), k -> new HashMap<>());
+//		    map.put(p.getSecond(), a);
+//		});
+//		Graph<V, E> effectiveGraph = new Graph<V, E>(nodeClass, isDirected, isWeighted);
+//		for(V v : Arrays.asList(flyGraph.nodeSet()))
+//		    effectiveGraph.addNode((V) attrs.get(v).get("ID").getValue());
+//		for(E e : Arrays.asList(flyGraph.edgeSet())){
+//		    V source = flyGraph.getEdgeSource(e);
+//		    V target = flyGraph.getEdgeTarget(e);
+//		    V sourceID = (V) attrs.get(source).get("ID").getValue();
+//		    V targetID = (V) attrs.get(target).get("ID").getValue();
+//		    effectiveGraph.addEdge(sourceID, targetID);
+//		}
 
 		return flyGraph;
 	}
@@ -1254,7 +1294,7 @@ public class Graph<V, E>
 		// determine the node supplier to use
 		if (nodeClass == String.class)
 		{
-			builder.vertexSupplier(() -> (V) SupplierUtil.createStringSupplier().get());
+			builder.vertexSupplier((Supplier<V>) SupplierUtil.createStringSupplier());
 		}
 		else if (nodeClass == Integer.class)
 		{
