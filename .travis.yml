@@ -1,8 +1,29 @@
-language: java
-install: true
-jdk:
-  - oraclejdk8
-script:
-  - cd java/
-  - mvn -T $(nproc) clean package
+jobs:
+  include:
+    - language: java
+      install: true
+      addons:
+        apt:
+          packages:
+            - oracle-java8-installer
+      jdk:
+      #  - oraclejdk8 # discontinued
+        - openjdk8
+        - oraclejdk11
+        - openjdk11
+      script:
+        - cd java/
+        - mvn -T $(nproc) clean package
 
+    - language: python
+      python: 
+      - "3.6"
+      - "3.7"
+      - "3.8"
+      script:
+      - cd python/isislab
+      - python3 -m test.graph_test
+      - python3 -m test.graph_io_test
+      - python3 -m pip install --user --upgrade setuptools wheel
+      - python3 setup.py sdist bdis_wheel
+      - ls -la dist/
