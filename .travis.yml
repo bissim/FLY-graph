@@ -2,10 +2,10 @@ jobs:
   include:
     - language: java
       install: true
-      addons:
-        apt:
-          packages:
-            - oracle-java8-installer
+      # addons:
+      #   apt:
+      #     packages:
+      #       - oracle-java8-installer
       jdk:
       #  - oraclejdk8 # discontinued
         - openjdk8
@@ -24,6 +24,6 @@ jobs:
       - cd python/isislab
       - python3 -m test.graph_test
       - python3 -m test.graph_io_test
-      - python3 -m pip install --user --upgrade setuptools wheel
-      - python3 setup.py sdist bdis_wheel
+      - python3 -m pip install --upgrade setuptools wheel
+      - python3 setup.py sdist bdist_wheel
       - ls -la dist/
