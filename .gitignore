@@ -1,4 +1,11 @@
 **/.classpath
 **/.project
 **/.settings/
+**/bin/
 **/target/
+**/__pycache__/
+**/*.egg-info/
+**/dist/
+**/build/
+
+*.pyc
