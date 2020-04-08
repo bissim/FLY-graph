@@ -1,6 +1,9 @@
 #! /usr/bin/env python3
 
-from graph import Graph
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+
+from fly.graph import Graph
 
 nodes = ["a", "b", "c", "d", "e", "f"]
 
@@ -73,7 +76,7 @@ wdgraph.set_edge_weight("b", "d", 3.0)
 print("Weighted directed graph: {0}".format(wdgraph))
 
 print("\nIMPORT/EXPORT")
-data_path = "./../../../../../data/"
+data_path = "../../../data/"
 graph_path = data_path + "graph.py.edgelist"
 dgraph_path = data_path + "digraph.py.edgelist"
 wgraph_path = data_path + "wgraph.py.edgelist"
@@ -93,6 +96,6 @@ del idgraph
 del iwgraph
 del iwdgraph
 Graph.export_graph(graph, graph_path, ' ')
-Graph.export_graph(digraph, dgraph_path, ' ', is_directed=True)
-Graph.export_graph(wgraph, wgraph_path, ' ', is_weighted=True)
-Graph.export_graph(wdgraph, wdgraph_path, ' ', is_directed=True, is_weighted=True)
+Graph.export_graph(digraph, dgraph_path, ' ')
+Graph.export_graph(wgraph, wgraph_path, ' ')
+Graph.export_graph(wdgraph, wdgraph_path, ' ')

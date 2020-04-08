@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-# package isislab.fly.graph
+# package fly.graph
 
 from typing import TypeVar, Generic
 #from logging import Logger

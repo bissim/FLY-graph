@@ -2,4 +2,4 @@
 
 # package fly
 
-from .graph import graph
+from fly import graph

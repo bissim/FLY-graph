@@ -1,6 +1,9 @@
 #! /usr/bin/env python3
 
-from graph import Graph
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+
+from fly.graph import Graph
 
 graph = Graph()
 
