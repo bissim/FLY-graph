@@ -17,13 +17,13 @@ jobs:
 
     - language: python
       python: 
-      - "3.6"
-      - "3.7"
-      - "3.8"
+        - "3.6"
+        - "3.7"
+        - "3.8"
       script:
-      - cd python/isislab
-      - python3 -m test.graph_test
-      - python3 -m test.graph_io_test
-      - python3 -m pip install --upgrade setuptools wheel
-      - python3 setup.py sdist bdist_wheel
-      - ls -la dist/
+        - cd python/
+        - python3 -m pip install --upgrade setuptools wheel
+        - python3 setup.py sdist bdist_wheel
+        - ls -la dist/
+        - python3 -m pip install --user -r fly_graph.egg-info/requires.txt
+        - python3 -m fly.graph
