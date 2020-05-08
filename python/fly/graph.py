@@ -823,3 +823,15 @@ class Graph():
         mst = self.__class__()
         mst.graph = nx.minimum_spanning_tree(self.graph, algorithm='prim')
         return mst
+#
+# Run tests as standalone module
+#
+if __name__ == "__main__":
+    print("Run FLY Graph tests")
+
+    import os, sys
+    sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+    from ..test import graph_test, graph_io_test
+
+    graph_test
+    graph_io_test

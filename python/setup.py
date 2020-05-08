@@ -6,8 +6,8 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="fly-isislab",
-    version="0.0.1",
+    name="fly-graph",
+    version="0.0.1-dev+20200508",
     author="Simone Bisogno",
     author_email="s.bisogno90@gmail.com",
     description="A graph library for FLY language, written in Python",

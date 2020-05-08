@@ -2,4 +2,4 @@
 
 # package fly
 
-from fly import graph
+__all__ = ["graph"]
