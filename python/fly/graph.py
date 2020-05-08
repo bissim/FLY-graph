@@ -512,7 +512,7 @@ class Graph():
     #
 
     @staticmethod
-    def import_graph(path: str, separator: str, is_directed=False, is_weighted=False) -> object:
+    def import_graph(path, separator: str, is_directed=False, is_weighted=False) -> object:
         """
         Imports a graph from a CSV file.
 
@@ -543,7 +543,7 @@ class Graph():
         return fly_graph
 
     @staticmethod
-    def export_graph(fly_graph: object, path: str, separator: str) -> None:
+    def export_graph(fly_graph: object, path, separator: str) -> None:
         """
         Exports a graph to file.
 
