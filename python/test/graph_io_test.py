@@ -3,6 +3,7 @@
 import os, sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
+import urllib.request
 from fly.graph import Graph
 
 nodes = ["a", "b", "c", "d", "e", "f"]
@@ -99,3 +100,7 @@ Graph.export_graph(graph, graph_path, ' ')
 Graph.export_graph(digraph, dgraph_path, ' ')
 Graph.export_graph(wgraph, wgraph_path, ' ')
 Graph.export_graph(wdgraph, wdgraph_path, ' ')
+del graph
+remote_file = urllib.request.urlopen("https://raw.githubusercontent.com/bissim/FLY-graph/master/data/graph.py.edgelist")
+graph = Graph.import_graph(remote_file, ' ')
+print("Remote graph: {0}".format(graph))
