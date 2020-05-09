@@ -25,10 +25,10 @@ class Graph():
     graph : object
         the Graph object from NetworkX library
 
-    is_directed : bool
+    isDirected : bool
         Denotes whether graph is directed
 
-    is_weighted : bool
+    isWeighted : bool
         Denotes whether graph is weighted
 
     Methods
@@ -36,121 +36,121 @@ class Graph():
     clear()
         Empties graph nodes and edges sets.
 
-    add_node(node)
+    addNode(node)
         Adds a specified node to graph.
 
-    add_nodes(nodes)
+    addNodes(nodes)
         Adds a specified list of nodes to graph.
 
-    node_degree(node)
+    nodeDegree(node)
         Gets the number of edges the specified node is part of.
 
-    node_in_degree(node)
+    nodeInDegree(node)
         Gets the number of edges the specified node is target of.
 
-    node_out_degree(node)
+    nodeOutDegree(node)
         Gets the number of edges the specified node is source of.
 
     neighbourhood(node)
         Gets the edges the specified node is part of.
 
-    node_in_edges(node)
+    nodeInEdges(node)
         Gets the edges the specified node is target of.
 
-    node_out_edges(node)
+    nodeOutEdges(node)
         Gets the edges the specified node is source of.
 
-    node_set()
+    nodeSet()
         Gets the nodes of graph.
 
-    num_nodes()
+    numNodes()
         Gets the number of nodes in graph.
 
-    remove_node(node)
+    removeNode(node)
         Removes a specified node from graph.
 
-    has_node(node)
+    hasNode(node)
         Checks whether graph has a specified node.
 
-    add_edge(first_node, second_node)
+    addEdge(first_node, second_node)
         Adds an edge between two specified nodes to graph.
 
-    get_edge(first_node, second_node)
+    getEdge(first_node, second_node)
         Gets the edge of graph between two specified nodes.
 
-    edge_set()
+    edgeSet()
         Gets the edges of graph.
 
-    num_edges()
+    numEdges()
         Gets the number of edges of graph.
 
-    get_edge_weight(first_node, second_node)
+    getEdgeWeight(first_node, second_node)
         Gets weight of the edge of graph between two specified nodes.
 
-    set_edge_weight(first_node, second_node, weight)
+    setEdgeWeight(first_node, second_node, weight)
         Sets weight of the edge of graph between two specified nodes.
 
-    remove_edge(first_node, second_node)
+    removeEdge(first_node, second_node)
         Removes the edge of graph between two specified nodes.
 
-    has_edge(first_node, second_node)
+    hasEdge(first_node, second_node)
         Checks whether graph has node between two specified nodes or not.
 
-    import_graph(path, separator, is_directed, is_weighted)
+    importGraph(path, separator, is_directed, is_weighted)
         Imports a graph from file.
 
-    export_graph(fly_graph, path, separator, is_directed, is_weighted)
+    exportGraph(fly_graph, path, separator, is_directed, is_weighted)
         Exports a graph to file.
 
-    bfs_edges(root_node)
+    bfsEdges(root_node)
         Gets edges of BFS rooted in specified node.
 
-    bfs_nodes(root_node)
+    bfsNodes(root_node)
         Gets nodes of BFS rooted in specified node.
 
-    bfs_tree(root_node)
+    bfsTree(root_node)
         Gets the BFS rooted in specified node.
 
-    dfs_edges(root_node)
+    dfsEdges(root_node)
         Gets edges of DFS rooted in specified node.
 
-    dfs_nodes(root_node)
+    dfsNodes(root_node)
         Gets nodes of DFS rooted in specified node.
 
-    dfs_tree(root_node)
+    dfsTree(root_node)
         Gets the DFS rooted in specified node.
 
-    is_connected()
+    isConnected()
         Checks whether graph is connected or not.
 
-    is_strongly_connected()
+    isStronglyConnected()
         Checks whether graph is strongly connected or not.
 
-    connected_components()
+    connectedComponents()
         Gets connected components of graph.
 
-    connected_subgraphs()
+    connectedSubgraphs()
         Gets connected subgraphs of graph.
 
-    number_connected_components()
+    numberConnectedComponents()
         Gets the number of connected components of graph.
 
-    node_connected_components(node)
+    nodeConnectedComponents(node)
         Gets connected component for specified node.
 
-    strongly_connected_components()
+    stronglyConnectedComponents()
         Gets strongly connected components of graph.
 
-    strongly_connected_subgraphs()
+    stronglyConnectedSubgraphs()
         Gets strongly connected subgraphs of graph.
 
-    is_dag()
+    isDAG()
         Checks whether graph is DAG or not.
 
-    topological_sort()
+    topologicalSort()
         Gets a topological sort for graph.
 
-    get_mst()
+    getMST()
         Gets minimum spanning tree from graph by running Prim's algorithm on it.
     """
 
@@ -175,14 +175,14 @@ class Graph():
             Denotes whether graph is weighted or not (default: False)
         """
         self.graph = nx.DiGraph() if is_directed else nx.Graph()
-        self.is_directed = is_directed
-        self.is_weighted = is_weighted
+        self.isDirected = is_directed
+        self.isWeighted = is_weighted
 
     def __repr__(self):
         to_string = "{" + str(self.graph.nodes) + ", " + str(self.graph.edges) + "}"
-        if self.is_directed:
+        if self.isDirected:
             to_string += ", directed"
-        if self.is_weighted:
+        if self.isWeighted:
             to_string += ", weighted"
         return to_string
 
@@ -201,7 +201,7 @@ class Graph():
     # Nodes
     #
 
-    def add_node(self, node: V) -> None:
+    def addNode(self, node: V) -> None:
         """
         Adds a node to graph.
 
@@ -213,7 +213,7 @@ class Graph():
         """
         self.graph.add_node(node)
 
-    def add_nodes(self, nodes: list) -> None:
+    def addNodes(self, nodes: list) -> None:
         """
         Adds a list of nodes to graph.
 
@@ -230,7 +230,7 @@ class Graph():
 #        for node in nodes:
 #            self.add_node(node)
 
-    def node_degree(self, node: V) -> int:
+    def nodeDegree(self, node: V) -> int:
         """
         Gets the number of edges the node is part of.
 
@@ -246,7 +246,7 @@ class Graph():
         """
         return self.graph.degree(node)
 
-    def node_in_degree(self, node: V) -> int:
+    def nodeInDegree(self, node: V) -> int:
         """
         Gets the number of edges the specified node is target of.
 
@@ -262,7 +262,7 @@ class Graph():
         """
         return self.graph.in_degree(node)
 
-    def node_out_degree(self, node: V) -> int:
+    def nodeOutDegree(self, node: V) -> int:
         """
         Gets the number of edges the specified node is source of.
 
@@ -295,7 +295,7 @@ class Graph():
         """
         return list(self.graph.adj[node])
 
-    def node_in_edges(self, node: V) -> list:
+    def nodeInEdges(self, node: V) -> list:
         """
         Gets the edges the specified node is target of.
 
@@ -312,7 +312,7 @@ class Graph():
         """
         return list(self.graph.in_edges(nbunch=node))
 
-    def node_out_edges(self, node: V) -> list:
+    def nodeOutEdges(self, node: V) -> list:
         """
         Gets the edges the specified node is source of.
 
@@ -328,7 +328,7 @@ class Graph():
         """
         return list(self.graph.out_edges(nbunch=node))
 
-    def node_set(self) -> list:
+    def nodeSet(self) -> list:
         """
         Gets the nodes of graph.
 
@@ -339,7 +339,7 @@ class Graph():
         """
         return list(self.graph.nodes)
 
-    def num_nodes(self) -> int:
+    def numNodes(self) -> int:
         """
         Gets the number of nodes in graph.
 
@@ -350,7 +350,7 @@ class Graph():
         """
         return self.graph.order()
 
-    def remove_node(self, node: V) -> None:
+    def removeNode(self, node: V) -> None:
         """
         Removes a specified node from graph.
 
@@ -362,7 +362,7 @@ class Graph():
         """
         self.graph.remove_node(node)
 
-    def has_node(self, node: V) -> bool:
+    def hasNode(self, node: V) -> bool:
         """
         Checks whether graph has a specified node.
 
@@ -382,7 +382,7 @@ class Graph():
     # Edges
     #
 
-    def add_edge(self, first_node: V, second_node: V) -> None:
+    def addEdge(self, first_node: V, second_node: V) -> None:
         """
         Adds an edge between two specified nodes to graph.
 
@@ -396,7 +396,7 @@ class Graph():
         """
         self.graph.add_edge(first_node, second_node)
 
-    def get_edge(self, first_node: V, second_node: V) -> E:
+    def getEdge(self, first_node: V, second_node: V) -> E:
         """
         Gets the edge of graph between two specified nodes.
 
@@ -415,7 +415,7 @@ class Graph():
         """
         return self.graph.edges[first_node, second_node]
 
-    def edge_set(self) -> list:
+    def edgeSet(self) -> list:
         """
         Gets the edges of graph.
 
@@ -426,7 +426,7 @@ class Graph():
         """
         return list(self.graph.edges)
 
-    def num_edges(self) -> int:
+    def numEdges(self) -> int:
         """
         Gets the number of edges of graph.
 
@@ -438,7 +438,17 @@ class Graph():
         """
         return self.graph.size()
 
-    def get_edge_weight(self, first_node: V, second_node: V) -> float:
+    def getEdgeSource(self, edge: E) -> V:
+        # TODO document
+        (source, target) = edge
+        return source
+
+    def getEdgeTarget(self, edge: E) -> V:
+        # TODO document
+        (source, target) = edge
+        return target
+
+    def getEdgeWeight(self, first_node: V, second_node: V) -> float:
         """
         Gets weight of the edge of graph between two specified nodes.
 
@@ -455,9 +465,9 @@ class Graph():
         float
             Weight of edge which specified nodes are edge and target of
         """
-        return self.graph[first_node][second_node]['weight'] #if self.is_weighted else 1.0
+        return self.graph[first_node][second_node]['weight'] #if self.isWeighted else 1.0
 
-    def set_edge_weight(self, first_node: V, second_node: V, weight: float) -> None:
+    def setEdgeWeight(self, first_node: V, second_node: V, weight: float) -> None:
         """
         Sets weight of the edge of graph between two specified nodes.
 
@@ -472,9 +482,9 @@ class Graph():
         weight : float
             Weight of edge
         """
-        self.graph[first_node][second_node]['weight'] = weight #if self.is_weighted else 1.0
+        self.graph[first_node][second_node]['weight'] = weight #if self.isWeighted else 1.0
 
-    def remove_edge(self, first_node: V, second_node: V) -> None:
+    def removeEdge(self, first_node: V, second_node: V) -> None:
         """
         Removes the edge of graph between two specified nodes.
 
@@ -488,7 +498,7 @@ class Graph():
         """
         self.graph.remove_edge(first_node, second_node)
 
-    def has_edge(self, first_node: V, second_node: V) -> bool:
+    def hasEdge(self, first_node: V, second_node: V) -> bool:
         """
         Checks whether graph has node between two specified nodes or not.
 
@@ -512,7 +522,7 @@ class Graph():
     #
 
     @staticmethod
-    def import_graph(path, separator: str, is_directed=False, is_weighted=False) -> object:
+    def importGraph(path, separator: str, is_directed=False, is_weighted=False) -> object:
         """
         Imports a graph from a CSV file.
 
@@ -539,11 +549,11 @@ class Graph():
             FLY graph read from file
         """
         fly_graph = Graph(is_directed=is_directed, is_weighted=is_weighted)
-        fly_graph.graph = nx.read_weighted_edgelist(path, delimiter=separator) #if fly_graph.is_weighted else nx.read_edgelist(path, delimiter=separator, data=False)
+        fly_graph.graph = nx.read_weighted_edgelist(path, delimiter=separator) #if fly_graph.isWeighted else nx.read_edgelist(path, delimiter=separator, data=False)
         return fly_graph
 
     @staticmethod
-    def export_graph(fly_graph: object, path, separator: str) -> None:
+    def exportGraph(fly_graph: object, path, separator: str) -> None:
         """
         Exports a graph to file.
 
@@ -564,7 +574,7 @@ class Graph():
     # Graph traversal
     #
 
-    def bfs_edges(self, root_node: V) -> list:
+    def bfsEdges(self, root_node: V) -> list:
         """
         Gets edges of BFS rooted in specified node.
 
@@ -580,7 +590,7 @@ class Graph():
         """
         return list(nx.bfs_edges(self.graph, root_node))
 
-    def bfs_nodes(self, root_node: V) -> list:
+    def bfsNodes(self, root_node: V) -> list:
         """
         Gets nodes of BFS rooted in specified node.
 
@@ -596,7 +606,7 @@ class Graph():
         """
         return [root_node] + [v for u, v in nx.bfs_edges(self.graph, root_node)]
 
-    def bfs_tree(self, root_node: V) -> object:
+    def bfsTree(self, root_node: V) -> object:
         """
         Gets the BFS rooted in specified node.
 
@@ -611,11 +621,11 @@ class Graph():
             BFS tree extracted from graph
         """
         tree = Graph()
-        tree.graph.add_edges_from(self.bfs_edges(root_node))
-        tree.graph.add_nodes_from(self.bfs_nodes(root_node))
+        tree.graph.add_edges_from(self.bfsEdges(root_node))
+        tree.graph.add_nodes_from(self.bfsNodes(root_node))
         return tree
 
-    def dfs_edges(self, root_node: V) -> list:
+    def dfsEdges(self, root_node: V) -> list:
         """
         Gets edges of DFS rooted in specified node.
 
@@ -631,7 +641,7 @@ class Graph():
         """
         return list(nx.dfs_edges(self.graph, source=root_node))
 
-    def dfs_nodes(self, root_node: V) -> list:
+    def dfsNodes(self, root_node: V) -> list:
         """
         Gets nodes of DFS rooted in specified node.
 
@@ -647,7 +657,7 @@ class Graph():
         """
         return [root_node] + [v for u, v in nx.dfs_edges(self.graph, source=root_node)]
 
-    def dfs_tree(self, root_node: V) -> object:
+    def dfsTree(self, root_node: V) -> object:
         """
         Gets the DFS rooted in specified node.
 
@@ -662,15 +672,15 @@ class Graph():
             DFS tree exrcted from graph
         """
         tree = Graph()
-        tree.graph.add_edges_from(self.dfs_edges(root_node))
-        tree.graph.add_nodes_from(self.dfs_nodes(root_node))
+        tree.graph.add_edges_from(self.dfsEdges(root_node))
+        tree.graph.add_nodes_from(self.dfsNodes(root_node))
         return tree
 
     #
     # Connectivity
     #
 
-    def is_connected(self) -> bool:
+    def isConnected(self) -> bool:
         """
         Checks whether graph is connected or not.
 
@@ -681,7 +691,7 @@ class Graph():
         """
         return nx.is_connected(self.graph)
 
-    def is_strongly_connected(self) -> bool:
+    def isStronglyConnected(self) -> bool:
         """
         Checks whether graph is strongly connected or not.
 
@@ -692,7 +702,7 @@ class Graph():
         """
         return nx.is_strongly_connected(self.graph)
 
-    def connected_components(self) -> list:
+    def connectedComponents(self) -> list:
         """
         Gets connected components of graph.
 
@@ -703,7 +713,7 @@ class Graph():
         """
         return list(set for set in nx.connected_components(self.graph))
 
-    def connected_subgraphs(self) -> list:
+    def connectedSubgraphs(self) -> list:
         """
         Gets connected subgraphs of graph.
 
@@ -714,16 +724,16 @@ class Graph():
         """
         subgraphs = list()
         for set in nx.connected_components(self.graph):
-            subgraph = Graph(is_directed = self.is_directed, is_weighted = self.is_weighted)
-            subgraph.add_nodes(set)
+            subgraph = Graph(is_directed = self.isDirected, is_weighted = self.isWeighted)
+            subgraph.addNodes(set)
             for edge in self.graph.edges:
                 if edge[0] in set and edge[1] in set:
-                    subgraph.add_edge(edge[0], edge[1])
+                    subgraph.addEdge(edge[0], edge[1])
             subgraphs.append(subgraph)
         return subgraphs
 #        return list(self.graph.subgraph(set).copy() for set in nx.connected_components(self.graph))
 
-    def number_connected_components(self) -> int:
+    def numberConnectedComponents(self) -> int:
         """
         Gets the number of connected components of graph.
 
@@ -734,7 +744,7 @@ class Graph():
         """
         return nx.number_connected_components(self.graph)
 
-    def node_connected_component(self, node: V) -> list:
+    def nodeConnectedComponent(self, node: V) -> list:
         """
         Gets connected component for specified node.
 
@@ -750,7 +760,7 @@ class Graph():
         """
         return nx.node_connected_component(self.graph, node)
 
-    def strongly_connected_components(self) -> list:
+    def stronglyConnectedComponents(self) -> list:
         """
         Gets strongly connected components of graph.
 
@@ -761,7 +771,7 @@ class Graph():
         """
         return list(set for set in nx.kosaraju_strongly_connected_components(self.graph))
 
-    def strongly_connected_subgraphs(self) -> list:
+    def stronglyConnectedSubgraphs(self) -> list:
         """
         Gets strongly connected subgraphs of graph.
 
@@ -772,11 +782,11 @@ class Graph():
         """
         subgraphs = list()
         for set in nx.kosaraju_strongly_connected_components(self.graph):
-            subgraph = Graph(is_directed = self.is_directed, is_weighted = self.is_weighted)
-            subgraph.add_nodes(set)
+            subgraph = Graph(is_directed = self.isDirected, is_weighted = self.isWeighted)
+            subgraph.addNodes(set)
             for edge in self.graph.edges:
                 if edge[0] in set and edge[1] in set:
-                    subgraph.add_edge(edge[0], edge[1])
+                    subgraph.addEdge(edge[0], edge[1])
             subgraphs.append(subgraph)
         return subgraphs
 #        return list(self.__class__().graph = (self.graph.subgraph(set).copy for set in nx.kosaraju_strongly_connected_components(self.graph)))
@@ -785,7 +795,7 @@ class Graph():
     # DAG and topological sorting
     #
 
-    def is_dag(self) -> bool:
+    def isDAG(self) -> bool:
         """
         Checks whether graph is a directed acyclic graph (DAG) or not.
 
@@ -796,7 +806,7 @@ class Graph():
         """
         return nx.is_directed_acyclic_graph(self.graph)
 
-    def topological_sort(self) -> list:
+    def topologicalSort(self) -> list:
         """
         Gets a topological sort for graph.
 
@@ -811,7 +821,7 @@ class Graph():
     # Minimum spanning tree
     #
 
-    def get_mst(self) -> object:
+    def getMST(self) -> object:
         """
         Gets minimum spanning tree from graph by running Prim's algorithm on it.
 
