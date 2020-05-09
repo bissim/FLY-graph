@@ -7,5 +7,6 @@
 **/*.egg-info/
 **/dist/
 **/build/
+**/.vscode/
 
 **/*.pyc
