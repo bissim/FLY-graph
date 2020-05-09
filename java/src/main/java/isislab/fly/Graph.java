@@ -39,7 +39,13 @@ import org.jgrapht.nio.csv.CSVFormat;
  * It basically wraps the JGraphT representation of graphs according to FLY
  * API for graphs.
  * 
- * @author Simone Bisogno &lt;s.bisogno10@studenti.unisa.it&gt;
+ * @author Simone Bisogno
+ *&lt;<a href="mailto:s.bisogno10@studenti.unisa.it?
+ *cc=s.bisogno90@gmail.com&
+ *subject=Java%20FLY%20graph%20library&
+ *body=Hello,%0D%0A%0D%0A
+ *your%20message%20here"
+ *>s.bisogno10@studenti.unisa.it</a>&gt;
  * 
  * @param <V> Type for nodes
  * @param <E> Type for edges
