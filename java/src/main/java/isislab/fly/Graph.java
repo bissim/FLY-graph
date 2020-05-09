@@ -39,7 +39,7 @@ import org.jgrapht.nio.csv.CSVFormat;
  * It basically wraps the JGraphT representation of graphs according to FLY
  * API for graphs.
  * 
- * @author Simone Bisogno (s.bisogno10@studenti.unisa.it)
+ * @author Simone Bisogno &lt;s.bisogno10@studenti.unisa.it&gt;
  * 
  * @param <V> Type for nodes
  * @param <E> Type for edges
@@ -70,9 +70,9 @@ public class Graph<V, E>
 	private boolean isDirected;
 
 	/**
-	 * The <code>Graph(Class&lt;V&gt;, boolean, boolean)</code> constructs a graph
-	 * with node class the same specified as parameter and can be directed,
-	 * weighted or both according to boolean parameters.
+	 * The <code>Graph(Class&lt;V&gt;, boolean, boolean)</code> constructs a
+	 * graph with node class the same specified as parameter and can be
+	 * directed, weighted or both according to boolean parameters.
 	 * 
 	 * @param nodeClass The class of the graph nodes
 	 * @param isDirected Denotes whether graph edges will be directed
@@ -486,7 +486,11 @@ public class Graph<V, E>
 	)
 			throws FileNotFoundException, Exception
 	{
-		Graph<V, E> flyGraph = new Graph<V, E>(nodeClass, isDirected, isWeighted);
+		Graph<V, E> flyGraph = new Graph<V, E>(
+					nodeClass,
+					isDirected,
+					isWeighted
+			);
 
 //		@SuppressWarnings("unchecked")
 //		VertexProvider<V> vertexProvider =
@@ -496,9 +500,9 @@ public class Graph<V, E>
 //					flyGraph.graph.getEdgeSupplier().get();
 
 		CSVImporter<V, E> importer = new CSVImporter<>(
-						CSVFormat.EDGE_LIST,
-						separator.charAt(0)
-				);
+					CSVFormat.EDGE_LIST,
+					separator.charAt(0)
+			);
 		// easy fix for real graph import
 		// as per https://stackoverflow.com/questions/61089620/
 		// effective since JGraphT 1.4.1
@@ -535,10 +539,17 @@ public class Graph<V, E>
 		// as per https://stackoverflow.com/questions/60461351/
 //		Map<V, Map<String, Attribute>> attrs = new HashMap<>();
 //		importer.addVertexAttributeConsumer((p, a) -> {
-//		    Map<String, Attribute> map = attrs.computeIfAbsent(p.getFirst(), k -> new HashMap<>());
+//		    Map<String, Attribute> map = attrs.computeIfAbsent(
+//		    		p.getFirst(),
+//		    		k -> new HashMap<>()
+//		    );
 //		    map.put(p.getSecond(), a);
 //		});
-//		Graph<V, E> effectiveGraph = new Graph<V, E>(nodeClass, isDirected, isWeighted);
+//		Graph<V, E> effectiveGraph = new Graph<V, E>(
+//					nodeClass,
+//					isDirected,
+//					isWeighted
+//			);
 //		for(V v : Arrays.asList(flyGraph.nodeSet()))
 //		    effectiveGraph.addNode((V) attrs.get(v).get("ID").getValue());
 //		for(E e : Arrays.asList(flyGraph.edgeSet())){
@@ -894,7 +905,8 @@ public class Graph<V, E>
 					);
 					Iterator<V> componentIterator = component.iterator();
 					IntStream
-							.range(0, component.size()) // iterate over component nodes
+							// iterate over component nodes
+							.range(0, component.size())
 							.forEach(j -> {
 								nodes[j] = componentIterator.next();
 							});
@@ -1204,11 +1216,15 @@ public class Graph<V, E>
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((edgeClass == null) ? 0 : edgeClass.hashCode());
+		result = prime * result + (
+			(edgeClass == null) ? 0 : edgeClass.hashCode()
+		);
 		result = prime * result + ((graph == null) ? 0 : graph.hashCode());
 		result = prime * result + (isDirected ? 1231 : 1237);
 		result = prime * result + (isWeighted ? 1231 : 1237);
-		result = prime * result + ((nodeClass == null) ? 0 : nodeClass.hashCode());
+		result = prime * result + (
+			(nodeClass == null) ? 0 : nodeClass.hashCode()
+		);
 		return result;
 	}
 
@@ -1291,15 +1307,21 @@ public class Graph<V, E>
 		// determine the node supplier to use
 		if (nodeClass == String.class)
 		{
-			builder.vertexSupplier((Supplier<V>) SupplierUtil.createStringSupplier());
+			builder.vertexSupplier(
+					(Supplier<V>) SupplierUtil.createStringSupplier()
+			);
 		}
 		else if (nodeClass == Integer.class)
 		{
-			builder.vertexSupplier((Supplier<V>) SupplierUtil.createIntegerSupplier());
+			builder.vertexSupplier(
+					(Supplier<V>) SupplierUtil.createIntegerSupplier()
+			);
 		}
 		else if (nodeClass == Long.class)
 		{
-			builder.vertexSupplier((Supplier<V>) SupplierUtil.createLongSupplier());
+			builder.vertexSupplier(
+					(Supplier<V>) SupplierUtil.createLongSupplier()
+			);
 		}
 		else
 		{
@@ -1487,7 +1509,7 @@ public class Graph<V, E>
 	 * instances of <code>Pair</code> will be immutable; in
 	 * particular, class itself will be immutable.
 	 * 
-	 * @author Simone Bisogno <s.bisogno10@studenti.unisa.it>
+	 * @author Simone Bisogno &lt;s.bisogno10@studenti.unisa.it&gt;
 	 *
 	 */
 	private final class Pair
@@ -1584,7 +1606,9 @@ public class Graph<V, E>
 			int result = 1;
 			result = prime * result + getEnclosingInstance().hashCode();
 			result = prime * result + ((first == null) ? 0 : first.hashCode());
-			result = prime * result + ((second == null) ? 0 : second.hashCode());
+			result = prime * result + (
+				(second == null) ? 0 : second.hashCode()
+			);
 			return result;
 		}
 
