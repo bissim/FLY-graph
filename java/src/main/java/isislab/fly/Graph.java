@@ -476,6 +476,7 @@ public class Graph<V, E>
 	 * @throws FileNotFoundException There is no file at specified path
 	 * @throws Exception Graph cannot be imported from file
 	 */
+	@SuppressWarnings("unchecked")
 	public static <V, E> Graph<V, E> importGraph(
 			String path,
 			String separator,
@@ -1261,6 +1262,7 @@ public class Graph<V, E>
 	 * @param isWeighted Denotes whether graph edges will be weighted
 	 * @return a JGraphT <code>org.jgrapht.Graph&lt;V, E&gt;</code> object
 	 */
+	@SuppressWarnings("unchecked")
 	private org.jgrapht.Graph<V, E> graphBuilder(
 			Class<V> nodeClass,
 			Class<E> edgeClass,
