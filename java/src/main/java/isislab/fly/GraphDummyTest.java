@@ -29,6 +29,19 @@ public class GraphDummyTest
 		// print graph
 		out.println("Undirected graph: " + graph);
 
+		// edge manipulation
+		Object edge = graph.getEdge("d", "e");
+		out.println("Edge " + edge);
+		out.println("Change edge target from 'e' to 'a'");
+		graph.setEdgeTarget(edge, "a");
+		out.println("Graph: " + graph);
+		edge = graph.getEdge("d", "a");
+		out.println("Edge: " + edge);
+		out.println("Change edge source from 'd' to 'c'");
+		graph.setEdgeSource(edge, "c");
+		out.println("Graph: " + graph);
+		
+
 		// other management methods
 		String[] graphNodes = graph.nodeSet();
 		out.print("Graph nodes: [");
@@ -248,6 +261,14 @@ public class GraphDummyTest
 		 * find DFS nodes
 		 */
 		out.println("\nDEPTH FIRST SEARCH");
+		String[] moreNodes = {"g", "h", "i", "j"};
+		graph.addNodes(moreNodes);
+		graph.addEdge("c", "f");
+		graph.addEdge("c", "h");
+		graph.addEdge("f", "g");
+		graph.addEdge("f", "i");
+		graph.addEdge("i", "j");
+		out.println("Graph: " + graph);
 		String[] dfsNodes = graph.dfsNodes(rootNode);
 		out.print("DFS nodes order: ");
 		IntStream
@@ -270,6 +291,11 @@ public class GraphDummyTest
 		 */
 		Graph<String, Object> dfsTree = graph.dfsTree(rootNode);
 		out.println("DFS tree: " + dfsTree);
+		graph.removeNode("g");
+		graph.removeNode("h");
+		graph.removeNode("i");
+		graph.removeNode("j");
+		graph.removeEdge("c", "f");
 
 		/*
 		 * Connectivity

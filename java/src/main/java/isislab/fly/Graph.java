@@ -390,9 +390,25 @@ public class Graph<V, E>
 	}
 
 	// TODO comment
+	public void setEdgeSource(E e, V s)
+	{
+		V t = this.graph.getEdgeTarget(e);
+		this.graph.removeEdge(e);
+		this.graph.addEdge(s, t);
+	}
+
+	// TODO comment
 	public V getEdgeTarget(E e)
 	{
 		return this.graph.getEdgeTarget(e);
+	}
+
+	// TODO comment
+	public void setEdgeTarget(E e, V t)
+	{
+		V s = this.graph.getEdgeSource(e);
+		this.graph.removeEdge(e);
+		this.graph.addEdge(s, t);
 	}
 
 	/**
@@ -831,10 +847,10 @@ public class Graph<V, E>
 				this.isWeighted
 		);
 
-		// add BFS nodes to graph
+		// add DFS nodes to graph
 		dfsTree.addNodes(this.dfsNodes(rootNode));
 
-		// add BFS edges to graph
+		// add DFS edges to graph
 		Pair[] nodePairs = this.extractDfsEdges(rootNode);
 		IntStream
 				.range(0, nodePairs.length)
@@ -1481,7 +1497,11 @@ public class Graph<V, E>
 		// try to extract edges from iterator
 		V firstNode = null, secondNode = null;
 		int edgesCounter = 0;
-		while (iterator.hasNext())
+		int backwardIndex = 0;
+		while (
+				iterator.hasNext() &&
+				edgesCounter < dfsEdges.length
+		)
 		{
 			// nodes have to be picked in couples
 			// where the first element is the second
@@ -1502,6 +1522,29 @@ public class Graph<V, E>
 			if (this.hasEdge(firstNode, secondNode))
 			{
 				dfsEdges[edgesCounter++] = new Pair(firstNode, secondNode);
+			}
+			else
+			{
+				// the node in firstNode list that is
+				// parent of secondNode has to be found
+				backwardIndex = edgesCounter - 1;
+				while (backwardIndex >= 0)
+				{
+					if (
+							this.hasEdge(
+									dfsEdges[backwardIndex].getFirst(),
+									secondNode
+							)
+					)
+					{
+						dfsEdges[edgesCounter++] = new Pair(
+								dfsEdges[backwardIndex].getFirst(),
+								secondNode
+						);
+						break;
+					}
+					backwardIndex--;
+				}
 			}
 		}
 
