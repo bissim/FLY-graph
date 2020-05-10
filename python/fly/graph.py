@@ -413,7 +413,12 @@ class Graph():
         E
             Graph edge which specified nodes are source and target of
         """
-        return self.graph.edges[first_node, second_node]
+        edge_list = self.graph.edges([first_node, second_node])
+        for pair in edge_list:
+            (source, target) = pair
+            if source == first_node and target == second_node:
+                return pair
+        return None
 
     def edgeSet(self) -> list:
         """
@@ -443,10 +448,22 @@ class Graph():
         (source, target) = edge
         return source
 
+    def setEdgeSource(self, edge: E, new_source: V) -> None:
+        # TODO document
+        (source, target) = edge
+        self.graph.remove_edge(source, target)
+        self.graph.add_edge(new_source, target)
+
     def getEdgeTarget(self, edge: E) -> V:
         # TODO document
         (source, target) = edge
         return target
+
+    def setEdgeTarget(self, edge: E, new_target: V) -> None:
+        # TODO document
+        (source, target) = edge
+        self.graph.remove_edge(source, target)
+        self.graph.add_edge(source, new_target)
 
     def getEdgeWeight(self, first_node: V, second_node: V) -> float:
         """

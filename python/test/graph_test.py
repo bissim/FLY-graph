@@ -32,6 +32,18 @@ print("Degree of node 'a': {0}".format(graph.nodeDegree("a")))
 print("Degree of node 'f': {0}".format(graph.nodeDegree("f")))
 print("Neighbourhood of 'a': {0}".format(graph.neighbourhood("a")))
 
+# edge manipulation
+edge = graph.getEdge("d", "e")
+print("Edge: {0}".format(edge))
+print ("Change edge target from 'e' to 'a'")
+graph.setEdgeTarget(edge, "a")
+print("Graph: {0}".format(graph))
+edge = graph.getEdge("d", "a")
+print("Edge: {0}".format(edge))
+print("Change edge source from 'd' to 'c'")
+graph.setEdgeSource(edge, "c")
+print("Graph: {0}".format(graph))
+
 print("\nWEIGHTED GRAPH")
 wgraph = Graph(is_weighted=True)
 wgraph.addNodes(nodes)
