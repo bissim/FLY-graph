@@ -853,12 +853,12 @@ class Graph():
 #
 # Run tests as standalone module
 #
-if __name__ == "__main__":
-    print("Run FLY Graph tests")
-
-    import os, sys
-    sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-    from ..test import graph_test, graph_io_test
-
-    graph_test
-    graph_io_test
+#if __name__ == "__main__":
+#    print("Run FLY Graph tests")
+#
+#    import os, sys
+#    sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+#    from ..test import graph_test, graph_io_test
+#
+#    graph_test
+#    graph_io_test
