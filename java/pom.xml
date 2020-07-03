@@ -6,7 +6,7 @@
 
   <groupId>isislab.fly</groupId>
   <artifactId>graph</artifactId>
-  <version>0.0.1-dev+20200703</version>
+  <version>0.0.1-dev+20200703+1602</version>
   <!-- <packaging>jar</packaging> -->
 
   <name>FLY Graph</name>
@@ -29,7 +29,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <jdkVersion>1.8</jdkVersion>
-    <jgraphtVersion>1.4.0</jgraphtVersion>
+    <jgraphtVersion>1.5.0</jgraphtVersion>
   </properties>
 
   <repositories>
@@ -61,7 +61,7 @@
     <dependency>
       <groupId>org.jgrapht</groupId>
       <artifactId>jgrapht-io</artifactId>
-      <version>1.4.1-SNAPSHOT</version>
+      <version>${jgraphtVersion}</version>
     </dependency>
     <dependency>
       <groupId>com.github.johnpoth</groupId>
