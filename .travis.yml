@@ -22,4 +22,5 @@ jobs:
         - ls -la dist/
         - python3 -m pip install -r fly_graph.egg-info/requires.txt
         - cd ..
-        - python3 -m fly.graph
+        - python3 -m python.test.graph_test
+        - python3 -m python.test.graph_io_test
