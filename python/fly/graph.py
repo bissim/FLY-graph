@@ -175,7 +175,7 @@ class Graph():
             Denotes whether graph is weighted or not (default: False)
         """
         self.graph = nx.DiGraph() if is_directed else nx.Graph()
-        self.isDirected = is_directed
+        self.isDirected = isinstance(self.graph, nx.DiGraph)
         self.isWeighted = is_weighted
 
     def __repr__(self):
@@ -566,7 +566,7 @@ class Graph():
             FLY graph read from file
         """
         fly_graph = Graph(is_directed=is_directed, is_weighted=is_weighted)
-        fly_graph.graph = nx.read_weighted_edgelist(path, delimiter=separator) #if fly_graph.isWeighted else nx.read_edgelist(path, delimiter=separator, data=False)
+        fly_graph.graph = nx.read_weighted_edgelist(path, delimiter=separator, create_using=nx.DiGraph if is_directed else nx.Graph) #if fly_graph.isWeighted else nx.read_edgelist(path, delimiter=separator, data=False)
         return fly_graph
 
     @staticmethod
@@ -715,7 +715,7 @@ class Graph():
         Returns
         -------
         bool
-            'True' if graph i strongly connected, 'False' otherwise
+            'True' if graph is strongly connected, 'False' otherwise
         """
         return nx.is_strongly_connected(self.graph)
 
