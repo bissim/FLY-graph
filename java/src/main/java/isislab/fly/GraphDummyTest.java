@@ -342,7 +342,7 @@ public class GraphDummyTest
 		IntStream
 				.range(0, connectedSubgraphs.length)
 				.forEach(i -> {
-					out.println("Strong subgraph " + i + ": " + connectedSubgraphs[i]);
+					out.println("Subgraph " + i + ": " + connectedSubgraphs[i]);
 				});
 		out.println("Removing nodes 'f' and 'g'...");
 		graph.removeNode("f");
@@ -378,7 +378,7 @@ public class GraphDummyTest
 		IntStream
 				.range(0, stronglyConnectedSubgraphs.length)
 				.forEach(i -> {
-					out.println("Subgraph " + i + ": " + stronglyConnectedSubgraphs[i]);
+					out.println("Strong subgraph " + i + ": " + stronglyConnectedSubgraphs[i]);
 				});
 		out.println("Removing (a, c) and adding (c, a) and (e, c)...");
 		digraph.removeEdge("a", "c");
