@@ -470,6 +470,90 @@ public class Graph<V, E>
 	 */
 
 	/**
+	 * The <code>importGraph(File, String, Class&lt;V&gt;, boolean,
+	 * boolean)</code> method imports a graph from a specified file;
+	 * class object for nodes has to be specified, along with two boolean
+	 * values denoting whether graph is directed or weighted.
+	 * <br>
+	 * Source file has to be in CSV format: specifically, it has to be an
+	 * <em>edge list</em> file listing the edges of graph (and, optionally,
+	 * their weight) in such a fashion:<br><br>
+	 * <code>a b 2.3</code><br>
+	 * <code>b c 1.8</code><br><br>
+	 * In this example, two weighted edges have been defined, separated by
+	 * space character. Weight has to be specified or not according to
+	 * relative boolean value passed.
+	 * 
+	 * @param <V> The class for nodes.
+	 * @param <E> The class for edges.
+	 * @param file Edgelist file in file system
+	 * @param separator Separator character for CSV
+	 * @param nodeClass <code>Class&lt;V&gt;</code> object for nodes
+	 * @param isWeighted <code>true</code> if graph is weighted,
+	 * <code>false</code> otherwise
+	 * @param isDirected <code>true</code> if graph is directed,
+	 * <code>false</code> otherwise
+	 * @return the <code>Graph&lt;V, E&gt;</code> object read from
+	 * <code>path</code> file
+	 * @throws FileNotFoundException There is no file at specified path
+	 * @throws Exception Graph cannot be imported from file
+	 */
+	@SuppressWarnings("unchecked")
+	public static <V, E> Graph<V, E> importGraph(
+			File file,
+			String separator,
+			Class<V> nodeClass,
+			boolean isWeighted,
+			boolean isDirected
+	)
+			throws FileNotFoundException, Exception
+	{
+		Graph<V, E> flyGraph = new Graph<V, E>(
+					nodeClass,
+					isDirected,
+					isWeighted
+			);
+
+		CSVImporter<V, E> importer = new CSVImporter<>(
+					CSVFormat.EDGE_LIST,
+					separator.charAt(0)
+			);
+		// easy fix for real graph import
+		// as per https://stackoverflow.com/questions/61089620/
+		// effective since JGraphT 1.4.1
+		// remove imported graph conversion after enabling this line
+		importer.setVertexFactory(id -> (V) id);
+
+		// tell importer that graph to import is weighted
+		if (isWeighted)
+		{
+			importer.setParameter(CSVFormat.Parameter.EDGE_WEIGHTS, true);
+		}
+
+		try
+		{
+			importer.importGraph(
+					flyGraph.graph,
+					new FileReader(file)
+			);
+		}
+		catch (ImportException e)
+		{
+			// we need to hide ImportException because
+			// caller mustn't be aware of the use of
+			// JGraphT library, that's why we're relaunching
+			// it as a messaged RuntimeException
+			throw new Exception(
+					e.getClass().getSimpleName() +
+					": " +
+					e.getLocalizedMessage()
+			);
+		}
+
+		return flyGraph;
+	}
+
+	/**
 	 * The <code>importGraph(String, String, Class&lt;V&gt;, boolean,
 	 * boolean)</code> method imports a graph from a file at specified path;
 	 * class object for nodes has to be specified, along with two boolean
@@ -498,7 +582,6 @@ public class Graph<V, E>
 	 * @throws FileNotFoundException There is no file at specified path
 	 * @throws Exception Graph cannot be imported from file
 	 */
-	@SuppressWarnings("unchecked")
 	public static <V, E> Graph<V, E> importGraph(
 			String path,
 			String separator,
@@ -508,81 +591,14 @@ public class Graph<V, E>
 	)
 			throws FileNotFoundException, Exception
 	{
-		Graph<V, E> flyGraph = new Graph<V, E>(
-					nodeClass,
-					isDirected,
-					isWeighted
-			);
-
-//		@SuppressWarnings("unchecked")
-//		VertexProvider<V> vertexProvider =
-//				(id, attributes) -> (V) id;
-//		EdgeProvider<V, E> edgeProvider =
-//				(from, to, label, attributes) ->
-//					flyGraph.graph.getEdgeSupplier().get();
-
-		CSVImporter<V, E> importer = new CSVImporter<>(
-					CSVFormat.EDGE_LIST,
-					separator.charAt(0)
-			);
-		// easy fix for real graph import
-		// as per https://stackoverflow.com/questions/61089620/
-		// effective since JGraphT 1.4.1
-		// remove imported graph conversion after enabling this line
-		importer.setVertexFactory(id -> (V) id);
-
-		// tell importer that graph to import is weighted
-		if (isWeighted)
-		{
-			importer.setParameter(CSVFormat.Parameter.EDGE_WEIGHTS, true);
-		}
-
-		try
-		{
-			importer.importGraph(
-					flyGraph.graph,
-					new FileReader(path)
-			);
-		}
-		catch (ImportException e)
-		{
-			// we need to hide ImportException because
-			// caller mustn't be aware of the use of
-			// JGraphT library, that's why we're relaunching
-			// it as a messaged RuntimeException
-			throw new Exception(
-					e.getClass().getSimpleName() +
-					": " +
-					e.getLocalizedMessage()
-			);
-		}
-
-		// convert imported indexed graph to effective labeled one
-		// as per https://stackoverflow.com/questions/60461351/
-//		Map<V, Map<String, Attribute>> attrs = new HashMap<>();
-//		importer.addVertexAttributeConsumer((p, a) -> {
-//		    Map<String, Attribute> map = attrs.computeIfAbsent(
-//		    		p.getFirst(),
-//		    		k -> new HashMap<>()
-//		    );
-//		    map.put(p.getSecond(), a);
-//		});
-//		Graph<V, E> effectiveGraph = new Graph<V, E>(
-//					nodeClass,
-//					isDirected,
-//					isWeighted
-//			);
-//		for(V v : Arrays.asList(flyGraph.nodeSet()))
-//		    effectiveGraph.addNode((V) attrs.get(v).get("ID").getValue());
-//		for(E e : Arrays.asList(flyGraph.edgeSet())){
-//		    V source = flyGraph.getEdgeSource(e);
-//		    V target = flyGraph.getEdgeTarget(e);
-//		    V sourceID = (V) attrs.get(source).get("ID").getValue();
-//		    V targetID = (V) attrs.get(target).get("ID").getValue();
-//		    effectiveGraph.addEdge(sourceID, targetID);
-//		}
-
-		return flyGraph;
+		File file = new File(path);
+		return Graph.importGraph(
+				file,
+				separator,
+				nodeClass,
+				isWeighted,
+				isDirected
+		);
 	}
 
 	/**
