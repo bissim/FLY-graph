@@ -16,6 +16,11 @@
     <name>ISISLab</name>
     <url>http.//www.isislab.it</url>
   </organization>
+  <licenses>
+    <license>
+      <name>MIT</name>
+    </license>
+  </licenses>
 
   <developers>
     <developer>
