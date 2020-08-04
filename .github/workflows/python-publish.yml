@@ -42,7 +42,7 @@ jobs:
         ls -la ./dist/
         mv ./dist/*.whl ./dist/fly-graph-${{ github.event.release.tag_name }}-py3-none.whl
         mv ./dist/*.tar.gz ./dist/fly-graph-${{ github.event.release.tag_name }}.tar.gz
-        ls -la ./python/dist/
+        ls -la ./dist/
 
     - name: Get latest FLY Graph release
       id: release
