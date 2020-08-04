@@ -10,7 +10,6 @@ on:
 env:
   GITHUB_TOKEN: ${{ github.token }}
   WS: ${{ github.workspace }}
-  TAG: ${{ github.event.release.tag_name }}
 
 jobs:
   build:
@@ -38,13 +37,13 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file $WS/java/pom.xml
 
-    - name: Publish FLY Graph ${TAG} GitHub Packages Apache Maven
+    - name: Publish GitHub Packages Apache Maven
       continue-on-error: true
       env:
         GITHUB_ACTOR: ${{ github.actor }}
       run: mvn -B deploy -s $WS/java/settings.xml -f $WS/java/pom.xml
 
-    - name: Get latest FLY Graph ${TAG} release
+    - name: Get latest FLY Graph release
       id: get_release
       uses: bruceadams/get-release@v1.2.0
 
@@ -53,8 +52,8 @@ jobs:
       uses: actions/upload-release-asset@latest
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
-        asset_path: ./java/target/fly-graph-${TAG}-jar-with-dependencies-and-exclude-files.jar
-        asset_name: fly-graph-$TAG-jar-with-dependencies-and-exclude-files.jar
+        asset_path: ./java/target/fly-graph-${{ github.event.release.tag_name }}-jar-with-dependencies-and-exclude-files.jar
+        asset_name: fly-graph-${{ github.event.release.tag_name }}-jar-with-dependencies-and-exclude-files.jar
         asset_content_type: application/java-archive
 
     - name: Upload JAR as Release Asset
@@ -62,8 +61,8 @@ jobs:
       uses: actions/upload-release-asset@latest
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
-        asset_path: ./java/target/fly-graph-${TAG}-lib.jar
-        asset_name: fly-graph-${TAG}-lib.jar
+        asset_path: ./java/target/fly-graph-${{ github.event.release.tag_name }}-lib.jar
+        asset_name: fly-graph-${{ github.event.release.tag_name }}-lib.jar
         asset_content_type: application/java-archive
 
     - name: Upload Javadoc as Release Asset
@@ -71,6 +70,6 @@ jobs:
       uses: actions/upload-release-asset@latest
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
-        asset_path: ./java/target/fly-graph-${TAG}-javadoc.jar
-        asset_name: fly-graph-${TAG}-javadoc.jar
+        asset_path: ./java/target/fly-graph-${{ github.event.release.tag_name }}-javadoc.jar
+        asset_name: fly-graph-${{ github.event.release.tag_name }}-javadoc.jar
         asset_content_type: application/java-archive

@@ -9,8 +9,6 @@ on:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  WS: ${{ github.workspace }}
-  TAG: ${{ github.event.release.tag_name }}
 
 jobs:
   deploy:
@@ -41,9 +39,9 @@ jobs:
 
     - name: Rename packages
       run: |
-        ls -la ./python/dist/
-        mv ./python/dist/*.whl ./python/dist/fly-graph-$TAG-py3-none.whl
-        mv ./python/dist/*.tar.gz ./python/dist/fly-graph-$TAG.tar.gz
+        ls -la ./dist/
+        mv ./dist/*.whl ./dist/fly-graph-${{ github.event.release.tag_name }}-py3-none.whl
+        mv ./dist/*.tar.gz ./dist/fly-graph-${{ github.event.release.tag_name }}.tar.gz
         ls -la ./python/dist/
 
     - name: Get latest FLY Graph release
@@ -55,8 +53,8 @@ jobs:
       uses: actions/upload-release-asset@latest
       with:
         upload_url: ${{ steps.release.outputs.upload_url }}
-        asset_path: ./python/dist/fly-graph-${TAG}-py3-none.whl
-        asset_name: fly-graph-${TAG}-py3-none.whl
+        asset_path: ./dist/fly-graph-${{ github.event.release.tag_name }}-py3-none.whl
+        asset_name: fly-graph-${{ github.event.release.tag_name }}-py3-none.whl
         asset_content_type: application/x-pywheel+zip
 
     - name: Upload tarball as Release Asset
@@ -64,6 +62,6 @@ jobs:
       uses: actions/upload-release-asset@latest
       with:
         upload_url: ${{ steps.release.outputs.upload_url }}
-        asset_path: ./python/dist/fly-graph-${TAG}.tar.gz
-        asset_name: fly-graph-${TAG}.tar.gz
+        asset_path: ./dist/fly-graph-${{ github.event.release.tag_name }}.tar.gz
+        asset_name: fly-graph-${{ github.event.release.tag_name }}.tar.gz
         asset_content_type: application/gzip
