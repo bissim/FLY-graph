@@ -14,6 +14,8 @@ jobs:
     - name: Create Release
       id: create_release
       uses: actions/create-release@latest
+      env:
+        GITHUB_TOKEN: ${{ secrets.AUTH_TOKEN }}
       with:
         tag_name: ${{ github.ref }}
         release_name: FLY graph ${{ github.ref }}
