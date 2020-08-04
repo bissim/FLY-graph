@@ -7,6 +7,9 @@ on:
   release:
     types: [created]
 
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 jobs:
   deploy:
 
@@ -41,8 +44,6 @@ jobs:
     - name: Upload Wheel as Release Asset
       id: upload-wheel-release-asset 
       uses: actions/upload-release-asset@latest
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
         asset_path: ./python/dist/fly-graph-*-py3-none.whl
@@ -52,8 +53,6 @@ jobs:
     - name: Upload Zip as Release Asset
       id: upload-zip-release-asset 
       uses: actions/upload-release-asset@latest
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
         asset_path: ./python/dist/fly-graph-*.zip
