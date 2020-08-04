@@ -25,11 +25,22 @@ jobs:
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }} # location for the settings.xml file
 
+    - name: Set up cache
+      uses: actions/cache@v1
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
+
     - name: Build with Maven
       run: mvn -B package --file java/pom.xml
 
     - name: Publish to GitHub Packages Apache Maven
-      run: mvn -B deploy -Dtoken=${GITHUB_TOKEN} --file java/pom.xml
+      continue-on-error: true
+      env:
+        GITHUB_ACTOR: ${{ secrets.GITHUB_ACTOR }}
+      run: mvn -B deploy -s ./java/settings.xml -f java/pom.xml
 
     - name: Get latest FLY Graph release
       id: get_release
