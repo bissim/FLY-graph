@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Move to Python project folder
-      run: !
+      run: |
         cd ./python/
         ls -la
 
