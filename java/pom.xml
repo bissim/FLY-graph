@@ -9,6 +9,14 @@
   <version>0.0.1-dev+20200730</version>
   <!-- <packaging>jar</packaging> -->
 
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <name>GitHub bissim Apache Maven Packages</name>
+      <url>https://maven.pkg.github.com/bissim/FLY-graph</url>
+    </repository>
+  </distributionManagement>
+
   <name>FLY Graph</name>
   <description>A graph library for FLY language, written in Java</description>
   <inceptionYear>2019</inceptionYear>
