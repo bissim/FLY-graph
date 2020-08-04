@@ -37,6 +37,13 @@ jobs:
         ls -la
         twine upload ./dist/*
 
+    - name: Rename packages
+      run: |
+        ls -la
+        mv ./python/dist/*.whl ./python/dist/fly-graph-${{ github.ref }}-py3-none.whl
+        mv ./python/dist/*.tar.gz ./python/dist/fly-graph-${{ github.ref }}.tar.gz
+        ls -la
+
     - name: Get latest FLY Graph release
       id: get_release
       uses: bruceadams/get-release@v1.2.0
@@ -46,15 +53,15 @@ jobs:
       uses: actions/upload-release-asset@latest
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
-        asset_path: ./python/dist/fly-graph-*-py3-none.whl
+        asset_path: ./python/dist/fly-graph-${{ github.ref }}-py3-none.whl
         asset_name: fly-graph-${{ github.ref }}-py3-none.whl
         asset_content_type: application/x-pywheel+zip
 
-    - name: Upload Zip as Release Asset
+    - name: Upload tarball as Release Asset
       id: upload-zip-release-asset 
       uses: actions/upload-release-asset@latest
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
-        asset_path: ./python/dist/fly-graph-*.zip
-        asset_name: fly-graph-${{ github.ref }}.zip
-        asset_content_type: application/zip
+        asset_path: ./python/dist/fly-graph-${{ github.ref }}.tar.gz
+        asset_name: fly-graph-${{ github.ref }}.tar.gz
+        asset_content_type: application/gzip

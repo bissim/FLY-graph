@@ -29,7 +29,7 @@ jobs:
       run: mvn -B package --file java/pom.xml
 
     - name: Publish to GitHub Packages Apache Maven
-      run: mvn -B deploy --file java/pom.xml
+      run: mvn -B deploy -Dtoken=${GITHUB_TOKEN} --file java/pom.xml
 
     - name: Get latest FLY Graph release
       id: get_release
