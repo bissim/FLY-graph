@@ -7,6 +7,7 @@ notifications:
 jobs:
   include:
     - name: Build Java project (Oracle JDK 8)
+      dist: trusty
       language: java
       addons:
         apt:
