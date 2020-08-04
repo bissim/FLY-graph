@@ -1,25 +1,46 @@
+os: linux
+dist: bionic
+
+notifications:
+  webhooks: https://fathomless-fjord-24024.herokuapp.com/notify
+
 jobs:
   include:
-    - language: java
-      install: true
-      jdk:
-        - openjdk8
-        - oraclejdk11
-        - openjdk11
-      script:
-        - cd java/
-        - mvn -T $(nproc) clean package
+    - name: Build Java project (Oracle JDK 8)
+      language: java
+      addons:
+        apt:
+          packages:
+            - oracle-java8-installer
+      jdk: oraclejdk8
+      script: ./scripts/build_java.sh
 
-    - language: python
-      python: 
-        - "3.6"
-        - "3.7"
-        - "3.8"
-      script:
-        - cd python/
-        - python3 -m pip install --upgrade setuptools wheel
-        - python3 setup.py sdist bdist_wheel
-        - ls -la dist/
-        - python3 -m pip install -r fly_graph.egg-info/requires.txt
-        - cd ..
-        - python3 -m python.fly.graph
+    - name: Build Java project (OpenJDK 8)
+      language: java
+      jdk: openjdk8
+      script: ./scripts/build_java.sh
+
+    - name: Build Java project (Oracle JDK 11)
+      language: java
+      jdk: oraclejdk11
+      script: ./scripts/build_java.sh
+
+    - name: Build Java project (OpenJDK 11)
+      language: java
+      jdk: openjdk11
+      script: ./scripts/build_java.sh
+
+    - name: Build Python project (3.6)
+      language: python
+      python: "3.6"
+      script: ./scripts/build_python.sh
+
+    - name: Build Python project (3.7)
+      language: python
+      python: "3.7"
+      script: ./scripts/build_python.sh
+
+    - name: Build Python project (3.8)
+      language: python
+      python: "3.8"
+      script: ./scripts/build_python.sh
