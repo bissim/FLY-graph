@@ -15,11 +15,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Move to Java project folder
-      run: |
-        cd ./java/
-        ls -la
-
     - name: Set up JDK 11
       uses: actions/setup-java@v1
       with:
@@ -31,9 +26,13 @@ jobs:
       run: mvn -B package --file java/pom.xml
 
     - name: Publish to GitHub Packages Apache Maven
-      run: mvn deploy -Dtoken=${GITHUB_TOKEN}
+      run: mvn deploy -Dtoken=${GITHUB_TOKEN} --file java/pom.xml
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Get latest FLY Graph release
+      id: get_release
+      uses: bruceadams/get-release@v1.2.0
 
     - name: Upload JAR with dependencies as Release Asset
       id: upload-jar-with-deps-as-release-asset 
@@ -41,7 +40,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
         asset_path: ./java/target/fly-graph-${{ github.ref }}-jar-with-dependencies-and-exclude-files.jar
         asset_name: fly-graph-${{ github.ref }}-jar-with-dependencies-and-exclude-files.jar
         asset_content_type: application/java-archive
@@ -52,7 +51,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
         asset_path: ./java/target/fly-graph-${{ github.ref }}-lib.jar
         asset_name: fly-graph-${{ github.ref }}-lib.jar
         asset_content_type: application/java-archive
@@ -63,10 +62,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
         asset_path: ./java/target/fly-graph-${{ github.ref }}-javadoc.jar
         asset_name: fly-graph-${{ github.ref }}-javadoc.jar
         asset_content_type: application/java-archive
-
-    - name: Move out from Java folder
-      run: cd ..

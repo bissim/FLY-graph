@@ -15,11 +15,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Move to Python project folder
-      run: |
-        cd ./python/
-        ls -la
-
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
@@ -39,13 +34,17 @@ jobs:
         ls -la
         twine upload ./dist/*
 
+    - name: Get latest FLY Graph release
+      id: get_release
+      uses: bruceadams/get-release@v1.2.0
+
     - name: Upload Wheel as Release Asset
       id: upload-wheel-release-asset 
       uses: actions/upload-release-asset@latest
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
         asset_path: ./python/dist/fly-graph-*-py3-none.whl
         asset_name: fly-graph-${{ github.ref }}-py3-none.whl
         asset_content_type: application/x-pywheel+zip
@@ -56,10 +55,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
         asset_path: ./python/dist/fly-graph-*.zip
         asset_name: fly-graph-${{ github.ref }}.zip
         asset_content_type: application/zip
-
-    - name: Move out from Python folder
-      run: cd ..
