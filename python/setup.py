@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="fly-graph",
-    version="0.0.1-rc4",
+    version="0.0.1-rc5",
     author="Simone Bisogno",
     author_email="s.bisogno90@gmail.com",
     description="A graph library for FLY language, written in Python",
