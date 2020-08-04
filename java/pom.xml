@@ -6,7 +6,7 @@
 
   <groupId>isislab.fly</groupId>
   <artifactId>fly-graph</artifactId>
-  <version>0.0.1-rc10</version>
+  <version>0.0.1-rc11</version>
   <!-- <packaging>jar</packaging> -->
 
   <distributionManagement>
