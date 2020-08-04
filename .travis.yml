@@ -5,6 +5,11 @@ notifications:
   webhooks: https://fathomless-fjord-24024.herokuapp.com/notify
 
 jobs:
+  allow_failures:
+    - jdk:
+      - oraclejdk8
+      - openjdk8
+
   include:
     - name: Build Java project (Oracle JDK 8)
       dist: trusty
