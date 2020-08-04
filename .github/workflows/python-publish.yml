@@ -41,10 +41,10 @@ jobs:
 
     - name: Rename packages
       run: |
-        ls -la $WS/python/dist/
-        mv $WS/python/dist/*.whl $WS/python/dist/fly-graph-$TAG-py3-none.whl
-        mv $WS/python/dist/*.tar.gz $WS/python/dist/fly-graph-$TAG.tar.gz
-        ls -la $WS/python/dist/
+        ls -la ./python/dist/
+        mv ./python/dist/*.whl ./python/dist/fly-graph-$TAG-py3-none.whl
+        mv ./python/dist/*.tar.gz ./python/dist/fly-graph-$TAG.tar.gz
+        ls -la ./python/dist/
 
     - name: Get latest FLY Graph release
       id: release
@@ -55,7 +55,7 @@ jobs:
       uses: actions/upload-release-asset@latest
       with:
         upload_url: ${{ steps.release.outputs.upload_url }}
-        asset_path: ${WS}/python/dist/fly-graph-${TAG}-py3-none.whl
+        asset_path: ./python/dist/fly-graph-${TAG}-py3-none.whl
         asset_name: fly-graph-${TAG}-py3-none.whl
         asset_content_type: application/x-pywheel+zip
 
@@ -64,6 +64,6 @@ jobs:
       uses: actions/upload-release-asset@latest
       with:
         upload_url: ${{ steps.release.outputs.upload_url }}
-        asset_path: ${WS}/python/dist/fly-graph-${TAG}.tar.gz
+        asset_path: ./python/dist/fly-graph-${TAG}.tar.gz
         asset_name: fly-graph-${TAG}.tar.gz
         asset_content_type: application/gzip

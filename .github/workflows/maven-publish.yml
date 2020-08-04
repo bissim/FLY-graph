@@ -44,7 +44,7 @@ jobs:
         GITHUB_ACTOR: ${{ github.actor }}
       run: mvn -B deploy -s $WS/java/settings.xml -f $WS/java/pom.xml
 
-    - name: Get latest FLY Graph ${{ TAG }} release
+    - name: Get latest FLY Graph ${TAG} release
       id: get_release
       uses: bruceadams/get-release@v1.2.0
 
@@ -53,7 +53,7 @@ jobs:
       uses: actions/upload-release-asset@latest
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
-        asset_path: ${WS}/java/target/fly-graph-${TAG}-jar-with-dependencies-and-exclude-files.jar
+        asset_path: ./java/target/fly-graph-${TAG}-jar-with-dependencies-and-exclude-files.jar
         asset_name: fly-graph-$TAG-jar-with-dependencies-and-exclude-files.jar
         asset_content_type: application/java-archive
 
@@ -62,7 +62,7 @@ jobs:
       uses: actions/upload-release-asset@latest
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
-        asset_path: ${WS}/java/target/fly-graph-${TAG}-lib.jar
+        asset_path: ./java/target/fly-graph-${TAG}-lib.jar
         asset_name: fly-graph-${TAG}-lib.jar
         asset_content_type: application/java-archive
 
@@ -71,6 +71,6 @@ jobs:
       uses: actions/upload-release-asset@latest
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
-        asset_path: ${WS}/java/target/fly-graph-${TAG}-javadoc.jar
+        asset_path: ./java/target/fly-graph-${TAG}-javadoc.jar
         asset_name: fly-graph-${TAG}-javadoc.jar
         asset_content_type: application/java-archive
