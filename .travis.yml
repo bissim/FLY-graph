@@ -6,9 +6,9 @@ notifications:
 
 jobs:
   allow_failures:
-    - jdk:
-      - oraclejdk8
-      - openjdk8
+    - env: FAIL="yes"
+
+  fast_finish: true
 
   include:
     - name: Build Java project (Oracle JDK 8)
@@ -19,11 +19,13 @@ jobs:
           packages:
             - oracle-java8-installer
       jdk: oraclejdk8
+      env: FAIL="yes"
       script: ./scripts/build_java.sh
 
     - name: Build Java project (OpenJDK 8)
       language: java
       jdk: openjdk8
+      env: FAIL="yes"
       script: ./scripts/build_java.sh
 
     - name: Build Java project (Oracle JDK 11)
