@@ -59,11 +59,11 @@
       <name>Maven Central</name>
       <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
     </repository>
-    <repository>
+    <!-- <repository>
       <id>github</id>
       <name>GitHub bissim Apache Maven Packages</name>
       <url>https://maven.pkg.github.com/bissim/FLY-graph</url>
-    </repository>
+    </repository> -->
   </distributionManagement>
 
   <properties>
