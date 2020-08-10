@@ -59,7 +59,7 @@ jobs:
 
     - name: Get latest FLY Graph release
       id: get_release
-      uses: bruceadams/get-release@v1
+      uses: bruceadams/get-release@v1.2.0
 
     - name: Upload JAR with dependencies as Release Asset
       id: upload-jar-with-deps-as-release-asset
