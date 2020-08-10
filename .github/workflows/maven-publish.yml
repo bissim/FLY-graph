@@ -26,6 +26,8 @@ jobs:
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
         server-username: ${{ github.actor }} # env variable for username in deploy
         server-password: ${{ github.token }} # env variable for token in deploy
+        gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }} # Value of the GPG private key to import
+        gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }} # env variable for GPG private key passphrase
 
     - name: Set up cache
       uses: actions/cache@v2
@@ -51,11 +53,7 @@ jobs:
 
     - name: Publish to Apache Maven Central
       continue-on-error: true
-      run: mvn-B -T $(nproc) deploy -f $WS/java/pom.xml
-      env:
-        MAVEN_USERNAME: maven_username123
-        MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
-        MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+      run: mvn -B -T $(nproc) deploy -f $WS/java/pom.xml
 
     - name: Get latest FLY Graph release
       id: get_release
