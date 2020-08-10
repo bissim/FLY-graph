@@ -4,31 +4,27 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>isislab.fly</groupId>
+  <groupId>io.github.bissim</groupId>
   <artifactId>fly-graph</artifactId>
   <version>0.0.1-rc15</version>
-  <!-- <packaging>jar</packaging> -->
-
-  <distributionManagement>
-    <repository>
-      <id>github</id>
-      <name>GitHub bissim Apache Maven Packages</name>
-      <url>https://maven.pkg.github.com/bissim/FLY-graph</url>
-    </repository>
-  </distributionManagement>
+  <packaging>jar</packaging>
 
   <name>FLY Graph</name>
   <description>A graph library for FLY language, written in Java</description>
   <inceptionYear>2019</inceptionYear>
-  <organization>
-    <name>ISISLab</name>
-    <url>http.//www.isislab.it</url>
-  </organization>
+  <url>https://github.com/bissim/FLY-graph</url>
+
   <licenses>
     <license>
       <name>MIT</name>
+      <url>http://www.opensource.org/licenses/mit-license</url>
     </license>
   </licenses>
+
+  <organization>
+    <name>ISISLab</name>
+    <url>https://www.isislab.it</url>
+  </organization>
 
   <developers>
     <developer>
@@ -36,8 +32,39 @@
       <name>Simone Bisogno</name>
       <email>s.bisogno90@gmail.com</email>
       <url>https://bissim.github.io</url>
+      <organization>ISISLab</organization>
+      <organizationUrl>https://www.isislab.it</organizationUrl>
     </developer>
   </developers>
+
+  <scm>
+    <connection>scm:git:git://github.com/bissim/FLY-graph.git</connection>
+    <developerConnection>scm:git:ssh://github.com:bissim/FLY-graph.git</developerConnection>
+    <url>https://github.com/bissim/FLY-graph/tree/master</url>
+  </scm>
+
+  <issueManagement>
+    <system>GitHub</system>
+    <url>https://github.com/bissim/FLY-graph</url>
+  </issueManagement>
+
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <name>Maven Central (SNAPSHOT)</name>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <name>Maven Central</name>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+    <repository>
+      <id>github</id>
+      <name>GitHub bissim Apache Maven Packages</name>
+      <url>https://maven.pkg.github.com/bissim/FLY-graph</url>
+    </repository>
+  </distributionManagement>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -156,10 +183,8 @@
             <configuration>
               <classifier>lib</classifier>
               <excludes>
-                <exclude>**/__pycache__/</exclude>
                 <exclude>**/GraphDummyTest*.*</exclude>
                 <exclude>**/*.bak</exclude>
-                <exclude>**/graph_*.py</exclude>
               </excludes>
             </configuration>
           </execution>
@@ -178,6 +203,19 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>3.2.0</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>3.2.0</version>
         <configuration>
@@ -193,6 +231,39 @@
             </configuration>
             <goals>
               <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>1.6</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>3.0.0-M1</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>1.6</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
             </goals>
           </execution>
         </executions>
