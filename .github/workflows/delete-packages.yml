@@ -1,6 +1,4 @@
 name: Delete GitHub Packages
-author: bissim
-description: "Delete project package from GitHub Packages"
 
 branding:
   icon: 'x'

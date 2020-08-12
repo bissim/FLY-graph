@@ -1,6 +1,4 @@
 name: Release
-author: bissim
-description: "Release project packages"
 
 branding:
   icon: 'package'
