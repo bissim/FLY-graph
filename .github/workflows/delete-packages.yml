@@ -1,0 +1,26 @@
+on:
+  workflow_dispatch:
+    inputs:
+      package-name:
+        description: "Package name"
+        required: false
+        default: 'isislab.fly.fly-graph'
+      num:
+        description: "Number of oldest package releases to delete"
+        required: true
+        default: 1
+
+jobs:
+  delete-packages:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - run: |
+        echo "Deleting ${{ github.events.inputs.num }} oldest versions of ${{ github.events.inputs.package.name }}..."
+
+    - name: Delete ${{ github.events.inputs.num }} oldest versions of ${{ github.events.inputs.package.name }}
+      uses: actions/delete-package-versions@v1
+      with:
+        package-name: ${{ github.events.inputs.package.name }}
+        num-old-versions-to-delete: ${{ github.events.inputs.num }}
