@@ -19,7 +19,7 @@ jobs:
 
     steps:
     - run: |
-        echo "Deleting ${{ github.event.inputs.num }} oldest versions of ${{ github.event.inputs.package.-ame }}..."
+        echo "Deleting ${{ github.event.inputs.num }} oldest versions of ${{ github.event.inputs.package-name }}..."
 
     - name: Delete ${{ github.event.inputs.num }} oldest versions of ${{ github.event.inputs.package-name }}
       uses: actions/delete-package-versions@v1
