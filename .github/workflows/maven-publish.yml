@@ -43,7 +43,7 @@ jobs:
 
     - name: Publish GitHub Packages Apache Maven
       continue-on-error: true
-      run: mvn -B -T $(nproc) deploy -s $WS/java/settings.xml -f $WS/java/pom.xml
+      run: mvn -B -T $(nproc) verify deploy -s $WS/java/settings.xml -f $WS/java/pom.xml
 
     - name: Set up Maven cache
       uses: actions/cache@v2
@@ -66,7 +66,7 @@ jobs:
 
     - name: Publish to Apache Maven Central
       continue-on-error: true
-      run: mvn -B -T $(nproc) deploy -s $WS/java/settings.xml -f $WS/java/pom.xml
+      run: mvn -B -T $(nproc) verify deploy -s $WS/java/settings.xml -f $WS/java/pom.xml
 
     - name: Get latest FLY Graph release
       id: get_release
