@@ -2,6 +2,12 @@
 # For more information see: https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions#publishing-to-package-registries
 
 name: Python Deploy
+author: bissim
+description: "Publish project package over PyPI repository index"
+
+branding:
+  icon: 'package'
+  color: 'blue'
 
 on:
   release:

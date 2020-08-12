@@ -1,4 +1,10 @@
 name: Release
+author: bissim
+description: "Release project packages"
+
+branding:
+  icon: 'package'
+  color: 'green'
 
 on:
   push:
