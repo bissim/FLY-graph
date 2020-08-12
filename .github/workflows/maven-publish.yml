@@ -30,17 +30,17 @@ jobs:
         gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }} # env variable for GPG private key passphrase
         settings-path: ${{ github.workspace }}/java
 
-    - name: Set up cache
+    - name: Publish GitHub Packages Apache Maven
+      continue-on-error: true
+      run: mvn -B -T $(nproc) deploy -s $WS/java/settings.xml -f $WS/java/pom.xml
+
+    - name: Set up Maven cache
       uses: actions/cache@v2
       with:
         path: ~/.m2/repository
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-maven-
-
-    - name: Publish GitHub Packages Apache Maven
-      continue-on-error: true
-      run: mvn -B -T $(nproc) deploy -s $WS/java/settings.xml -f $WS/java/pom.xml
 
     - name: Set up Apache Maven Central
       uses: actions/setup-java@v1
