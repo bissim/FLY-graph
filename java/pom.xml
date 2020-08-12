@@ -137,7 +137,7 @@
     <plugins>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.2.0</version>
+        <version>3.3.0</version>
         <configuration>
           <!-- <descriptorRefs> -->
           <!-- <descriptorRef>jar-with-dependencies</descriptorRef> -->
@@ -156,10 +156,9 @@
             <configuration>
               <classifier>lib</classifier>
               <excludes>
-                <exclude>**/__pycache__/</exclude>
                 <exclude>**/GraphDummyTest*.*</exclude>
                 <exclude>**/*.bak</exclude>
-                <exclude>**/graph_*.py</exclude>
+                <exclude>**/*.edgelist</exclude>
               </excludes>
             </configuration>
           </execution>
@@ -185,6 +184,7 @@
               <excludes>
                 <exclude>**/GraphDummyTest*.*</exclude>
                 <exclude>**/*.bak</exclude>
+                <exclude>**/*.edgelist</exclude>
               </excludes>
             </configuration>
           </execution>
