@@ -3,10 +3,6 @@
 
 name: Python Deploy
 
-branding:
-  icon: 'package'
-  color: 'blue'
-
 on:
   release:
     types: [created]

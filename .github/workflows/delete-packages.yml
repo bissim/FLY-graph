@@ -1,9 +1,5 @@
 name: Delete GitHub Packages
 
-branding:
-  icon: 'x'
-  color: 'red'
-
 on:
   workflow_dispatch:
     inputs:

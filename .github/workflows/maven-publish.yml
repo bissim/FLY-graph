@@ -3,10 +3,6 @@
 
 name: Java Deploy
 
-branding:
-  icon: 'package'
-  color: 'orange'
-
 on:
   release:
     types: [created]

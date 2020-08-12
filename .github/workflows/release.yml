@@ -1,9 +1,5 @@
 name: Release
 
-branding:
-  icon: 'package'
-  color: 'green'
-
 on:
   push:
     tags:
