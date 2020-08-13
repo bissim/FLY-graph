@@ -12,33 +12,17 @@ env:
   WS: ${{ github.workspace }}
 
 jobs:
-  # the first job will deploy over GitHub Packages
-  ghp-deploy:
+
+  # the first job will build project artifacts
+  build:
 
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
 
-    - name: Set up GitHub Packages
-      uses: actions/setup-java@v1
-      with:
-        java-version: '11'
-        server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-        server-username: GHS_USERNAME # env variable for username in deploy
-        server-password: GHS_TOKEN # env variable for token in deploy
-        gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }} # Value of the GPG private key to import
-        gpg-passphrase: GPG_PASSPHRASE # env variable for GPG private key passphrase
-
-    - name: Fix GPG error
-      run: export GPG_TTY=$(tty)
-
-    - name: Publish GitHub Packages Apache Maven
-      run: mvn -B -T $(nproc) deploy -f $WS/java/pom.xml
-      env:
-        GHS_USERNAME: ${{ github.actor }}
-        GHS_TOKEN: ${{ github.token }}
-        GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+    - name: Build FLY Graph project
+      run: mvn -B -T $(nproc) package -f $WS/java/pom.xml
 
     - name: Set up cache
       uses: actions/cache@v2
@@ -52,12 +36,37 @@ jobs:
           ${{ runner.os }}-maven-
           ${{ runner.os }}-
 
-  # the second job will deploy over Nexus
+  # the second job will deploy artifacts over GitHub Packages
+  ghp-deploy:
+
+    runs-on: ubuntu-latest
+
+    needs: build
+
+    steps:
+    - name: Set up GitHub Packages
+      uses: actions/setup-java@v1
+      with:
+        java-version: '11'
+        server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
+        server-username: GHS_USERNAME # env variable for username in deploy
+        server-password: GHS_TOKEN # env variable for token in deploy
+        gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }} # Value of the GPG private key to import
+        gpg-passphrase: GPG_PASSPHRASE # env variable for GPG private key passphrase
+
+    - name: Publish GitHub Packages Apache Maven
+      run: mvn -B -T $(nproc) deploy -f $WS/java/pom.xml
+      env:
+        GHS_USERNAME: ${{ github.actor }}
+        GHS_TOKEN: ${{ github.token }}
+        GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+  # the third job will deploy srtifacts over Nexus
   oss-deploy:
 
     runs-on: ubuntu-latest
 
-    needs: ghp-deploy
+    needs: build
 
     steps:
     - name: Set up Apache Maven Central
@@ -70,9 +79,6 @@ jobs:
         gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }} # Value of the GPG private key to import
         gpg-passphrase: GPG_PASSPHRASE # env variable for GPG private key passphrase
 
-    - name: Fix GPG error
-      run: export GPG_TTY=$(tty)
-
     - name: Publish to Apache Maven Central
       run: mvn -B -T $(nproc) deploy -f $WS/java/pom.xml
       env:
@@ -80,12 +86,12 @@ jobs:
         OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
         GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
-  # the third job will release over GitHub
+  # the fourth job will release artifacts over GitHub
   release:
 
     runs-on: ubuntu-latest
 
-    needs: oss-deploy
+    needs: build
 
     steps:
     - name: Build artifacts
