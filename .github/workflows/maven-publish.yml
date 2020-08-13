@@ -20,30 +20,22 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Configure GPG Key
-      run: |
-        mkdir -p ~/.gnupg/
-        chmod 700 ~/.gnupg/
-        printf "$GPG_PRIVATE_KEY" | base64 --decode > ~/.gnupg/temp.key
-        chmod 700 ~/.gnupg/temp.key
-        gpg --batch --allow-secret-key-import --import ~/.gnupg/temp.key
-        rm ~/.gnupg/temp.key
-      env:
-        GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-
     - name: Set up GitHub Packages
       uses: actions/setup-java@v1
       with:
         java-version: '11'
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-        server-username: ${{ github.actor }} # env variable for username in deploy
-        server-password: ${{ github.token }} # env variable for token in deploy
+        server-username: GHS_USERNAME # env variable for username in deploy
+        server-password: GHS_TOKEN # env variable for token in deploy
         gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }} # Value of the GPG private key to import
-        gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }} # env variable for GPG private key passphrase
-        settings-path: ${{ github.workspace }}/java
+        gpg-passphrase: GPG_PASSPHRASE # env variable for GPG private key passphrase
 
     - name: Publish GitHub Packages Apache Maven
-      run: mvn -B -T $(nproc) deploy -s $WS/java/settings.xml -f $WS/java/pom.xml
+      run: mvn -B -T $(nproc) deploy -f $WS/java/pom.xml
+      env:
+        GHS_USERNAME: ${{ github.actor }}
+        GHS_TOKEN: ${{ github.token }}
+        GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
     - name: Set up cache
       uses: actions/cache@v2
@@ -65,30 +57,22 @@ jobs:
     needs: ghp-deploy
 
     steps:
-    - name: Configure GPG Key
-      run: |
-        mkdir -p ~/.gnupg/
-        chmod 700 ~/.gnupg/
-        printf "$GPG_PRIVATE_KEY" | base64 --decode > ~/.gnupg/temp.key
-        chmod 700 ~/.gnupg/temp.key
-        gpg --batch --allow-secret-key-import --import ~/.gnupg/temp.key
-        rm ~/.gnupg/temp.key
-      env:
-        GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-
     - name: Set up Apache Maven Central
       uses: actions/setup-java@v1
       with: # running setup-java again overwrites the settings.xml
         java-version: '11'
         server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
-        server-username: ${{ secrets.OSSRH_USERNAME }} # env variable for username in deploy
-        server-password: ${{ secrets.OSSRH_PASSWORD }} # env variable for token in deploy
+        server-username: OSSRH_USERNAME # env variable for username in deploy
+        server-password: OSSRH_PASSWORD # env variable for token in deploy
         gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }} # Value of the GPG private key to import
-        gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }} # env variable for GPG private key passphrase
-        settings-path: ${{ github.workspace }}/java
+        gpg-passphrase: GPG_PASSPHRASE # env variable for GPG private key passphrase
 
     - name: Publish to Apache Maven Central
-      run: mvn -B -T $(nproc) deploy -s $WS/java/settings.xml -f $WS/java/pom.xml
+      run: mvn -B -T $(nproc) deploy -f $WS/java/pom.xml
+      env:
+        OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+        OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+        GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
   # the third job will release over GitHub
   release:
