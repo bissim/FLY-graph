@@ -23,8 +23,10 @@ jobs:
     - name: Configure GPG Key
       run: |
         mkdir -p ~/.gnupg/
-        printf "$GPG_PRIVATE_KEY" | base64 --decode > ~/.gnupg/private.key
-        gpg --batch --import ~/.gnupg/private.key
+        chmod 700 ~/.gnupg/
+        echo $GPG_PRIVATE_KEY > ~/.gnupg/temp.key
+        chmod 700 ~/.gnupg/temp.key
+        gpg --batch --import ~/.gnupg/temp.key
       env:
         GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
 
@@ -60,6 +62,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Configure GPG Key
+      run: |
+        mkdir -p ~/.gnupg/
+        chmod 700 ~/.gnupg/
+        printf "$GPG_PRIVATE_KEY" | base64 --decode > ~/.gnupg/private.key
+        chmod 700 ~/.gnupg/private.key
+        gpg --batch --import ~/.gnupg/private.key
+      env:
+        GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+
     - name: Set up Apache Maven Central
       uses: actions/setup-java@v1
       with: # running setup-java again overwrites the settings.xml
@@ -80,14 +92,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Configure GPG Key
-      run: |
-        mkdir -p ~/.gnupg/
-        printf "$GPG_PRIVATE_KEY" | base64 --decode > ~/.gnupg/private.key
-        gpg --batch --import ~/.gnupg/private.key
-      env:
-        GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-
     - name: Build artifacts
       run: mvn -B -T $(nproc) package -f $WS/java/pom.xml
 
