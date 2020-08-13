@@ -20,6 +20,14 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Configure GPG Key
+      run: |
+        mkdir -p ~/.gnupg/
+        printf "$GPG_PRIVATE_KEY" | base64 --decode > ~/.gnupg/private.key
+        gpg --batch --import ~/.gnupg/private.key
+      env:
+        GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+
     - name: Set up GitHub Packages
       uses: actions/setup-java@v1
       with:
@@ -72,6 +80,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Configure GPG Key
+      run: |
+        mkdir -p ~/.gnupg/
+        printf "$GPG_PRIVATE_KEY" | base64 --decode > ~/.gnupg/private.key
+        gpg --batch --import ~/.gnupg/private.key
+      env:
+        GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+
     - name: Build artifacts
       run: mvn -B -T $(nproc) package -f $WS/java/pom.xml
 
