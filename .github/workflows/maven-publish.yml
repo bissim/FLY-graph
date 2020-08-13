@@ -26,7 +26,8 @@ jobs:
         chmod 700 ~/.gnupg/
         echo $GPG_PRIVATE_KEY > ~/.gnupg/temp.key
         chmod 700 ~/.gnupg/temp.key
-        gpg --batch --import ~/.gnupg/temp.key
+        gpg --batch --allow-secret-key-import --import ~/.gnupg/temp.key
+        rm ~/.gnupg/temp.key
       env:
         GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
 
@@ -66,9 +67,10 @@ jobs:
       run: |
         mkdir -p ~/.gnupg/
         chmod 700 ~/.gnupg/
-        printf "$GPG_PRIVATE_KEY" | base64 --decode > ~/.gnupg/private.key
-        chmod 700 ~/.gnupg/private.key
-        gpg --batch --import ~/.gnupg/private.key
+        echo $GPG_PRIVATE_KEY > ~/.gnupg/temp.key
+        chmod 700 ~/.gnupg/temp.key
+        gpg --batch --allow-secret-key-import --import ~/.gnupg/temp.key
+        rm ~/.gnupg/temp.key
       env:
         GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
 
