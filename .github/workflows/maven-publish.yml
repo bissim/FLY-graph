@@ -12,7 +12,8 @@ env:
   WS: ${{ github.workspace }}
 
 jobs:
-  deploy:
+  # the first job will deploy over GitHub Packages
+  ghp-deploy:
 
     runs-on: ubuntu-latest
 
@@ -31,17 +32,26 @@ jobs:
         settings-path: ${{ github.workspace }}/java
 
     - name: Publish GitHub Packages Apache Maven
-      continue-on-error: true
-      run: mvn -B -T $(nproc) verify deploy -s $WS/java/settings.xml -f $WS/java/pom.xml
+      run: mvn -B -T $(nproc) deploy -s $WS/java/settings.xml -f $WS/java/pom.xml
 
-    - name: Set up Maven cache
+    - name: Set up cache
       uses: actions/cache@v2
       with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        path: |
+          ~/.m2/repository
+          ${{ github.workspace }}/java
+        key: ${{ runner.os }}-maven-${{ hashFiles('${{ github.workspace }}/java/pom.xml') }}
         restore-keys: |
+          ${{ runner.os }}-maven-${{ hashFiles('${{ github.workspace }}/java/pom.xml') }}
           ${{ runner.os }}-maven-
+          ${{ runner.os }}-
 
+  # the second job will deploy over Nexus
+  oss-deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
     - name: Set up Apache Maven Central
       uses: actions/setup-java@v1
       with: # running setup-java again overwrites the settings.xml
@@ -54,18 +64,26 @@ jobs:
         settings-path: ${{ github.workspace }}/java
 
     - name: Publish to Apache Maven Central
-      continue-on-error: true
-      run: mvn -B -T $(nproc) verify deploy -s $WS/java/settings.xml -f $WS/java/pom.xml
+      run: mvn -B -T $(nproc) deploy -s $WS/java/settings.xml -f $WS/java/pom.xml
+
+  # the third job will release over GitHub
+  release:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Build artifacts
+      run: mvn -B -T $(nproc) package -f $WS/java/pom.xml
 
     - name: Get latest FLY Graph release
-      id: get_release
+      id: release
       uses: bruceadams/get-release@v1.2.0
 
     - name: Upload JAR with dependencies as Release Asset
       id: upload-jar-with-deps-as-release-asset
       uses: actions/upload-release-asset@latest
       with:
-        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        upload_url: ${{ steps.release.outputs.upload_url }}
         asset_path: ./java/target/fly-graph-${{ github.event.release.tag_name }}-jar-with-dependencies-and-exclude-files.jar
         asset_name: fly-graph-${{ github.event.release.tag_name }}-jar-with-dependencies-and-exclude-files.jar
         asset_content_type: application/java-archive
@@ -74,7 +92,7 @@ jobs:
       id: upload-jar-release-asset
       uses: actions/upload-release-asset@latest
       with:
-        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        upload_url: ${{ steps.release.outputs.upload_url }}
         asset_path: ./java/target/fly-graph-${{ github.event.release.tag_name }}-lib.jar
         asset_name: fly-graph-${{ github.event.release.tag_name }}-lib.jar
         asset_content_type: application/java-archive
@@ -83,7 +101,7 @@ jobs:
       id: upload-javadoc-as-release-asset
       uses: actions/upload-release-asset@latest
       with:
-        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        upload_url: ${{ steps.release.outputs.upload_url }}
         asset_path: ./java/target/fly-graph-${{ github.event.release.tag_name }}-javadoc.jar
         asset_name: fly-graph-${{ github.event.release.tag_name }}-javadoc.jar
         asset_content_type: application/java-archive
