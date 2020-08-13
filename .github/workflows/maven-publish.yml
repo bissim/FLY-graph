@@ -24,7 +24,7 @@ jobs:
       run: |
         mkdir -p ~/.gnupg/
         chmod 700 ~/.gnupg/
-        echo $GPG_PRIVATE_KEY > ~/.gnupg/temp.key
+        echo $GPG_PRIVATE_KEY | base64 --decode > ~/.gnupg/temp.key
         chmod 700 ~/.gnupg/temp.key
         gpg --batch --allow-secret-key-import --import ~/.gnupg/temp.key
         rm ~/.gnupg/temp.key
@@ -62,12 +62,14 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    needs: ghp-deploy
+
     steps:
     - name: Configure GPG Key
       run: |
         mkdir -p ~/.gnupg/
         chmod 700 ~/.gnupg/
-        echo $GPG_PRIVATE_KEY > ~/.gnupg/temp.key
+        echo $GPG_PRIVATE_KEY | base64 --decode > ~/.gnupg/temp.key
         chmod 700 ~/.gnupg/temp.key
         gpg --batch --allow-secret-key-import --import ~/.gnupg/temp.key
         rm ~/.gnupg/temp.key
@@ -92,6 +94,8 @@ jobs:
   release:
 
     runs-on: ubuntu-latest
+
+    needs: oss-deploy
 
     steps:
     - name: Build artifacts
