@@ -102,8 +102,8 @@ jobs:
       uses: actions/upload-release-asset@latest
       with:
         upload_url: ${{ steps.release.outputs.upload_url }}
-        asset_path: ./java/target/fly-graph-${{ github.event.release.tag_name }}-lib.jar.asc
-        asset_name: fly-graph-${{ github.event.release.tag_name }}-lib.jar.asc
+        asset_path: ./java/target/fly-graph-${{ github.event.release.tag_name }}.jar.asc
+        asset_name: fly-graph-${{ github.event.release.tag_name }}.jar.asc
         asset_content_type: application/java-archive
 
     - name: Upload sources JAR as Release Asset
