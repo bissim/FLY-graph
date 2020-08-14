@@ -7,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import isislab.fly.Graph;
+import io.github.bissim.fly.Graph;
 
 /**
  * Unit test for simple App.

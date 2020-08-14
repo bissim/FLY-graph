@@ -1,4 +1,4 @@
-package isislab.fly;
+package io.github.bissim.fly;
 
 import static java.lang.System.err;
 import static java.lang.System.out;

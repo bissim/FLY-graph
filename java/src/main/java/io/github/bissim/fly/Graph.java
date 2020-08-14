@@ -1,4 +1,4 @@
-package isislab.fly;
+package io.github.bissim.fly;
 
 import java.io.File;
 import java.io.FileNotFoundException;
