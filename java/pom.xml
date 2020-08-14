@@ -7,7 +7,7 @@
   <groupId>io.github.bissim</groupId>
   <artifactId>fly-graph</artifactId>
   <version>0.0.1-rc35</version>
-  <packaging>pom</packaging>
+  <packaging>jar</packaging>
 
   <name>FLY Graph</name>
   <description>A graph library for FLY language, written in Java</description>
@@ -54,16 +54,16 @@
       <name>Maven Central (SNAPSHOT)</name>
       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
     </snapshotRepository>
-    <repository>
+    <!-- <repository>
       <id>ossrh</id>
       <name>Maven Central</name>
       <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
-    <!-- <repository>
+    </repository> -->
+    <repository>
       <id>github</id>
       <name>GitHub bissim Apache Maven Packages</name>
       <url>https://maven.pkg.github.com/bissim/FLY-graph</url>
-    </repository> -->
+    </repository>
   </distributionManagement>
 
   <properties>
@@ -71,21 +71,6 @@
     <jdkVersion>1.8</jdkVersion>
     <jgraphtVersion>1.5.0</jgraphtVersion>
   </properties>
-
-  <repositories>
-    <!-- snapshot repositories -->
-    <repository>
-      <id>maven-snapshots</id>
-      <url>http://oss.sonatype.org/content/repositories/snapshots</url>
-      <layout>default</layout>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
 
   <dependencies>
     <dependency>
@@ -112,7 +97,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.12</version>
+      <version>4.13</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -136,6 +121,68 @@
 
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>3.2.0</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+            <configuration>
+              <excludes>
+                <exclude>**/GraphDummyTest*.*</exclude>
+                <exclude>**/*.bak</exclude>
+                <exclude>**/*.edgelist</exclude>
+              </excludes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.2.0</version>
+        <configuration>
+          <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
+          <source>${jdkVersion}</source>
+        </configuration>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <configuration>
+              <outputDirectory>${project.build.directory}/javadoc</outputDirectory>
+              <source>${jdkVersion}</source>
+            </configuration>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>1.6</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+            <configuration>
+              <!-- Prevent gpg from using pinentry programs -->
+              <gpgArguments>
+                <arg>--pinentry-mode</arg>
+                <arg>loopback</arg>
+              </gpgArguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <version>3.3.0</version>
         <configuration>
@@ -143,7 +190,7 @@
           <!-- <descriptorRef>jar-with-dependencies</descriptorRef> -->
           <!-- </descriptorRefs> -->
           <descriptors>
-            <descriptor>src/assembly/jar-with-deps-with-exclude.xml</descriptor>
+            <descriptor>src/assembly/jar-with-deps.xml</descriptor>
           </descriptors>
         </configuration>
         <executions>
@@ -203,63 +250,19 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>3.2.0</version>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <goals>
-              <goal>jar-no-fork</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.2.0</version>
-        <configuration>
-          <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
-          <source>${jdkVersion}</source>
-        </configuration>
-        <executions>
-          <execution>
-            <id>attach-javadocs</id>
-            <configuration>
-              <outputDirectory>${project.build.directory}/javadoc</outputDirectory>
-              <source>${jdkVersion}</source>
-            </configuration>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-gpg-plugin</artifactId>
-        <version>1.6</version>
-        <executions>
-          <execution>
-            <id>sign-artifacts</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>sign</goal>
-            </goals>
-            <configuration>
-              <!-- Prevent gpg from using pinentry programs -->
-              <gpgArguments>
-                <arg>--pinentry-mode</arg>
-                <arg>loopback</arg>
-              </gpgArguments>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-deploy-plugin</artifactId>
         <version>3.0.0-M1</version>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <version>1.6.8</version>
+        <extensions>true</extensions>
+        <configuration>
+          <serverId>ossrh</serverId>
+          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+          <autoReleaseAfterClose>true</autoReleaseAfterClose>
+        </configuration>
       </plugin>
     </plugins>
   </build>
