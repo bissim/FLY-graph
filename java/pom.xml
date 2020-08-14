@@ -132,7 +132,7 @@
             </goals>
             <configuration>
               <excludes>
-                <exclude>**/GraphDummyTest*.*</exclude>
+                <exclude>**/*DummyTest*.*</exclude>
                 <exclude>**/*.bak</exclude>
                 <exclude>**/*.edgelist</exclude>
               </excludes>
@@ -147,17 +147,20 @@
         <configuration>
           <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
           <source>${jdkVersion}</source>
+              <excludes>
+                <exclude>**/*DummyTest*.*</exclude>
+              </excludes>
         </configuration>
         <executions>
           <execution>
             <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
             <configuration>
               <outputDirectory>${project.build.directory}/javadoc</outputDirectory>
               <source>${jdkVersion}</source>
             </configuration>
-            <goals>
-              <goal>jar</goal>
-            </goals>
           </execution>
         </executions>
       </plugin>
@@ -183,6 +186,7 @@
         </executions>
       </plugin>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
         <version>3.3.0</version>
         <configuration>
@@ -201,7 +205,6 @@
               <goal>single</goal>
             </goals>
             <configuration>
-              <classifier>lib</classifier>
               <excludes>
                 <exclude>**/GraphDummyTest*.*</exclude>
                 <exclude>**/*.bak</exclude>
@@ -221,13 +224,12 @@
             <phase>none</phase>
           </execution>
           <execution>
-            <id>lib</id>
+            <id>jar</id>
             <goals>
               <goal>jar</goal>
             </goals>
             <phase>package</phase>
             <configuration>
-              <classifier>lib</classifier>
               <excludes>
                 <exclude>**/GraphDummyTest*.*</exclude>
                 <exclude>**/*.bak</exclude>
@@ -236,8 +238,6 @@
             </configuration>
           </execution>
         </executions>
-        <configuration>
-        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
