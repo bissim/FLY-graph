@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="fly-graph",
-    version="0.0.1-rc40",
+    version="1.0.0",
     author="Simone Bisogno",
     author_email="s.bisogno90@gmail.com",
     description="A graph library for FLY language, written in Python",
@@ -20,14 +20,14 @@ setuptools.setup(
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
-        "Development Status :: 5 - Production/Stable",
+        "Development Status :: 6 - Mature",
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Other",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     keywords='FLY graph management',
     install_requires=['networkx'],
-    python_requires='~=3.6, !=3.7',
+    python_requires='~=3.6',
     project_urls={
         'Source': 'https://github.com/bissim/FLY-graph',
         'Tracker': 'https://github.com/bissim/FLY-graph/issues'
