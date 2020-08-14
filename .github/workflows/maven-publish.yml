@@ -26,9 +26,13 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: ${{ env.JAVA_VERSION }}
+        gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }} # Value of the GPG private key to import
+        gpg-passphrase: GPG_PASSPHRASE # env variable for GPG private key passphrase
 
     - name: Build FLY Graph project
-      run: mvn -B -T $(nproc) package -f $WS/java/pom.xml
+      run: mvn -B -T $(nproc) verify package -f $WS/java/pom.xml
+      env:
+        GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
     - name: Set up cache
       uses: actions/cache@v2
@@ -42,7 +46,103 @@ jobs:
           ${{ runner.os }}-maven-
           ${{ runner.os }}-
 
-  # the second job will deploy artifacts over GitHub Packages
+  # the second job will release artifacts over GitHub
+  release:
+
+    runs-on: ubuntu-20.04
+
+    needs: build
+
+    steps:
+    - name: Set up cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.m2/repository
+          ${{ github.workspace }}/java
+        key: ${{ runner.os }}-maven-${{ hashFiles('${{ github.workspace }}/java/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-${{ hashFiles('${{ github.workspace }}/java/pom.xml') }}
+          ${{ runner.os }}-maven-
+          ${{ runner.os }}-
+
+    - name: Get latest FLY Graph release
+      id: release
+      uses: bruceadams/get-release@v1.2.0
+
+    - name: Upload JAR with dependencies as Release Asset
+      id: upload-jar-with-deps
+      uses: actions/upload-release-asset@latest
+      with:
+        upload_url: ${{ steps.release.outputs.upload_url }}
+        asset_path: ./java/target/fly-graph-${{ github.event.release.tag_name }}-jar-with-deps.jar
+        asset_name: fly-graph-${{ github.event.release.tag_name }}-jar-with-deps.jar
+        asset_content_type: application/java-archive
+
+    - name: Upload JAR with dependencies signature as Release Asset
+      id: upload-jar-with-deps-sig
+      uses: actions/upload-release-asset@latest
+      with:
+        upload_url: ${{ steps.release.outputs.upload_url }}
+        asset_path: ./java/target/fly-graph-${{ github.event.release.tag_name }}-jar-with-deps.jar.asc
+        asset_name: fly-graph-${{ github.event.release.tag_name }}-jar-with-deps.jar.asc
+        asset_content_type: application/java-archive
+
+    - name: Upload library JAR as Release Asset
+      id: upload-lib
+      uses: actions/upload-release-asset@latest
+      with:
+        upload_url: ${{ steps.release.outputs.upload_url }}
+        asset_path: ./java/target/fly-graph-${{ github.event.release.tag_name }}-lib.jar
+        asset_name: fly-graph-${{ github.event.release.tag_name }}-lib.jar
+        asset_content_type: application/java-archive
+
+    - name: Upload library JAR signature as Release Asset
+      id: upload-lib-sig
+      uses: actions/upload-release-asset@latest
+      with:
+        upload_url: ${{ steps.release.outputs.upload_url }}
+        asset_path: ./java/target/fly-graph-${{ github.event.release.tag_name }}-lib.jar.asc
+        asset_name: fly-graph-${{ github.event.release.tag_name }}-lib.jar.asc
+        asset_content_type: application/java-archive
+
+    - name: Upload source JAR as Release Asset
+      id: upload-source
+      uses: actions/upload-release-asset@latest
+      with:
+        upload_url: ${{ steps.release.outputs.upload_url }}
+        asset_path: ./java/target/fly-graph-${{ github.event.release.tag_name }}-source.jar
+        asset_name: fly-graph-${{ github.event.release.tag_name }}-source.jar
+        asset_content_type: application/java-archive
+
+    - name: Upload source JAR signature as Release Asset
+      id: upload-source-sig
+      uses: actions/upload-release-asset@latest
+      with:
+        upload_url: ${{ steps.release.outputs.upload_url }}
+        asset_path: ./java/target/fly-graph-${{ github.event.release.tag_name }}-source.jar.asc
+        asset_name: fly-graph-${{ github.event.release.tag_name }}-source.jar.asc
+        asset_content_type: application/java-archive
+
+    - name: Upload javadoc JAR as Release Asset
+      id: upload-javadoc
+      uses: actions/upload-release-asset@latest
+      with:
+        upload_url: ${{ steps.release.outputs.upload_url }}
+        asset_path: ./java/target/fly-graph-${{ github.event.release.tag_name }}-javadoc.jar
+        asset_name: fly-graph-${{ github.event.release.tag_name }}-javadoc.jar
+        asset_content_type: application/java-archive
+
+    - name: Upload javadoc JAR signature as Release Asset
+      id: upload-javadoc-sig
+      uses: actions/upload-release-asset@latest
+      with:
+        upload_url: ${{ steps.release.outputs.upload_url }}
+        asset_path: ./java/target/fly-graph-${{ github.event.release.tag_name }}-javadoc.jar.asc
+        asset_name: fly-graph-${{ github.event.release.tag_name }}-javadoc.jar.asc
+        asset_content_type: application/java-archive
+
+  # the third job will deploy artifacts over GitHub Packages
   ghp-deploy:
 
     runs-on: ubuntu-20.04
@@ -79,7 +179,7 @@ jobs:
         GHS_TOKEN: ${{ github.token }}
         GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
-  # the third job will deploy srtifacts over Nexus
+  # the fourth job will deploy srtifacts over Nexus
   oss-deploy:
 
     runs-on: ubuntu-20.04
@@ -115,62 +215,3 @@ jobs:
         OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
         OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
         GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-
-  # the fourth job will release artifacts over GitHub
-  release:
-
-    runs-on: ubuntu-20.04
-
-    needs: build
-
-    steps:
-    - name: Set up cache
-      uses: actions/cache@v2
-      with:
-        path: |
-          ~/.m2/repository
-          ${{ github.workspace }}/java
-        key: ${{ runner.os }}-maven-${{ hashFiles('${{ github.workspace }}/java/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-maven-${{ hashFiles('${{ github.workspace }}/java/pom.xml') }}
-          ${{ runner.os }}-maven-
-          ${{ runner.os }}-
-
-    - name: Set up Java ${{ env.JAVA_VERSION }}
-      uses: actions/setup-java@v1
-      with:
-        java-version: ${{ env.JAVA_VERSION }}
-
-    - name: Build artifacts
-      run: mvn -B -T $(nproc) package -f $WS/java/pom.xml
-
-    - name: Get latest FLY Graph release
-      id: release
-      uses: bruceadams/get-release@v1.2.0
-
-    - name: Upload JAR with dependencies as Release Asset
-      id: upload-jar-with-deps-as-release-asset
-      uses: actions/upload-release-asset@latest
-      with:
-        upload_url: ${{ steps.release.outputs.upload_url }}
-        asset_path: ./java/target/fly-graph-${{ github.event.release.tag_name }}-jar-with-dependencies-and-exclude-files.jar
-        asset_name: fly-graph-${{ github.event.release.tag_name }}-jar-with-dependencies-and-exclude-files.jar
-        asset_content_type: application/java-archive
-
-    - name: Upload JAR as Release Asset
-      id: upload-jar-release-asset
-      uses: actions/upload-release-asset@latest
-      with:
-        upload_url: ${{ steps.release.outputs.upload_url }}
-        asset_path: ./java/target/fly-graph-${{ github.event.release.tag_name }}-lib.jar
-        asset_name: fly-graph-${{ github.event.release.tag_name }}-lib.jar
-        asset_content_type: application/java-archive
-
-    - name: Upload Javadoc as Release Asset
-      id: upload-javadoc-as-release-asset
-      uses: actions/upload-release-asset@latest
-      with:
-        upload_url: ${{ steps.release.outputs.upload_url }}
-        asset_path: ./java/target/fly-graph-${{ github.event.release.tag_name }}-javadoc.jar
-        asset_name: fly-graph-${{ github.event.release.tag_name }}-javadoc.jar
-        asset_content_type: application/java-archive
