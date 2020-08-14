@@ -7,7 +7,7 @@
   <groupId>io.github.bissim</groupId>
   <artifactId>fly-graph</artifactId>
   <version>0.0.1-rc34</version>
-  <packaging>jar</packaging>
+  <packaging>pom</packaging>
 
   <name>FLY Graph</name>
   <description>A graph library for FLY language, written in Java</description>
