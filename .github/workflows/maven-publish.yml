@@ -173,11 +173,13 @@ jobs:
         gpg-passphrase: GPG_PASSPHRASE # env variable for GPG private key passphrase
 
     - name: Publish GitHub Packages Apache Maven
-      run: mvn -B -T $(nproc) deploy -f $WS/java/pom.xml
+      run: |
+        mvn -B -T $(nproc) -DaltDeploymentRepository=${{ env.ALT_DEPLOY }} deploy -f $WS/java/pom.xml
       env:
         GHS_USERNAME: ${{ github.actor }}
         GHS_TOKEN: ${{ github.token }}
         GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        ALT_DEPLOY: github::default::https://maven.pkg.github.com/bissim/FLY-graph
 
   # the fourth job will deploy srtifacts over Nexus
   oss-deploy:

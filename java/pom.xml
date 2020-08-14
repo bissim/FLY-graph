@@ -54,16 +54,16 @@
       <name>Maven Central (SNAPSHOT)</name>
       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
     </snapshotRepository>
-    <!-- <repository>
+    <repository>
       <id>ossrh</id>
       <name>Maven Central</name>
       <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository> -->
-    <repository>
+    </repository>
+    <!-- <repository>
       <id>github</id>
       <name>GitHub bissim Apache Maven Packages</name>
       <url>https://maven.pkg.github.com/bissim/FLY-graph</url>
-    </repository>
+    </repository> -->
   </distributionManagement>
 
   <properties>
@@ -252,17 +252,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-deploy-plugin</artifactId>
         <version>3.0.0-M1</version>
-      </plugin>
-      <plugin>
-        <groupId>org.sonatype.plugins</groupId>
-        <artifactId>nexus-staging-maven-plugin</artifactId>
-        <version>1.6.8</version>
-        <extensions>true</extensions>
-        <configuration>
-          <serverId>ossrh</serverId>
-          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-          <autoReleaseAfterClose>true</autoReleaseAfterClose>
-        </configuration>
       </plugin>
     </plugins>
   </build>
