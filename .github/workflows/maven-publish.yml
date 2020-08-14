@@ -106,22 +106,22 @@ jobs:
         asset_name: fly-graph-${{ github.event.release.tag_name }}-lib.jar.asc
         asset_content_type: application/java-archive
 
-    - name: Upload source JAR as Release Asset
-      id: upload-source
+    - name: Upload sources JAR as Release Asset
+      id: upload-sources
       uses: actions/upload-release-asset@latest
       with:
         upload_url: ${{ steps.release.outputs.upload_url }}
-        asset_path: ./java/target/fly-graph-${{ github.event.release.tag_name }}-source.jar
-        asset_name: fly-graph-${{ github.event.release.tag_name }}-source.jar
+        asset_path: ./java/target/fly-graph-${{ github.event.release.tag_name }}-sources.jar
+        asset_name: fly-graph-${{ github.event.release.tag_name }}-sources.jar
         asset_content_type: application/java-archive
 
-    - name: Upload source JAR signature as Release Asset
-      id: upload-source-sig
+    - name: Upload sources JAR signature as Release Asset
+      id: upload-sources-sig
       uses: actions/upload-release-asset@latest
       with:
         upload_url: ${{ steps.release.outputs.upload_url }}
-        asset_path: ./java/target/fly-graph-${{ github.event.release.tag_name }}-source.jar.asc
-        asset_name: fly-graph-${{ github.event.release.tag_name }}-source.jar.asc
+        asset_path: ./java/target/fly-graph-${{ github.event.release.tag_name }}-sources.jar.asc
+        asset_name: fly-graph-${{ github.event.release.tag_name }}-sources.jar.asc
         asset_content_type: application/java-archive
 
     - name: Upload javadoc JAR as Release Asset
