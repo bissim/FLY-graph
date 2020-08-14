@@ -17,7 +17,7 @@ jobs:
   # the first job will build project artifacts
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
     - uses: actions/checkout@v2
@@ -45,12 +45,22 @@ jobs:
   # the second job will deploy artifacts over GitHub Packages
   ghp-deploy:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     needs: build
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Set up cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.m2/repository
+          ${{ github.workspace }}/java
+        key: ${{ runner.os }}-maven-${{ hashFiles('${{ github.workspace }}/java/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-${{ hashFiles('${{ github.workspace }}/java/pom.xml') }}
+          ${{ runner.os }}-maven-
+          ${{ runner.os }}-
 
     - name: Set up GitHub Packages
       uses: actions/setup-java@v1
@@ -72,12 +82,22 @@ jobs:
   # the third job will deploy srtifacts over Nexus
   oss-deploy:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     needs: build
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Set up cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.m2/repository
+          ${{ github.workspace }}/java
+        key: ${{ runner.os }}-maven-${{ hashFiles('${{ github.workspace }}/java/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-${{ hashFiles('${{ github.workspace }}/java/pom.xml') }}
+          ${{ runner.os }}-maven-
+          ${{ runner.os }}-
 
     - name: Set up Apache Maven Central
       uses: actions/setup-java@v1
@@ -99,12 +119,27 @@ jobs:
   # the fourth job will release artifacts over GitHub
   release:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     needs: build
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Set up cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.m2/repository
+          ${{ github.workspace }}/java
+        key: ${{ runner.os }}-maven-${{ hashFiles('${{ github.workspace }}/java/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-${{ hashFiles('${{ github.workspace }}/java/pom.xml') }}
+          ${{ runner.os }}-maven-
+          ${{ runner.os }}-
+
+    - name: Set up Java ${{ env.JAVA_VERSION }}
+      uses: actions/setup-java@v1
+      with:
+        java-version: ${{ env.JAVA_VERSION }}
 
     - name: Build artifacts
       run: mvn -B -T $(nproc) package -f $WS/java/pom.xml
