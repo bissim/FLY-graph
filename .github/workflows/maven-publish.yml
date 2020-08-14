@@ -174,7 +174,7 @@ jobs:
 
     - name: Publish GitHub Packages Apache Maven
       run: |
-        mvn -B -T $(nproc) -DaltDeploymentRepository=${{ env.ALT_DEPLOY }} deploy -f $WS/java/pom.xml
+        mvn -B -T $(nproc) -DaltDeploymentRepository=${{ env.ALT_DEPLOY }} clean deploy -f $WS/java/pom.xml
       env:
         GHS_USERNAME: ${{ github.actor }}
         GHS_TOKEN: ${{ github.token }}
@@ -212,7 +212,7 @@ jobs:
         gpg-passphrase: GPG_PASSPHRASE # env variable for GPG private key passphrase
 
     - name: Publish to Apache Maven Central
-      run: mvn -B -T $(nproc) deploy -f $WS/java/pom.xml
+      run: mvn -B -T $(nproc) clean deploy -f $WS/java/pom.xml
       env:
         OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
         OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
