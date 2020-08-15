@@ -40,8 +40,12 @@ jobs:
     - name: Rename packages
       run: |
         ls -la ./dist/
-        mv ./dist/*.whl ./dist/fly-graph-${{ github.event.release.tag_name }}-py3-none.whl
-        mv ./dist/*.tar.gz ./dist/fly-graph-${{ github.event.release.tag_name }}.tar.gz
+        if [[ ! -e ./dist/fly-graph-${{ github.event.release.tag_name }}-py3-none.whl ]]; then
+            mv ./dist/*.whl ./dist/fly-graph-${{ github.event.release.tag_name }}-py3-none.whl
+        fi
+        if [[ ! -e ./dist/fly-graph-${{ github.event.release.tag_name }}.tar.gz ]]; then
+            mv ./dist/*.tar.gz ./dist/fly-graph-${{ github.event.release.tag_name }}.tar.gz
+        fi
         ls -la ./dist/
 
     - name: Get latest FLY Graph release
