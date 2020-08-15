@@ -25,7 +25,7 @@
             <outputDirectory>./</outputDirectory>
             <directory>${project.build.outputDirectory}</directory>
             <excludes>
-				<exclude>**/GraphDummyTest*.*</exclude>
+				<exclude>**/*DummyTest*.*</exclude>
 				<exclude>**/*.bak</exclude>
 				<exclude>**/*.edgelist</exclude>
             </excludes>

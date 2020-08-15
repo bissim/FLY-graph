@@ -34,6 +34,11 @@
       <url>https://bissim.github.io</url>
       <organization>ISISLab</organization>
       <organizationUrl>https://www.isislab.it</organizationUrl>
+      <roles>
+        <role>thesis student</role>
+        <role>developer</role>
+      </roles>
+      <timezone>Europe/Rome</timezone>
     </developer>
   </developers>
 
@@ -206,7 +211,7 @@
             </goals>
             <configuration>
               <excludes>
-                <exclude>**/GraphDummyTest*.*</exclude>
+                <exclude>**/*DummyTest*.*</exclude>
                 <exclude>**/*.bak</exclude>
                 <exclude>**/*.edgelist</exclude>
               </excludes>
@@ -231,7 +236,7 @@
             <phase>package</phase>
             <configuration>
               <excludes>
-                <exclude>**/GraphDummyTest*.*</exclude>
+                <exclude>**/*DummyTest*.*</exclude>
                 <exclude>**/*.bak</exclude>
                 <exclude>**/*.edgelist</exclude>
               </excludes>
@@ -286,6 +291,7 @@
         <pluginManagement>
           <plugins>
             <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-javadoc-plugin</artifactId>
               <configuration>
                 <additionalOptions>-html5</additionalOptions>
