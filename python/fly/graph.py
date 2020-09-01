@@ -161,7 +161,7 @@ class Graph():
     # TODO consider documenting methods into class docblock
 
     # initializer
-    def __init__(self, is_directed=False, is_weighted=False) -> None:
+    def __init__(self, node_set=[], edge_set=[], is_directed=False, is_weighted=False) -> None:
         """
         Builds an instance of FLY Graph.
 
@@ -179,21 +179,25 @@ class Graph():
             Denotes whether graph is weighted or not (default: False)
         """
         self.graph = nx.DiGraph() if is_directed else nx.Graph()
+        if node_set: self.graph.add_nodes_from(node_set)
+        if edge_set: self.graph.add_edges_from(edge_set)
         self.isDirected = isinstance(self.graph, nx.DiGraph)
         self.isWeighted = is_weighted
 
     def __repr__(self):
-        to_string = "{" + str(self.graph.nodes) + ", " + str(self.graph.edges) + "}"
+        return f"Graph(node_set={self.graph.nodes}, edge_set={self.graph.edges}, is_directed={self.isDirected}, is_weighted={self.isWeighted})"
+
+    def __str__(self):
+        nodes = str(self.graph.nodes).replace('\'', '')
+        edges = str(self.graph.edges).replace('\'', '')
+        to_string = f"({nodes}, "
         if self.isDirected:
-            to_string += ", directed"
+            to_string += f"{edges}), directed"
+        else:
+            to_string += f"{edges.replace('(', '{').replace(')', '}')})"
         if self.isWeighted:
             to_string += ", weighted"
         return to_string
-
-    # TODO properly write str
-
-#    def __str__(self):
-#        pass
 
     def clear(self) -> None:
         """
