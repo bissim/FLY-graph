@@ -31,8 +31,10 @@ jobs:
 
     - name: Set project version in POM
       run: |
-        echo "Setting $(cat $WS/java/VERSION) as current version in POM..."
-        mvn -B -T $(nproc) versions:set -DnewVersion=$(cat $WS/java/VERSION) -f $WS/java/pom.xml
+        echo "Setting ${{ env.VERSION }} as current version in POM..."
+        mvn -B -T $(nproc) versions:set -DnewVersion=${{ env.VERSION }} -f $WS/java/pom.xml
+      env:
+        VERSION: $(cat $WS/VERSION)
 
     - name: Build FLY Graph project
       run: mvn -B -T $(nproc) verify package -f $WS/java/pom.xml
