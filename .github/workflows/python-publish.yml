@@ -9,6 +9,8 @@ on:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  WS: ${{ github.workspace }}
+  PYTHON_VERSION: '11'
 
 jobs:
   deploy:
@@ -21,7 +23,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.6'
+        python-version: ${{ env.PYTHON_VERSION }}
 
     - name: Install dependencies
       run: |
@@ -33,20 +35,24 @@ jobs:
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.PYPI_FLYGRAPH_TOKEN }}
       run: |
-        python ./python/setup.py sdist bdist_wheel
+        pwd
+        cd $WS/python/
+        pwd
+        python ./setup.py sdist bdist_wheel
         ls -la
-        twine upload ./dist/*
+        twine upload $WS/python/dist/*
 
     - name: Rename packages
       run: |
-        ls -la ./dist/
-        if [[ ! -e ./dist/fly-graph-${{ github.event.release.tag_name }}-py3-none.whl ]]; then
-            mv ./dist/*.whl ./dist/fly-graph-${{ github.event.release.tag_name }}-py3-none.whl
+        pwd
+        ls -la $WS/python/dist/
+        if [[ ! -e $WS/python/dist/fly-graph-${{ github.event.release.tag_name }}-py3-none.whl ]]; then
+            mv $WS/python/dist/*.whl $WS/python/dist/fly-graph-${{ github.event.release.tag_name }}-py3-none.whl
         fi
-        if [[ ! -e ./dist/fly-graph-${{ github.event.release.tag_name }}.tar.gz ]]; then
-            mv ./dist/*.tar.gz ./dist/fly-graph-${{ github.event.release.tag_name }}.tar.gz
+        if [[ ! -e $WS/python/dist/fly-graph-${{ github.event.release.tag_name }}.tar.gz ]]; then
+            mv $WS/python/dist/*.tar.gz $WS/python/dist/fly-graph-${{ github.event.release.tag_name }}.tar.gz
         fi
-        ls -la ./dist/
+        ls -la $WS/python/dist/
 
     - name: Get latest FLY Graph release
       id: release
@@ -57,7 +63,7 @@ jobs:
       uses: actions/upload-release-asset@latest
       with:
         upload_url: ${{ steps.release.outputs.upload_url }}
-        asset_path: ./dist/fly-graph-${{ github.event.release.tag_name }}-py3-none.whl
+        asset_path: $WS/python/dist/fly-graph-${{ github.event.release.tag_name }}-py3-none.whl
         asset_name: fly-graph-${{ github.event.release.tag_name }}-py3-none.whl
         asset_content_type: application/x-pywheel+zip
 
@@ -66,6 +72,6 @@ jobs:
       uses: actions/upload-release-asset@latest
       with:
         upload_url: ${{ steps.release.outputs.upload_url }}
-        asset_path: ./dist/fly-graph-${{ github.event.release.tag_name }}.tar.gz
+        asset_path: $WS/python/dist/fly-graph-${{ github.event.release.tag_name }}.tar.gz
         asset_name: fly-graph-${{ github.event.release.tag_name }}.tar.gz
         asset_content_type: application/gzip
