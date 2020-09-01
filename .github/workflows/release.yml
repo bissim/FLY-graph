@@ -22,4 +22,4 @@ jobs:
         body: |
           FLY graph release
         draft: false
-        prerelease: false
+        prerelease: true
