@@ -10,7 +10,7 @@ on:
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   WS: ${{ github.workspace }}
-  DIST: $WS/python/dist
+  DIST: ${{ github.workspace }}/python/dist
   PYTHON_VERSION: '3.6'
 
 jobs:
