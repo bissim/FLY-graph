@@ -14,7 +14,7 @@ import os
 import sys
 from shutil import rmtree
 
-from setuptools import find_namespace_packages, setup, Command
+from setuptools import find_namespace_packages, setup, sic
 
 # Package meta-data
 NAME = 'fly-graph'
@@ -49,7 +49,7 @@ except FileNotFoundError:
 f.close()
 del f
 
-PARENT = os.path.abspath(os.path.dirname(HERE))
+PARENT = os.path.dirname(HERE)
 
 # Import the VERSION and use it as the version
 with io.open(os.path.join(PARENT, 'VERSION'), encoding='utf-8') as f:
@@ -57,53 +57,10 @@ with io.open(os.path.join(PARENT, 'VERSION'), encoding='utf-8') as f:
 f.close()
 del f
 
-
-class UploadCommand(Command):
-    """Support setup.py upload."""
-
-    description = 'Build and publish the package.'
-    user_options = []
-
-    @staticmethod
-    def status(status):
-        """Prints things in bold."""
-        print('\033[1m{0}\033[0m'.format(status))
-
-    def initialize_options(self):
-        """Initialize Options"""
-        pass
-
-    def finalize_options(self):
-        """Finalize Options"""
-        pass
-
-    def run(self):
-        """Cleanup, build, upload, and git tag"""
-        try:
-            self.status('Removing previous builds…')
-            rmtree(os.path.join(HERE, 'dist'))
-        except OSError:
-            pass
-
-        self.status('Building Source and Wheel (universal) distribution…')
-        os.system(
-            '{0} setup.py sdist bdist_wheel --universal'.format(sys.executable)
-        )
-
-        self.status('Uploading the package to PyPI via Twine…')
-        os.system('twine upload dist/*')
-
-        self.status('Pushing git tags…')
-        os.system('git tag {0}'.format(VERSION))
-        os.system('git push --tags')
-
-        sys.exit()
-
-
 # Where the magic happens:
 setup(
     name=NAME,
-    version=VERSION,
+    version=sic(VERSION),
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
@@ -130,10 +87,6 @@ setup(
         "Programming Language :: Other",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
-    # $ setup.py publish support.
-    cmdclass={
-        'upload': UploadCommand,
-    },
     keywords='FLY graph management',
     project_urls={
         'Source': 'https://github.com/bissim/FLY-graph',
