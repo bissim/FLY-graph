@@ -14,7 +14,7 @@ import os
 import sys
 from shutil import rmtree
 
-from setuptools import find_namespace_packages, setup, sic
+from setuptools import find_namespace_packages, setup
 
 # Package meta-data
 NAME = 'fly-graph'
@@ -60,7 +60,7 @@ del f
 # Where the magic happens:
 setup(
     name=NAME,
-    version=sic(VERSION),
+    version=VERSION,
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
