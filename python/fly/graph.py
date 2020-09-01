@@ -2,6 +2,10 @@
 
 # package fly.graph
 
+'''
+Graphs for FLY language
+'''
+
 from typing import TypeVar, Generic
 #from logging import Logger
 

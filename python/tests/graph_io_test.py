@@ -1,9 +1,13 @@
 #! python3
 
+'''
+Dummy test for FLY Graph IO functionality
+'''
+
 # import os, sys
 # sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
-import urllib.request
+from urllib.request import urlopen
 from fly.graph import Graph
 
 nodes = ["a", "b", "c", "d", "e", "f"]
@@ -101,6 +105,6 @@ Graph.exportGraph(digraph, dgraph_path, ' ')
 Graph.exportGraph(wgraph, wgraph_path, ' ')
 Graph.exportGraph(wdgraph, wdgraph_path, ' ')
 del graph
-remote_file = urllib.request.urlopen("https://raw.githubusercontent.com/bissim/FLY-graph/master/data/graph.py.edgelist")
+remote_file = urlopen("https://raw.githubusercontent.com/bissim/FLY-graph/master/data/graph.py.edgelist")
 graph = Graph.importGraph(remote_file, ' ')
 print("Remote graph: {0}".format(graph))
