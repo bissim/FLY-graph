@@ -5,6 +5,8 @@ name: Release
 
 on:
   push:
+    branches:
+      - 'master'
     paths:
       - 'VERSION' # create a release when 'VERSION' file gets changed
 
