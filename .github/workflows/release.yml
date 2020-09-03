@@ -25,11 +25,11 @@ jobs:
     - name: Create signed annotated tag (${{ env.VERSION }})
       id: tag
       uses: laputansoft/github-tag-action@v4.6
-        with:
-          github_token: ${{ secrets.AUTH_TOKEN }}
-          default_bump: false
-          tag: ${{ env.VERSION }}
-          create_annotated_tag: true
+      with:
+        github_token: ${{ secrets.AUTH_TOKEN }}
+        default_bump: false
+        tag: ${{ env.VERSION }}
+        create_annotated_tag: true
 
     - name: Create Release
       id: release
