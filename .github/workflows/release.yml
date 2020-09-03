@@ -2,8 +2,8 @@ name: Release
 
 on:
   push:
-    tags:
-    - '*'
+    paths:
+      - 'VERSION' # create a release when 'VERSION' file gets changed
 
 jobs:
   release:
@@ -11,14 +11,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Extract version from VERSION file
+      id: version
+      run: |
+        echo "::set-env name=VERSION::$(cat $WS/VERSION)"
+      env:
+        WS: ${{ github.workspace }}
+
+    - name: Create signed annotated tag (${{ env.VERSION }})
+      id: tag
+      uses: laputansoft/github-tag-action@v4.6
+        with:
+          github_token: ${{ secrets.AUTH_TOKEN }}
+          default_bump: false
+          tag: ${{ env.VERSION }}
+          create_annotated_tag: true
+
     - name: Create Release
-      id: create_release
+      id: release
       uses: actions/create-release@latest
       env:
         GITHUB_TOKEN: ${{ secrets.AUTH_TOKEN }}
       with:
-        tag_name: ${{ github.ref }}
-        release_name: FLY graph ${{ github.ref }}
+        tag_name: ${{ steps.tag.new_tag }} #${{ github.ref }}
+        release_name: FLY graph ${{ steps.tag.new_tag }} #${{ github.ref }}
         body: |
           FLY graph release
         draft: false

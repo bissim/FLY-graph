@@ -8,10 +8,11 @@ on:
     types: [created]
 
 env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  WS: ${{ github.workspace }}
   DIST: ${{ github.workspace }}/python/dist
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   PYTHON_VERSION: '3.6'
+  TAG: ${{ github.event.release.tag_name }}
+  WS: ${{ github.workspace }}
 
 jobs:
   deploy:
@@ -47,11 +48,11 @@ jobs:
       run: |
         pwd
         ls -la $DIST/
-        if [[ ! -e $DIST/fly-graph-${{ github.event.release.tag_name }}-py3-none.whl ]]; then
-            mv $DIST/*.whl $DIST/fly-graph-${{ github.event.release.tag_name }}-py3-none.whl
+        if [[ ! -e $DIST/fly-graph-${{ env.TAG }}-py3-none.whl ]]; then
+            mv $DIST/*.whl $DIST/fly-graph-${{ env.TAG }}-py3-none.whl
         fi
-        if [[ ! -e $DIST/fly-graph-${{ github.event.release.tag_name }}.tar.gz ]]; then
-            mv $DIST/*.tar.gz $DIST/fly-graph-${{ github.event.release.tag_name }}.tar.gz
+        if [[ ! -e $DIST/fly-graph-${{ env.TAG }}.tar.gz ]]; then
+            mv $DIST/*.tar.gz $DIST/fly-graph-${{ env.TAG }}.tar.gz
         fi
         ls -la $DIST/
 
@@ -64,8 +65,8 @@ jobs:
       uses: actions/upload-release-asset@latest
       with:
         upload_url: ${{ steps.release.outputs.upload_url }}
-        asset_path: ${{ env.DIST }}/fly-graph-${{ github.event.release.tag_name }}-py3-none.whl
-        asset_name: fly-graph-${{ github.event.release.tag_name }}-py3-none.whl
+        asset_path: ${{ env.DIST }}/fly-graph-${{ env.TAG }}-py3-none.whl
+        asset_name: fly-graph-${{ env.TAG }}-py3-none.whl
         asset_content_type: application/x-pywheel+zip
 
     - name: Upload tarball as Release Asset
@@ -73,6 +74,6 @@ jobs:
       uses: actions/upload-release-asset@latest
       with:
         upload_url: ${{ steps.release.outputs.upload_url }}
-        asset_path: ${{ env.DIST }}/fly-graph-${{ github.event.release.tag_name }}.tar.gz
-        asset_name: fly-graph-${{ github.event.release.tag_name }}.tar.gz
+        asset_path: ${{ env.DIST }}/fly-graph-${{ env.TAG }}.tar.gz
+        asset_name: fly-graph-${{ env.TAG }}.tar.gz
         asset_content_type: application/gzip

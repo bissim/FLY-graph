@@ -9,8 +9,9 @@ on:
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
-  WS: ${{ github.workspace }}
   JAVA_VERSION: '11'
+  TAG: ${{ github.event.release.tag_name }}
+  WS: ${{ github.workspace }}
 
 jobs:
 
@@ -29,10 +30,10 @@ jobs:
         gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }} # Value of the GPG private key to import
         gpg-passphrase: GPG_PASSPHRASE # env variable for GPG private key passphrase
 
-    - name: Set project version in POM
+    - name: Set ${{ env.VERSION }} as project version in POM
       run: |
-        echo "Setting ${{ env.VERSION }} as current version in POM..."
-        mvn -B -T $(nproc) versions:set -DnewVersion=${{ env.VERSION }} -f $WS/java/pom.xml
+        echo "Setting $VERSION as current version in POM..."
+        mvn -B -T $(nproc) versions:set -DnewVersion=$VERSION -f $WS/java/pom.xml
       env:
         VERSION: $(cat $WS/VERSION)
 
@@ -46,10 +47,10 @@ jobs:
       with:
         path: |
           ~/.m2/repository
-          ${{ github.workspace }}/java
-        key: ${{ runner.os }}-maven-${{ hashFiles('${{ github.workspace }}/java/pom.xml') }}
+          ${{ env.WS }}/java
+        key: ${{ runner.os }}-maven-${{ hashFiles('${{ env.WS }}/java/pom.xml') }}
         restore-keys: |
-          ${{ runner.os }}-maven-${{ hashFiles('${{ github.workspace }}/java/pom.xml') }}
+          ${{ runner.os }}-maven-${{ hashFiles('${{ env.WS }}/java/pom.xml') }}
           ${{ runner.os }}-maven-
           ${{ runner.os }}-
 
@@ -66,10 +67,10 @@ jobs:
       with:
         path: |
           ~/.m2/repository
-          ${{ github.workspace }}/java
-        key: ${{ runner.os }}-maven-${{ hashFiles('${{ github.workspace }}/java/pom.xml') }}
+          ${{ env.WS }}/java
+        key: ${{ runner.os }}-maven-${{ hashFiles('${{ env.WS }}/java/pom.xml') }}
         restore-keys: |
-          ${{ runner.os }}-maven-${{ hashFiles('${{ github.workspace }}/java/pom.xml') }}
+          ${{ runner.os }}-maven-${{ hashFiles('${{ env.WS }}/java/pom.xml') }}
           ${{ runner.os }}-maven-
           ${{ runner.os }}-
 
@@ -82,8 +83,8 @@ jobs:
       uses: actions/upload-release-asset@latest
       with:
         upload_url: ${{ steps.release.outputs.upload_url }}
-        asset_path: ./java/target/fly-graph-${{ github.event.release.tag_name }}-jar-with-deps.jar
-        asset_name: fly-graph-${{ github.event.release.tag_name }}-jar-with-deps.jar
+        asset_path: ./java/target/fly-graph-${{ env.TAG }}-jar-with-deps.jar
+        asset_name: fly-graph-${{ env.TAG }}-jar-with-deps.jar
         asset_content_type: application/java-archive
 
     - name: Upload JAR with dependencies signature as Release Asset
@@ -91,8 +92,8 @@ jobs:
       uses: actions/upload-release-asset@latest
       with:
         upload_url: ${{ steps.release.outputs.upload_url }}
-        asset_path: ./java/target/fly-graph-${{ github.event.release.tag_name }}-jar-with-deps.jar.asc
-        asset_name: fly-graph-${{ github.event.release.tag_name }}-jar-with-deps.jar.asc
+        asset_path: ./java/target/fly-graph-${{ env.TAG }}-jar-with-deps.jar.asc
+        asset_name: fly-graph-${{ env.TAG }}-jar-with-deps.jar.asc
         asset_content_type: application/java-archive
 
     - name: Upload library JAR as Release Asset
@@ -100,8 +101,8 @@ jobs:
       uses: actions/upload-release-asset@latest
       with:
         upload_url: ${{ steps.release.outputs.upload_url }}
-        asset_path: ./java/target/fly-graph-${{ github.event.release.tag_name }}.jar
-        asset_name: fly-graph-${{ github.event.release.tag_name }}.jar
+        asset_path: ./java/target/fly-graph-${{ env.TAG }}.jar
+        asset_name: fly-graph-${{ env.TAG }}.jar
         asset_content_type: application/java-archive
 
     - name: Upload library JAR signature as Release Asset
@@ -109,8 +110,8 @@ jobs:
       uses: actions/upload-release-asset@latest
       with:
         upload_url: ${{ steps.release.outputs.upload_url }}
-        asset_path: ./java/target/fly-graph-${{ github.event.release.tag_name }}.jar.asc
-        asset_name: fly-graph-${{ github.event.release.tag_name }}.jar.asc
+        asset_path: ./java/target/fly-graph-${{ env.TAG }}.jar.asc
+        asset_name: fly-graph-${{ env.TAG }}.jar.asc
         asset_content_type: application/java-archive
 
     - name: Upload sources JAR as Release Asset
@@ -118,8 +119,8 @@ jobs:
       uses: actions/upload-release-asset@latest
       with:
         upload_url: ${{ steps.release.outputs.upload_url }}
-        asset_path: ./java/target/fly-graph-${{ github.event.release.tag_name }}-sources.jar
-        asset_name: fly-graph-${{ github.event.release.tag_name }}-sources.jar
+        asset_path: ./java/target/fly-graph-${{ env.TAG }}-sources.jar
+        asset_name: fly-graph-${{ env.TAG }}-sources.jar
         asset_content_type: application/java-archive
 
     - name: Upload sources JAR signature as Release Asset
@@ -127,8 +128,8 @@ jobs:
       uses: actions/upload-release-asset@latest
       with:
         upload_url: ${{ steps.release.outputs.upload_url }}
-        asset_path: ./java/target/fly-graph-${{ github.event.release.tag_name }}-sources.jar.asc
-        asset_name: fly-graph-${{ github.event.release.tag_name }}-sources.jar.asc
+        asset_path: ./java/target/fly-graph-${{ env.TAG }}-sources.jar.asc
+        asset_name: fly-graph-${{ env.TAG }}-sources.jar.asc
         asset_content_type: application/java-archive
 
     - name: Upload javadoc JAR as Release Asset
@@ -136,8 +137,8 @@ jobs:
       uses: actions/upload-release-asset@latest
       with:
         upload_url: ${{ steps.release.outputs.upload_url }}
-        asset_path: ./java/target/fly-graph-${{ github.event.release.tag_name }}-javadoc.jar
-        asset_name: fly-graph-${{ github.event.release.tag_name }}-javadoc.jar
+        asset_path: ./java/target/fly-graph-${{ env.TAG }}-javadoc.jar
+        asset_name: fly-graph-${{ env.TAG }}-javadoc.jar
         asset_content_type: application/java-archive
 
     - name: Upload javadoc JAR signature as Release Asset
@@ -145,8 +146,8 @@ jobs:
       uses: actions/upload-release-asset@latest
       with:
         upload_url: ${{ steps.release.outputs.upload_url }}
-        asset_path: ./java/target/fly-graph-${{ github.event.release.tag_name }}-javadoc.jar.asc
-        asset_name: fly-graph-${{ github.event.release.tag_name }}-javadoc.jar.asc
+        asset_path: ./java/target/fly-graph-${{ env.TAG }}-javadoc.jar.asc
+        asset_name: fly-graph-${{ env.TAG }}-javadoc.jar.asc
         asset_content_type: application/java-archive
 
   # the third job will deploy artifacts over GitHub Packages
@@ -162,10 +163,10 @@ jobs:
       with:
         path: |
           ~/.m2/repository
-          ${{ github.workspace }}/java
-        key: ${{ runner.os }}-maven-${{ hashFiles('${{ github.workspace }}/java/pom.xml') }}
+          ${{ env.WS }}/java
+        key: ${{ runner.os }}-maven-${{ hashFiles('${{ env.WS }}/java/pom.xml') }}
         restore-keys: |
-          ${{ runner.os }}-maven-${{ hashFiles('${{ github.workspace }}/java/pom.xml') }}
+          ${{ runner.os }}-maven-${{ hashFiles('${{ env.WS }}/java/pom.xml') }}
           ${{ runner.os }}-maven-
           ${{ runner.os }}-
 
@@ -201,10 +202,10 @@ jobs:
       with:
         path: |
           ~/.m2/repository
-          ${{ github.workspace }}/java
-        key: ${{ runner.os }}-maven-${{ hashFiles('${{ github.workspace }}/java/pom.xml') }}
+          ${{ env.WS }}/java
+        key: ${{ runner.os }}-maven-${{ hashFiles('${{ env.WS }}/java/pom.xml') }}
         restore-keys: |
-          ${{ runner.os }}-maven-${{ hashFiles('${{ github.workspace }}/java/pom.xml') }}
+          ${{ runner.os }}-maven-${{ hashFiles('${{ env.WS }}/java/pom.xml') }}
           ${{ runner.os }}-maven-
           ${{ runner.os }}-
 
