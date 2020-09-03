@@ -39,6 +39,7 @@ import org.jgrapht.nio.csv.CSVFormat;
  * It basically wraps the JGraphT representation of graphs according to FLY
  * API for graphs.
  * 
+ * @version 1.0.1
  * @author Simone Bisogno
  *&lt;<a href="mailto:s.bisogno10@studenti.unisa.it?cc=s.bisogno90@gmail.com&amp;subject=Java%20FLY%20graph%20library&amp;body=Hello,%0D%0A%0D%0Ayour%20message%20here">s.bisogno10@studenti.unisa.it</a>&gt;
  * 
@@ -50,22 +51,27 @@ public class Graph<V, E>
 {
 	// instance variables
 	/**
+	 * @since 1.0.0
 	 * The JGraphT <code>Graph&lt;V, E&gt;</code> wrapped by this class
 	 */
 	private org.jgrapht.Graph<V, E> graph;
 	/**
+	 * @since 1.0.0
 	 * The class used for nodes
 	 */
 	private Class<V> nodeClass;
 	/**
+	 * @since 1.0.0
 	 * The class used for edges
 	 */
 	private Class<E> edgeClass;
 	/**
+	 * @since 1.0.0
 	 * Denotes whether graph is weighted
 	 */
 	private boolean isWeighted;
 	/**
+	 * @since 1.0.0
 	 * Denotes whether graph is directed
 	 */
 	private boolean isDirected;
@@ -74,6 +80,8 @@ public class Graph<V, E>
 	 * The <code>Graph(Class&lt;V&gt;, boolean, boolean)</code> constructs a
 	 * graph with node class the same specified as parameter and can be
 	 * directed, weighted or both according to boolean parameters.
+	 * 
+	 * @since 1.0.0
 	 * 
 	 * @param nodeClass The class of the graph nodes
 	 * @param isDirected Denotes whether graph edges will be directed
@@ -102,6 +110,9 @@ public class Graph<V, E>
 	/**
 	 * The <code>clear()</code> method deals with emptying both
 	 * graph node set and edge set.
+	 * 
+	 * @since 1.0.0
+	 * 
 	 */
 	public void clear()
 	{
@@ -117,6 +128,8 @@ public class Graph<V, E>
 	 * The <code>addNode(V)</code> method deals with adding specified node
 	 * to graph node set.
 	 * 
+	 * @since 1.0.0
+	 * 
 	 * @param node The node to add to graph
 	 */
 	public void addNode(V node)
@@ -128,6 +141,8 @@ public class Graph<V, E>
 	 * The <code>addNodes(V[])</code> method deals with adding nodes from
 	 * specified array to graph node set.
 	 * 
+	 * @since 1.0.0
+	 * 
 	 * @see #addNode(Object)
 	 * 
 	 * @param nodes The nodes to add to graph
@@ -136,14 +151,14 @@ public class Graph<V, E>
 	{
 		IntStream
 				.range(0, nodes.length)
-				.forEach(i -> {
-					this.addNode(nodes[i]);
-				});
+				.forEach(i -> this.addNode(nodes[i]));
 	}
 
 	/*
 	 * The <code>addNodes(V...)</code> method deals with adding specified nodes
 	 * to graph node set.
+	 * 
+	 * @since 1.0.0
 	 * 
 	 * @see #addNode(Object)
 	 * 
@@ -152,14 +167,14 @@ public class Graph<V, E>
 //	public void addNodes(V... nodes)
 //	{
 //		List<V> nodesList = List.of(nodes); // not in Java 8
-//		nodesList.stream().forEach(n -> {
-//			this.addNode(n);
-//		});
+//		nodesList.stream().forEach(n -> this.addNode(n));
 //	}
 
 	/**
 	 * The <code>nodeDegree(V)</code> method returns the degree of specified
 	 * node, as long as it belongs to the graph.
+	 * 
+	 * @since 1.0.0
 	 * 
 	 * @param node The node of graph which we want to know the degree of
 	 * @return The degree of node
@@ -176,6 +191,8 @@ public class Graph<V, E>
 	 * By 'in' degree of a node one denotes how many edges have the node
 	 * as their target.
 	 * 
+	 * @since 1.0.0
+	 * 
 	 * @param node The node of graph which we want to know the 'in' degree of
 	 * @return The 'in' degree of node
 	 */
@@ -191,6 +208,8 @@ public class Graph<V, E>
 	 * By 'out' degree of a node one denotes how many edges have the node
 	 * as their source.
 	 * 
+	 * @since 1.0.0
+	 * 
 	 * @param node The node of graph which we want to know the 'out' degree of
 	 * @return The 'out' degree of node
 	 */
@@ -202,6 +221,8 @@ public class Graph<V, E>
 	/**
 	 * The <code>neighbourhood(V)</code> method returns the list of edges
 	 * in which specified node is source or target.
+	 * 
+	 * @since 1.0.0
 	 * 
 	 * @param node The node which we want to know the neighbourhood of
 	 * @return The array of edges having node as source or target
@@ -218,6 +239,8 @@ public class Graph<V, E>
 	 * By 'in' edges of a node one denotes the edges having the node as
 	 * their target.
 	 * 
+	 * @since 1.0.0
+	 * 
 	 * @param node The node which we want to know the 'in edges' of
 	 * @return The array of edges having node as target
 	 */
@@ -233,6 +256,8 @@ public class Graph<V, E>
 	 * By 'out' edges of a node one denotes the edges having the node as
 	 * their source.
 	 * 
+	 * @since 1.0.0
+	 * 
 	 * @param node The node which we want to know the 'out edges' of
 	 * @return The array of edges having node as source
 	 */
@@ -243,6 +268,8 @@ public class Graph<V, E>
 
 	/**
 	 * The <code>nodeSet()</code> method returns all nodes of the graph.
+	 * 
+	 * @since 1.0.0
 	 * 
 	 * @return The array of graph nodes
 	 */
@@ -269,6 +296,8 @@ public class Graph<V, E>
 	 * The <code>numNodes()</code> method returns the number of nodes
 	 * in the graph.
 	 * 
+	 * @since 1.0.0
+	 * 
 	 * @return The number of graph nodes
 	 */
 	public int numNodes()
@@ -280,6 +309,8 @@ public class Graph<V, E>
 	 * The <code>removeNode(V)</code> method deals with removing specified
 	 * node from graph, if it belongs to it.
 	 * 
+	 * @since 1.0.0
+	 * 
 	 * @param node The node to remove
 	 */
 	public void removeNode(V node)
@@ -290,6 +321,8 @@ public class Graph<V, E>
 	/**
 	 * The <code>hasNode(V)</code> method checks whether specified node
 	 * belongs to graph or not.
+	 * 
+	 * @since 1.0.0
 	 * 
 	 * @param node The node to check for
 	 * @return <code>true</code> if the node belongs to graph,
@@ -308,6 +341,8 @@ public class Graph<V, E>
 	 * The <code>addEdge(V, V)</code> method adds an edge to graph which
 	 * specified nodes are the source and target of.
 	 * 
+	 * @since 1.0.0
+	 * 
 	 * @param firstNode One of the edge nodes
 	 * @param secondNode The other edge node
 	 */
@@ -318,6 +353,8 @@ public class Graph<V, E>
 
 	/*
 	 * The <code>addEdges(E[])</code> method ...
+	 * 
+	 * @since 1.0.0
 	 * 
 	 * @param edges The edges to add to graph
 	 */
@@ -333,6 +370,8 @@ public class Graph<V, E>
 	 * The <code>getEdge(V, V)</code> method returns the edge which
 	 * specified nodes are the source and target of.
 	 * 
+	 * @since 1.0.0
+	 * 
 	 * @param firstNode One of the edge nodes
 	 * @param secondNode The other edge node
 	 * @return the edge of the graph where <code>firstNode</code> is source
@@ -345,6 +384,8 @@ public class Graph<V, E>
 
 	/**
 	 * The <code>edgeSet()</code> method returns all edges of the graph.
+	 * 
+	 * @since 1.0.0
 	 * 
 	 * @return The array of graph edges
 	 */
@@ -371,6 +412,8 @@ public class Graph<V, E>
 	 * The <code>numEdges()</code> method returns the number of edges
 	 * in the graph.
 	 * 
+	 * @since 1.0.0
+	 * 
 	 * @return The number of graph edges
 	 */
 	public int numEdges()
@@ -379,12 +422,28 @@ public class Graph<V, E>
 	}
 
 	// TODO comment
+	/**
+	 * The ...
+	 * 
+	 * @since 1.0.0
+	 * 
+	 * @param e
+	 * @return
+	 */
 	public V getEdgeSource(E e)
 	{
 		return this.graph.getEdgeSource(e);
 	}
 
 	// TODO comment
+	/**
+	 * The ...
+	 * 
+	 * @since 1.0.0
+	 * 
+	 * @param e
+	 * @param s
+	 */
 	public void setEdgeSource(E e, V s)
 	{
 		V t = this.graph.getEdgeTarget(e);
@@ -393,12 +452,28 @@ public class Graph<V, E>
 	}
 
 	// TODO comment
+	/**
+	 * The ...
+	 * 
+	 * @since 1.0.0
+	 * 
+	 * @param e
+	 * @return
+	 */
 	public V getEdgeTarget(E e)
 	{
 		return this.graph.getEdgeTarget(e);
 	}
 
 	// TODO comment
+	/**
+	 * The ...
+	 * 
+	 * @since 1.0.0
+	 * 
+	 * @param e
+	 * @param t
+	 */
 	public void setEdgeTarget(E e, V t)
 	{
 		V s = this.graph.getEdgeSource(e);
@@ -409,6 +484,8 @@ public class Graph<V, E>
 	/**
 	 * The <code>getEdgeWeight(V, V)</code> method returns the weight of
 	 * edge specified by the two given nodes.
+	 * 
+	 * @since 1.0.0
 	 * 
 	 * @param firstNode One of the edge nodes
 	 * @param secondNode The other edge node
@@ -424,6 +501,8 @@ public class Graph<V, E>
 	 * The <code>setEdgeWeight(V, V, float)</code> method sets the weight
 	 * of edge specified by the two given nodes.
 	 * 
+	 * @since 1.0.0
+	 * 
 	 * @param firstNode One of the edge nodes
 	 * @param secondNode The other edge node
 	 * @param weight The weight of the edge
@@ -438,6 +517,8 @@ public class Graph<V, E>
 	 * The <code>removeEdge(V, V)</code> method removes the edge
 	 * between specified nodes.
 	 * 
+	 * @since 1.0.0
+	 * 
 	 * @param firstNode One of the edge nodes
 	 * @param secondNode The other edge node
 	 */
@@ -449,6 +530,8 @@ public class Graph<V, E>
 	/**
 	 * The <code>hasEdge(V, V)</code> method checks whether graph has
 	 * an edge between specified nodes.
+	 * 
+	 * @since 1.0.0
 	 * 
 	 * @param firstNode One of the edge nodes
 	 * @param secondNode The other edge node
@@ -478,6 +561,8 @@ public class Graph<V, E>
 	 * In this example, two weighted edges have been defined, separated by
 	 * space character. Weight has to be specified or not according to
 	 * relative boolean value passed.
+	 * 
+	 * @since 1.0.0
 	 * 
 	 * @param <V> The class for nodes.
 	 * @param <E> The class for edges.
@@ -563,6 +648,8 @@ public class Graph<V, E>
 	 * space character. Weight has to be specified or not according to
 	 * relative boolean value passed.
 	 * 
+	 * @since 1.0.0
+	 * 
 	 * @param <V> The class for nodes.
 	 * @param <E> The class for edges.
 	 * @param path Position of edgelist file in file system
@@ -604,6 +691,8 @@ public class Graph<V, E>
 	 * their weight) in such a fashion:<br><br>
 	 * <code>a b 2.3</code><br>
 	 * <code>b c 1.8</code><br><br>
+	 * 
+	 * @since 1.0.0
 	 * 
 	 * @param <V> The class for nodes.
 	 * @param <E> The class for edges.
@@ -668,6 +757,8 @@ public class Graph<V, E>
 	 * The <code>bfsEdges(V)</code> method returns edges of the BFS tree
 	 * rooted in specified node.
 	 * 
+	 * @since 1.0.0
+	 * 
 	 * @param rootNode Desired root node of BFS tree
 	 * @return Array of edges of BFS tree
 	 */
@@ -696,6 +787,8 @@ public class Graph<V, E>
 	/**
 	 * The <code>bfsNodes(V)</code> method returns nodes of the BFS tree
 	 * rooted in specified node.
+	 * 
+	 * @since 1.0.0
 	 * 
 	 * @param rootNode Desired root node of BFS tree
 	 * @return Array of nodes of BFS tree
@@ -740,6 +833,8 @@ public class Graph<V, E>
 	 * The <code>bfsTree(V)</code> method returns the BFS tree
 	 * rooted in specified node.
 	 * 
+	 * @since 1.0.0
+	 * 
 	 * @param rootNode Desired root node of BFS tree
 	 * @return BFS tree
 	 */
@@ -772,6 +867,8 @@ public class Graph<V, E>
 	 * The <code>dfsEdges(V)</code> method returns edges of the DFS tree
 	 * rooted in specified node.
 	 * 
+	 * @since 1.0.0
+	 * 
 	 * @param rootNode Desired root node of DFS tree
 	 * @return Set of edges of DFS tree
 	 */
@@ -800,6 +897,8 @@ public class Graph<V, E>
 	/**
 	 * The <code>dfsNodes(V)</code> method returns nodes of the DFS tree
 	 * rooted in specified node.
+	 * 
+	 * @since 1.0.0
 	 * 
 	 * @param rootNode Desired root node of DFS tree
 	 * @return Set of nodes of DFS tree
@@ -847,6 +946,8 @@ public class Graph<V, E>
 	 * The <code>dfsTree(V)</code> method returns the DFS tree
 	 * rooted in specified node.
 	 * 
+	 * @since 1.0.0
+	 * 
 	 * @param rootNode Desired root node of DFS tree
 	 * @return DFS tree
 	 */
@@ -883,6 +984,8 @@ public class Graph<V, E>
 	 * The <code>isConnected()</code> method indicates whether graph is
 	 * connected.
 	 * 
+	 * @since 1.0.0
+	 * 
 	 * @return <code>true</code> if the graph is connected,
 	 * <code>false</code> otherwise
 	 */
@@ -898,6 +1001,8 @@ public class Graph<V, E>
 	 * The <code>isStronglyConnected()</code> method indicates whether graph
 	 * is strongly connected.
 	 * 
+	 * @since 1.0.0
+	 * 
 	 * @return <code>true</code> if the graph is strongly connected,
 	 * <code>false</code> otherwise
 	 */
@@ -912,6 +1017,8 @@ public class Graph<V, E>
 	/**
 	 * The <code>connectedComponents()</code> method returns connected
 	 * components of graph as groups of nodes.
+	 * 
+	 * @since 1.0.0
 	 * 
 	 * @return array of arrays of connected nodes
 	 */
@@ -953,6 +1060,8 @@ public class Graph<V, E>
 	 * The <code>connectedSubgraphs()</code> method returns connected
 	 * subgraphs of graph.
 	 * 
+	 * @since 1.0.0
+	 * 
 	 * @return array of connected subgraphs
 	 */
 	@SuppressWarnings("unchecked")
@@ -982,6 +1091,8 @@ public class Graph<V, E>
 	 * The <code>numberConnectedComponents()</code> method returns number of
 	 * connected components of graph.
 	 * 
+	 * @since 1.0.0
+	 * 
 	 * @return number of connected components of the graph
 	 */
 	public int numberConnectedComponents()
@@ -995,6 +1106,8 @@ public class Graph<V, E>
 	/**
 	 * The <code>nodeConnectedComponent(V)</code> method returns connected
 	 * component of graph for given node.
+	 * 
+	 * @since 1.0.0
 	 * 
 	 * @param node The node which we want to know the connected component of
 	 * @return the connected component given node belongs to
@@ -1023,6 +1136,8 @@ public class Graph<V, E>
 	/**
 	 * The <code>stronglyConnectedComponents()</code> method returns strongly
 	 * connected components of graph as group of nodes.
+	 * 
+	 * @since 1.0.0
 	 * 
 	 * @return array of arrays of strongly connected components
 	 */
@@ -1064,6 +1179,8 @@ public class Graph<V, E>
 	 * The <code>stronglyConnectedSubgraphs()</code> method returns strongly
 	 * connected subgraphs of graph.
 	 * 
+	 * @since 1.0.0
+	 * 
 	 * @return array of strongly connected subgraphs
 	 */
 	public Graph<V, E>[] stronglyConnectedSubgraphs()
@@ -1100,6 +1217,8 @@ public class Graph<V, E>
 	 * The <code>isDAG()</code> method checks whether graph is a directed
 	 * acyclic graph (DAG).
 	 * 
+	 * @since 1.0.0
+	 * 
 	 * @return <code>true</code> if graph is DAG,
 	 * <code>false</code> otherwise
 	 */
@@ -1113,6 +1232,8 @@ public class Graph<V, E>
 	/**
 	 * The <code>topologicalSort()</code> method returns the list of nodes
 	 * ordered according to topological sort.
+	 * 
+	 * @since 1.0.0
 	 * 
 	 * @return array of topological sorted nodes
 	 */
@@ -1142,6 +1263,8 @@ public class Graph<V, E>
 	/**
 	 * The <code>getMST()</code> method returns the minimum spanning tree
 	 * of graph.
+	 * 
+	 * @since 1.0.0
 	 * 
 	 * @return minimum spanning tree of graph
 	 */
@@ -1179,6 +1302,8 @@ public class Graph<V, E>
 	 * The <code>toString()</code> method returns a string
 	 * representation of <code>Graph&lt;V, E&gt;</code> object.
 	 * 
+	 * @since 1.0.0
+	 * 
 	 * @return Representation of <code>Graph&lt;V, E&gt;</code> object
 	 */
 	@Override
@@ -1202,6 +1327,8 @@ public class Graph<V, E>
 	/**
 	 * The <code>equals(Object)</code> method indicates whether some other
 	 * 'object' is equal to this graph.
+	 * 
+	 * @since 1.0.0
 	 * 
 	 * @param obj Another <code>Graph&lt;V, E&gt;</code> object
 	 * @return <code>true</code> if <code>obj</code> is equal to graph,
@@ -1243,6 +1370,8 @@ public class Graph<V, E>
 	/**
 	 * The <code>hashCode()</code> method  calculates the
 	 * hash code for a <code>Graph&lt;V, E&gt;</code> object.
+	 * 
+	 * @since 1.0.0
 	 */
 	@Override
 	public int hashCode()
@@ -1269,6 +1398,8 @@ public class Graph<V, E>
 	 * The <code>addEdges()</code> helper method adds edges objects to graph;
 	 * it first convert every edge into its couple of nodes and then invokes
 	 * the {@link #addEdge(Object, Object)} method for every couple of nodes.
+	 * 
+	 * @since 1.0.0
 	 * 
 	 * @see #addEdge(Object, Object)
 	 * 
@@ -1302,6 +1433,8 @@ public class Graph<V, E>
 	 * of <code>org.jgrapht.Graph&lt;V, E&gt;</code> by specifying the
 	 * node class, the edge class, whether graph is directed, whether graph
 	 * is weighted.
+	 * 
+	 * @since 1.0.0
 	 * 
 	 * @see org.jgrapht.Graph
 	 * 
@@ -1370,6 +1503,8 @@ public class Graph<V, E>
 	 * it returns the class object of {@link DefaultWeightedEdge}; in the
 	 * second case, it returns the class object of {@link DefaultEdge}.
 	 * 
+	 * @since 1.0.0
+	 * 
 	 * @see DefaultEdge
 	 * @see DefaultWeightedEdge
 	 * 
@@ -1389,6 +1524,8 @@ public class Graph<V, E>
 	/**
 	 * The <code>edgeArrayFromSet</code> helper method deals with creating an
 	 * array of edges from a specified set.
+	 * 
+	 * @since 1.0.0
 	 * 
 	 * @param edgeSet A set of edges
 	 * @return The array of edges
@@ -1415,6 +1552,8 @@ public class Graph<V, E>
 	 * the sequence of nodes from BFS visit into pairs of nodes; such a
 	 * sequence will be converted in a proper sequence of edges by
 	 * <code>{@link #bfsEdges(Object)}</code> public method.
+	 * 
+	 * @since 1.0.0
 	 * 
 	 * @see #bfsEdges(Object)
 	 * 
@@ -1484,6 +1623,8 @@ public class Graph<V, E>
 	 * the sequence of nodes from DFS visit into pairs of nodes; such a
 	 * sequence will be converted in a proper sequence of edges by
 	 * <code>{@link #dfsEdges(Object)}</code> public method.
+	 * 
+	 * @since 1.0.0
 	 * 
 	 * @see #dfsEdges(Object)
 	 * 
@@ -1569,6 +1710,8 @@ public class Graph<V, E>
 	 * instances of <code>Pair</code> will be immutable; in
 	 * particular, class itself will be immutable.
 	 * 
+	 * @since 1.0.0
+	 * 
 	 * @author Simone Bisogno &lt;s.bisogno10@studenti.unisa.it&gt;
 	 *
 	 */
@@ -1579,10 +1722,12 @@ public class Graph<V, E>
 		 */
 
 		/**
+		 * @since 1.0.0
 		 * First element of the pair.
 		 */
 		private V first;
 		/**
+		 * @since 1.0.0
 		 * Second element of the pair.
 		 */
 		private V second;
@@ -1593,6 +1738,8 @@ public class Graph<V, E>
 
 		/**
 		 * Build a pair of <code>V</code> objects.
+		 * 
+		 * @since 1.0.0
 		 * 
 		 * @param first pair first element
 		 * @param second pair second element
@@ -1606,6 +1753,8 @@ public class Graph<V, E>
 		/**
 		 * Return fist element of pair.
 		 * 
+		 * @since 1.0.0
+		 * 
 		 * @return pair first element
 		 */
 		public V getFirst()
@@ -1615,6 +1764,8 @@ public class Graph<V, E>
 
 		/**
 		 * Return second element of pair.
+		 * 
+		 * @since 1.0.0
 		 * 
 		 * @return pair second element
 		 */
@@ -1676,6 +1827,6 @@ public class Graph<V, E>
 		{
 			return Graph.this;
 		}
-	}
+	} // end of Pair class
 
 }
