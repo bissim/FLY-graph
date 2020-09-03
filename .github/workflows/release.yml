@@ -1,3 +1,6 @@
+# This workflow will create an annotated tag and the associated release when
+# a push over VERSION file is performed
+
 name: Release
 
 on:
@@ -8,7 +11,7 @@ on:
 jobs:
   release:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
     - uses: actions/checkout@v2
@@ -27,7 +30,6 @@ jobs:
       uses: laputansoft/github-tag-action@v4.6
       with:
         github_token: ${{ secrets.AUTH_TOKEN }}
-        default_bump: false
         tag: ${{ env.VERSION }}
         create_annotated_tag: true
 
