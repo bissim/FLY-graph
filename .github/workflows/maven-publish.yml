@@ -30,12 +30,15 @@ jobs:
         gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }} # Value of the GPG private key to import
         gpg-passphrase: GPG_PASSPHRASE # env variable for GPG private key passphrase
 
+    - name: Extract version from VERSION file
+      id: version
+      run: |
+        echo "::set-env name=VERSION::$(cat $WS/VERSION)"
+
     - name: Set ${{ env.VERSION }} as project version in POM
       run: |
         echo "Setting $VERSION as current version in POM..."
-        mvn -B -T $(nproc) versions:set -DnewVersion=$VERSION -f $WS/java/pom.xml
-      env:
-        VERSION: $(cat $WS/VERSION)
+        mvn -B -T $(nproc) versions:set -DnewVersion=${{ env.VERSION }} -f $WS/java/pom.xml
 
     - name: Build FLY Graph project
       run: mvn -B -T $(nproc) verify package -f $WS/java/pom.xml
