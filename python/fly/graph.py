@@ -7,9 +7,14 @@ Graphs for FLY language
 '''
 
 from typing import TypeVar, Generic
-#from logging import Logger
 
 import networkx as nx
+from networkx.classes.function import induced_subgraph, neighbors, subgraph
+from networkx.algorithms.shortest_paths import shortest_path
+from networkx.algorithms.distance_measures import diameter, radius
+from networkx.algorithms.cluster import average_clustering, clustering, transitivity, triangles
+from networkx.exception import NetworkXNoPath
+from networkx.algorithms.lowest_common_ancestors import lowest_common_ancestor
 
 # The type used to represent nodes (or 'vertices') into a graph.
 V = TypeVar('V')
@@ -286,9 +291,10 @@ class Graph():
         """
         return self.graph.out_degree(node)
 
-    def neighbourhood(self, node: V) -> list:
+    def neighbourhood(self, node: V) -> object:
         """
-        Gets the edges the specified node is part of.
+        Gets the subraph induced nodes the specified node is adjacent of
+        and the edges among them.
 
         Parameters
         ----------
@@ -297,11 +303,23 @@ class Graph():
 
         Returns
         -------
-        list
+        object
             Neighbourhood of specified node
 
         """
-        return list(self.graph.adj[node])
+        neighbours = [node] + list(self.graph.adj[node])
+        subg = Graph(
+            node_set=neighbours,
+            is_directed=self.isDirected,
+            is_weighted=self.isWeighted
+        )
+        subg.graph.add_edges_from(
+            (n, nbr, d)
+                for n, nbrs in self.graph.adj.items() if n in neighbours
+                for nbr, d in nbrs.items() if nbr in neighbours
+        )
+        subg.graph.update(self.graph.graph)
+        return subg
 
     def nodeInEdges(self, node: V) -> list:
         """
@@ -541,6 +559,66 @@ class Graph():
             'True' if an edge exists between specified nodes, 'False' otherwise
         """
         return self.graph.has_edge(first_node, second_node)
+
+    #
+    # Metrics
+    #
+
+    def shortestPath(self, source: V, target: V) -> list:
+        """
+        """
+        try:
+            return shortest_path(self.graph, source=source, target=target)
+        except NetworkXNoPath:
+            return list()
+
+    def getDiameter(self) -> float:
+        """
+        """
+        return diameter(self.graph)
+
+    def getRadius(self) -> float:
+        """
+        """
+        return radius(self.graph)
+
+    # def getNumberOfTriangles(self, node=None) -> int:
+    #     """
+    #     """
+    #     if (node):
+    #         return triangles(self.graph, node)
+    #     else:
+    #         return int(sum(triangles(self.graph).values()) / 3) # each triangle is counted thrice because of its nodes
+
+    # def getNumberOfTriplets(self, node=None) -> int:
+    #     """
+    #     """
+    #     if (node):
+    #         nodes_nbrs = ((n, self.graph[n]) for n in self.graph.nbunch_iter(node))
+    #     else:
+    #         nodes_nbrs = self.graph.adj.items()
+
+    #     number_triads = 0;
+    #     for v, v_nbrs in nodes_nbrs:
+    #         #print(f"{v}: {(set(v_nbrs) - {v})}") # TODO fix
+    #         number_triads += len(set(v_nbrs) - {v})
+
+    #     return number_triads
+
+    def getAverageClusteringCoefficient(self) -> float:
+        """
+        """
+        return average_clustering(self.graph)
+
+    def getGlobalClusteringCoefficient(self) -> float:
+        """
+        """
+        return transitivity(self.graph)
+
+    def getNodeClusteringCoefficient(self, node: V) -> float:
+        """
+        """
+        return clustering(self.graph, node)
 
     #
     # I/O
@@ -858,6 +936,16 @@ class Graph():
         mst = self.__class__()
         mst.graph = nx.minimum_spanning_tree(self.graph, algorithm='prim')
         return mst
+
+    #
+    # Lowest common ancestor
+    #
+
+    def getLCA(self, node1: V, node2: V) -> V:
+        """
+        """
+        return lowest_common_ancestor(self.graph, node1, node2)
+
 #
 # Run tests as standalone module
 #

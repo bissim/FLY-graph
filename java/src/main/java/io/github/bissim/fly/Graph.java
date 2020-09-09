@@ -4,25 +4,39 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 
+import org.jgrapht.GraphMetrics;
+import org.jgrapht.GraphPath;
+import org.jgrapht.GraphTests;
+import org.jgrapht.Graphs;
 import org.jgrapht.alg.connectivity.ConnectivityInspector;
 import org.jgrapht.alg.connectivity.KosarajuStrongConnectivityInspector;
 import org.jgrapht.alg.cycle.CycleDetector;
+import org.jgrapht.alg.lca.NaiveLCAFinder;
+import org.jgrapht.alg.scoring.ClusteringCoefficient;
+import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.alg.spanning.PrimMinimumSpanningTree;
+import org.jgrapht.alg.util.NeighborCache;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.builder.GraphTypeBuilder;
 import org.jgrapht.traverse.BreadthFirstIterator;
 import org.jgrapht.traverse.DepthFirstIterator;
 import org.jgrapht.traverse.TopologicalOrderIterator;
+import org.jgrapht.util.CollectionUtil;
 import org.jgrapht.util.SupplierUtil;
 
 import org.jgrapht.nio.ImportException;
@@ -75,6 +89,11 @@ public class Graph<V, E>
 	 * Denotes whether graph is directed
 	 */
 	private boolean isDirected;
+	/**
+	 * @since 1.0.1
+	 * Stores information about graph clustering
+	 */
+	private ClusteringCoefficient<V, E> clusteringCoefficient;
 
 	/**
 	 * The <code>Graph(Class&lt;V&gt;, boolean, boolean)</code> constructs a
@@ -127,47 +146,62 @@ public class Graph<V, E>
 	/**
 	 * The <code>addNode(V)</code> method deals with adding specified node
 	 * to graph node set.
+	 * <b>
+	 * In version 1.0.0 this method was not daisy-chainable.
 	 * 
-	 * @since 1.0.0
+	 * @since 1.0.1
 	 * 
 	 * @param node The node to add to graph
+	 * @return graph with added node
 	 */
-	public void addNode(V node)
+	public Graph<V, E> addNode(V node)
 	{
 		this.graph.addVertex(node);
+
+		return this;
 	}
 
 	/**
 	 * The <code>addNodes(V[])</code> method deals with adding nodes from
 	 * specified array to graph node set.
+	 * <b>
+	 * In version 1.0.0 this method was not daisy-chainable.
 	 * 
-	 * @since 1.0.0
+	 * @since 1.0.1
 	 * 
 	 * @see #addNode(Object)
 	 * 
 	 * @param nodes The nodes to add to graph
+	 * @return graph with added nodes
 	 */
-	public void addNodes(V[] nodes)
+	public Graph<V, E> addNodes(V[] nodes)
 	{
 		IntStream
 				.range(0, nodes.length)
 				.forEach(i -> this.addNode(nodes[i]));
+
+		return this;
 	}
 
 	/*
 	 * The <code>addNodes(V...)</code> method deals with adding specified nodes
 	 * to graph node set.
+	 * <b>
+	 * In version 1.0.0 this method was not daisy-chainable.
 	 * 
-	 * @since 1.0.0
+	 * @since 1.0.1
 	 * 
 	 * @see #addNode(Object)
 	 * 
 	 * @param nodes The nodes to add to graph
+	 * @return graph with added nodes
 	 */
-//	public void addNodes(V... nodes)
+//	public Graph<V, E> addNodes(V... nodes)
 //	{
 //		List<V> nodesList = List.of(nodes); // not in Java 8
 //		nodesList.stream().forEach(n -> this.addNode(n));
+//
+//		return this;
 //	}
 
 	/**
@@ -219,17 +253,26 @@ public class Graph<V, E>
 	}
 
 	/**
-	 * The <code>neighbourhood(V)</code> method returns the list of edges
-	 * in which specified node is source or target.
+	 * The {@code neighbourhood} method ...
+	 * <br>
+	 * In version 1.0.0, it erroneously gave the list of edges the given node
+	 * was head or tail of.
 	 * 
-	 * @since 1.0.0
+	 * @since 1.0.1
 	 * 
 	 * @param node The node which we want to know the neighbourhood of
-	 * @return The array of edges having node as source or target
+	 * @return ...
 	 */
-	public E[] neighbourhood(V node)
+	public Graph<V, E> neighbourhood(V node)
 	{
-		return this.edgeArrayFromSet(this.graph.edgesOf(node));
+		return new Graph<V, E>(
+					this.nodeClass,
+					this.isDirected,
+					this.isWeighted
+				)
+				.addNode(node)
+				.addNodes(this.neighbourNodes(node))
+				.addEdges(this.neighbourhoodEdges(node));
 	}
 
 	/**
@@ -285,9 +328,7 @@ public class Graph<V, E>
 		Iterator<V> setIterator = nodeSet.iterator();
 		IntStream
 				.range(0, nodes.length)
-				.forEach(i -> {
-					nodes[i] = setIterator.next();
-				});
+				.forEach(i -> nodes[i] = setIterator.next());
 
 		return nodes;
 	}
@@ -340,31 +381,21 @@ public class Graph<V, E>
 	/**
 	 * The <code>addEdge(V, V)</code> method adds an edge to graph which
 	 * specified nodes are the source and target of.
+	 * <b>
+	 * In version 1.0.0 this method was not daisy-chainable.
 	 * 
-	 * @since 1.0.0
+	 * @since 1.0.1
 	 * 
 	 * @param firstNode One of the edge nodes
 	 * @param secondNode The other edge node
+	 * @return graph with added edge
 	 */
-	public void addEdge(V firstNode, V secondNode)
+	public Graph<V, E> addEdge(V firstNode, V secondNode)
 	{
 		this.graph.addEdge(firstNode, secondNode);
-	}
 
-	/*
-	 * The <code>addEdges(E[])</code> method ...
-	 * 
-	 * @since 1.0.0
-	 * 
-	 * @param edges The edges to add to graph
-	 */
-//	public void addEdges(E[] edges)
-//	{
-//		List<E> edgesList = List.of(edges);
-//		edgesList.stream().forEach(e -> {
-//			this.addEdge(firstNode, secondNode);
-//		});
-//	}
+		return this;
+	}
 
 	/**
 	 * The <code>getEdge(V, V)</code> method returns the edge which
@@ -401,9 +432,7 @@ public class Graph<V, E>
 		Iterator<E> setIterator = edgeSet.iterator();
 		IntStream
 				.range(0, edges.length)
-				.forEach(i -> {
-					edges[i] = setIterator.next();
-				});
+				.forEach(i -> edges[i] = setIterator.next());
 
 		return edges;
 	}
@@ -423,7 +452,7 @@ public class Graph<V, E>
 
 	// TODO comment
 	/**
-	 * The ...
+	 * The {@code getEdgeSource(E)} method ...
 	 * 
 	 * @since 1.0.0
 	 * 
@@ -437,7 +466,7 @@ public class Graph<V, E>
 
 	// TODO comment
 	/**
-	 * The ...
+	 * The {@code setEdgeSource(E, V)} method ...
 	 * 
 	 * @since 1.0.0
 	 * 
@@ -453,7 +482,7 @@ public class Graph<V, E>
 
 	// TODO comment
 	/**
-	 * The ...
+	 * The {@code getEdgeTarget(E)} method ...
 	 * 
 	 * @since 1.0.0
 	 * 
@@ -467,7 +496,7 @@ public class Graph<V, E>
 
 	// TODO comment
 	/**
-	 * The ...
+	 * The {@code setEdgeTarget(E, V)} method ...
 	 * 
 	 * @since 1.0.0
 	 * 
@@ -541,6 +570,260 @@ public class Graph<V, E>
 	public boolean hasEdge(V firstNode, V secondNode)
 	{
 		return this.graph.containsEdge(firstNode, secondNode);
+	}
+
+	/*
+	 * Graph metrics
+	 */
+
+	// TODO comment
+	/**
+	 * The ...
+	 * 
+	 * @since 1.0.1
+	 * 
+	 * @param source
+	 * @param target
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public E[] shortestPath(V source, V target)
+	{
+		GraphPath<V, E> shortestPath = new DijkstraShortestPath<V, E>(this.graph)
+				.getPath(source, target);
+		if (shortestPath == null)
+		{
+			return (E[]) Array.newInstance(this.edgeClass, 0);
+		}
+		else {
+			return (E[]) shortestPath
+				.getEdgeList()
+				.toArray();
+		}
+	}
+
+	// TODO comment
+	/**
+	 * The ...
+	 * 
+	 * @since 1.0.1
+	 * 
+	 * @return
+	 */
+	public double getDiameter()
+	{
+		return GraphMetrics.getDiameter(this.graph);
+	}
+
+	// TODO comment
+	/**
+	 * The ...
+	 * 
+	 * @since 1.0.1
+	 * 
+	 * @return
+	 */
+	public double getRadius()
+	{
+		return GraphMetrics.getRadius(this.graph);
+	}
+
+	// TODO comment
+	// /**
+	//  * The ...
+	//  * 
+	//  * @since 1.0.1
+	//  * 
+	//  * @return
+	//  */
+	// public long getNumberOfTriangles()
+	// {
+	// 	return GraphMetrics.getNumberOfTriangles(this.graph);
+	// }
+
+	// TODO comment
+	// /**
+	//  * An $O(|E|^{3/2})$ algorithm for counting the number of non-trivial triangles in an undirected
+	//  * graph. A non-trivial triangle is formed by three distinct vertices all connected to each
+	//  * other.
+	//  *
+	//  * <p>
+	//  * For more details of this algorithm see Ullman, Jeffrey: "Mining of Massive Datasets",
+	//  * Cambridge University Press, Chapter 10
+	//  *
+	//  * @since 1.0.1
+	//  * @see org.jgrapht.GraphMetrics#getNumberOfTriangles(org.jgrapht.Graph)
+	//  * 
+	//  * @param graph the input graph
+	//  * @param <V> the graph vertex type
+	//  * @param <E> the graph edge type
+	//  * @return the number of triangles in the graph
+	//  * @throws NullPointerException if {@code graph} is {@code null}
+	//  * @throws IllegalArgumentException if {@code graph} is not undirected
+	//  */
+	// public long getNumberOfTriangles(V node) // TODO test
+	// {
+	// 	GraphTests.requireUndirected(this.graph);
+
+	// 	final int sqrtV = (int) Math.sqrt(this.graph.vertexSet().size());
+
+	// 	/**
+	// 	 * The set of node neighbour nodes
+	// 	 */
+	// 	Set<V> vertexSet = Graphs.neighborSetOf(this.graph, node);
+	// 	List<V> vertexList = new ArrayList<>(vertexSet); // just consider node neighbourhood
+	// 	Graph<V, E> neighbourhood = this.neighbourhood(node);
+
+	// 	/*
+	// 	 * The book suggest the following comparator: "Compare vertices based on their degree. If
+	// 	 * equal compare them of their actual value, since they are all integers".
+	// 	 */
+
+	// 	// Fix vertex order for unique comparison of vertices
+	// 	Map<V, Integer> vertexOrder =
+	// 		CollectionUtil.newHashMapWithExpectedSize(vertexSet.size()); // neighbourhood
+	// 	int k = 0;
+	// 	for (V v : vertexSet)
+	// 	{
+	// 		vertexOrder.put(v, k++);
+	// 	}
+
+	// 	Comparator<V> comparator = Comparator
+	// 		.comparingInt(neighbourhood::nodeDegree)
+	// 		.thenComparingInt(System::identityHashCode)
+	// 		.thenComparingInt(vertexOrder::get);
+
+	// 	vertexList.sort(comparator);
+
+	// 	// vertex v is a heavy-hitter iff degree(v) >= sqrtV
+	// 	List<V> heavyHitterVertices = vertexList
+	// 		.stream()
+	// 		.filter(x -> neighbourhood.graph.degreeOf(x) >= sqrtV)
+	// 		.collect(Collectors.toCollection(ArrayList::new));
+
+	// 	// count the number of triangles formed from only heavy-hitter vertices
+	// 	long numberTriangles = this.naiveCountTriangles(heavyHitterVertices);
+
+	// 	for (E edge : this.neighbourhoodEdges(node))
+	// 	{
+	// 		V v1 = neighbourhood.getEdgeSource(edge);
+	// 		V v2 = neighbourhood.getEdgeTarget(edge);
+
+	// 		if (v1 == v2)
+	// 		{
+	// 			continue;
+	// 		}
+
+	// 		if (
+	// 			neighbourhood.graph.degreeOf(v1) < sqrtV ||
+	// 			neighbourhood.graph.degreeOf(v2) < sqrtV
+	// 		)
+	// 		{
+	// 			// ensure that v1 <= v2 (swap them otherwise)
+	// 			if (comparator.compare(v1, v2) > 0)
+	// 			{
+	// 				V tmp = v1;
+	// 				v1 = v2;
+	// 				v2 = tmp;
+	// 			}
+
+	// 			for (E e : neighbourhood.graph.edgesOf(v1))
+	// 			{
+	// 				V u = Graphs.getOppositeVertex(neighbourhood.graph, e, v1);
+
+	// 				// check if the triangle is non-trivial: u, v1, v2 are distinct vertices
+	// 				if (u == v1 || u == v2)
+	// 				{
+	// 					continue;
+	// 				}
+
+	// 				/*
+	// 				 * Check if v2 <= u and if (u, v2) is a valid edge. If both of them are true,
+	// 				 * then we have a new triangle (v1, v2, u) and all three vertices in the
+	// 				 * triangle are ordered (v1 <= v2 <= u) so we count it only once.
+	// 				 */
+	// 				if (
+	// 					comparator.compare(v2, u) <= 0 &&
+	// 					neighbourhood.graph.containsEdge(u, v2))
+	// 				{
+	// 					numberTriangles++;
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+
+	// 	return numberTriangles;
+	// }
+
+	// TODO comment
+	// /**
+	//  * The {@code getNumberOfTriplets()} method ...
+	//  * 
+	//  * @since 1.0.1
+	//  * @see org.jgrapht.alg.scoring.ClusteringCoefficient#computeGlobalClusteringCoefficient()
+	//  * 
+	//  * @return
+	//  */
+	// public int getNumberOfTriplets()
+	// {
+	// 	return this.triplets(null);
+	// }
+
+	// TODO comment
+	// /**
+	//  * The {@code getNumberOfTriplets(V)} method ...
+	//  * 
+	//  * @since 1.0.1
+	//  * @see org.jgrapht.alg.scoring.ClusteringCoefficient#computeGlobalClusteringCoefficient()
+	//  * 
+	//  * @return
+	//  */
+	// public int getNumberOfTriplets(V node)
+	// {
+	// 	return this.triplets(node);
+	// }
+
+	// TODO comment
+	/**
+	 * The ...
+	 * 
+	 * @since 1.0.1
+	 * 
+	 * @return
+	 */
+	public double getAverageClusteringCoefficient()
+	{
+		return this.clusteringCoefficient()
+				.getAverageClusteringCoefficient();
+	}
+
+	// TODO comment
+	/**
+	 * The ...
+	 * 
+	 * @since 1.0.1
+	 * 
+	 * @return
+	 */
+	public double getGlobalClusteringCoefficient()
+	{
+		return this.clusteringCoefficient()
+				.getGlobalClusteringCoefficient();
+	}
+
+	// TODO comment
+	/**
+	 * The ...
+	 * 
+	 * @since 1.0.1
+	 * 
+	 * @param node
+	 * @return
+	 */
+	public double getNodeClusteringCoefficient(V node)
+	{
+		return this.clusteringCoefficient()
+				.getVertexScore(node);
 	}
 
 	/*
@@ -1295,6 +1578,26 @@ public class Graph<V, E>
 	}
 
 	/*
+	 * Lowest common ancestor
+	 */
+
+	// TODO comment
+	/**
+	 * The ...
+	 * 
+	 * @since 1.0.1
+	 * 
+	 * @param node1
+	 * @param node2
+	 * @return
+	 */
+	public V getLCA(V node1, V node2)
+	{
+		GraphTests.requireDirected(this.graph);
+		return new NaiveLCAFinder<V, E>(this.graph).getLCA(node1, node2);
+	}
+
+	/*
 	 * Object methods
 	 */
 
@@ -1394,18 +1697,154 @@ public class Graph<V, E>
 	 * helper methods
 	 */
 
+	private E[] neighbourhoodEdges(V node)
+	{
+		Set<E> neighbourhoodEdgesSet = new HashSet<>();
+
+		// let's start by adding edges incidents to given node
+		neighbourhoodEdgesSet.addAll(this.graph.edgesOf(node));
+
+		// then retrieve neighbour nodes and pick
+		// the edges between them and given node
+		// and among them
+		Set<V> neighbourNodesSet = Graphs.neighborSetOf(this.graph, node);
+		this.graph.edgeSet().forEach(e -> {
+			V source = this.getEdgeSource(e);
+			V target = this.getEdgeTarget(e);
+			if (
+				neighbourNodesSet.contains(source) &&
+				neighbourNodesSet.contains(target)
+			)
+			{
+				neighbourhoodEdgesSet.add(e);
+			}
+		});
+
+		// now turn the set into array and return it
+		@SuppressWarnings("unchecked")
+		E[] neighbourhoodEdges = (E[]) Array.newInstance(
+				this.edgeClass,
+				neighbourhoodEdgesSet.size()
+		);
+		Iterator<E> setIterator = neighbourhoodEdgesSet.iterator();
+		IntStream
+				.range(0, neighbourhoodEdges.length)
+				.forEach(i -> neighbourhoodEdges[i] = setIterator.next());
+
+		return neighbourhoodEdges;
+	}
+
+	/**
+	 * The <code>neighbourNodes(V)</code> method returns the list of nodes
+	 * which are adjacent to given node.
+	 * 
+	 * @since 1.0.1
+	 * 
+	 * @param node The node which we want to know the neighbourhood of
+	 * @return The array of edges having node as source or target
+	 */
+	private V[] neighbourNodes(V node)
+	{
+		Set<V> nodesSet = Graphs.neighborSetOf(this.graph, node);
+
+		// convert set of nodes into array of nodes
+		@SuppressWarnings("unchecked")
+		V[] nodeArray = (V[]) Array.newInstance(
+				this.nodeClass,
+				nodesSet.size()
+		);
+		Iterator<V> setIterator = nodesSet.iterator();
+		IntStream
+				.range(0, nodeArray.length)
+				.forEach(i -> nodeArray[i] = setIterator.next());
+
+		return nodeArray;
+	}
+
+	private long naiveCountTriangles(List<V> vertexSubset)
+	{
+		long total = 0;
+
+		for (int i = 0; i < vertexSubset.size(); i++)
+		{
+			for (int j = i + 1; j < vertexSubset.size(); j++)
+			{
+				for (int k = j + 1; k < vertexSubset.size(); k++)
+				{
+					V u = vertexSubset.get(i);
+					V v = vertexSubset.get(j);
+					V w = vertexSubset.get(k);
+
+					if (
+						this.graph.containsEdge(u, v) &&
+						this.graph.containsEdge(v, w) &&
+						this.graph.containsEdge(w, u)
+					)
+					{
+						total++;
+					}
+				}
+			}
+		}
+
+		return total;
+	}
+
+	private int triplets(V node)
+	{
+		org.jgrapht.Graph<V, E> graph;
+		if (node == null)
+		{
+			graph = this.graph;
+		}
+		else
+		{
+			graph = this.neighbourhood(node).graph;
+		}
+		NeighborCache<V, E> neighborCache = new NeighborCache<>(graph);
+		// array needed to overcome final variable issue
+		// in 'forEach'
+		int[] numberTriplets = {0};
+
+		graph.vertexSet().forEach(v -> {
+			if (graph.getType().isUndirected()) {
+				int nodeDegree = graph.degreeOf(v);
+				numberTriplets[0] += 1.0 * nodeDegree * (nodeDegree - 1) / 2;
+			} else {
+				numberTriplets[0] += 1.0 * neighborCache.predecessorsOf(v).size()
+					* neighborCache.successorsOf(v).size();
+			}
+		});
+
+		return numberTriplets[0];
+	}
+
+	// TODO comment
+	private ClusteringCoefficient<V, E> clusteringCoefficient()
+	{
+		if (this.clusteringCoefficient == null)
+		{
+			this.clusteringCoefficient = new ClusteringCoefficient<V, E>(this.graph);
+		}
+
+		return this.clusteringCoefficient;
+	}
+
 	/**
 	 * The <code>addEdges()</code> helper method adds edges objects to graph;
 	 * it first convert every edge into its couple of nodes and then invokes
 	 * the {@link #addEdge(Object, Object)} method for every couple of nodes.
+	 * <b>
+	 * In version 1.0.0 this method was not daisy-chainable.
 	 * 
-	 * @since 1.0.0
+	 * @since 1.0.1
 	 * 
 	 * @see #addEdge(Object, Object)
 	 * 
 	 * @param edges Array of edges to add to graph
+	 * @return graph with added edges
 	 */
-	private void addEdges(E[] edges)
+	private Graph<V, E> addEdges(E[] edges)
 	{
 		IntStream
 				.range(0, edges.length)
@@ -1426,7 +1865,22 @@ public class Graph<V, E>
 						);
 					}
 				});
+
+		return this;
 	}
+
+	/*
+	 * The <code>addEdges(E...)</code> method ...
+	 * 
+	 * @since 1.0.0
+	 * 
+	 * @param edges The edges to add to graph
+	 */
+//	private void addEdges(E... edges)
+//	{
+//		List<E> edgesList = List.of(edges); // not in Java 8
+//		edgesList.stream().forEach(e -> this.addEdge(firstNode, secondNode));
+//	}
 
 	/**
 	 * The <code>graphBuilder()</code> helper method constructs an instance
