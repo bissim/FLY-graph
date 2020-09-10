@@ -11,7 +11,7 @@ from typing import TypeVar, Generic
 import networkx as nx
 from networkx.classes.function import induced_subgraph, neighbors, subgraph
 from networkx.algorithms.shortest_paths import shortest_path
-from networkx.algorithms.distance_measures import diameter, radius
+from networkx.algorithms.distance_measures import center, diameter, eccentricity, periphery, radius
 from networkx.algorithms.cluster import average_clustering, clustering, transitivity, triangles
 from networkx.exception import NetworkXNoPath
 from networkx.algorithms.lowest_common_ancestors import lowest_common_ancestor
@@ -561,7 +561,7 @@ class Graph():
         return self.graph.has_edge(first_node, second_node)
 
     #
-    # Metrics
+    # Measurement
     #
 
     def shortestPath(self, source: V, target: V) -> list:
@@ -581,6 +581,25 @@ class Graph():
         """
         """
         return radius(self.graph)
+
+    def getCenter(self) -> list:
+        """
+        """
+        return center(self.graph)
+
+    def getPeriphery(self) -> list:
+        """
+        """
+        return periphery(self.graph)
+
+    def getNodeEccentricity(self, node: V) -> float:
+        """
+        """
+        return eccentricity(self.graph, v=node);
+
+    #
+    # Metrics
+    #
 
     # def getNumberOfTriangles(self, node=None) -> int:
     #     """

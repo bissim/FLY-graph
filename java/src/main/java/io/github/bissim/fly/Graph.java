@@ -4,12 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.Spliterator;
 import java.util.Spliterators;
@@ -18,7 +15,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 
-import org.jgrapht.GraphMetrics;
 import org.jgrapht.GraphPath;
 import org.jgrapht.GraphTests;
 import org.jgrapht.Graphs;
@@ -28,6 +24,7 @@ import org.jgrapht.alg.cycle.CycleDetector;
 import org.jgrapht.alg.lca.NaiveLCAFinder;
 import org.jgrapht.alg.scoring.ClusteringCoefficient;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
+import org.jgrapht.alg.shortestpath.GraphMeasurer;
 import org.jgrapht.alg.spanning.PrimMinimumSpanningTree;
 import org.jgrapht.alg.util.NeighborCache;
 import org.jgrapht.graph.DefaultEdge;
@@ -36,7 +33,6 @@ import org.jgrapht.graph.builder.GraphTypeBuilder;
 import org.jgrapht.traverse.BreadthFirstIterator;
 import org.jgrapht.traverse.DepthFirstIterator;
 import org.jgrapht.traverse.TopologicalOrderIterator;
-import org.jgrapht.util.CollectionUtil;
 import org.jgrapht.util.SupplierUtil;
 
 import org.jgrapht.nio.ImportException;
@@ -65,33 +61,38 @@ public class Graph<V, E>
 {
 	// instance variables
 	/**
-	 * @since 1.0.0
 	 * The JGraphT <code>Graph&lt;V, E&gt;</code> wrapped by this class
+	 * @since 1.0.0
 	 */
 	private org.jgrapht.Graph<V, E> graph;
 	/**
-	 * @since 1.0.0
 	 * The class used for nodes
+	 * @since 1.0.0
 	 */
 	private Class<V> nodeClass;
 	/**
-	 * @since 1.0.0
 	 * The class used for edges
+	 * @since 1.0.0
 	 */
 	private Class<E> edgeClass;
 	/**
-	 * @since 1.0.0
 	 * Denotes whether graph is weighted
+	 * @since 1.0.0
 	 */
 	private boolean isWeighted;
 	/**
-	 * @since 1.0.0
 	 * Denotes whether graph is directed
+	 * @since 1.0.0
 	 */
 	private boolean isDirected;
 	/**
+	 * Stores information about graph measurements
 	 * @since 1.0.1
+	 */
+	private GraphMeasurer<V, E> graphMeasurer;
+	/**
 	 * Stores information about graph clustering
+	 * @since 1.0.1
 	 */
 	private ClusteringCoefficient<V, E> clusteringCoefficient;
 
@@ -135,7 +136,11 @@ public class Graph<V, E>
 	 */
 	public void clear()
 	{
-		this.graph.vertexSet().clear();
+		Set<V> nodes = this.graph
+				.vertexSet()
+				.stream()
+				.collect(Collectors.toSet());
+		this.graph.removeAllVertices(nodes);
 //		this.graph.edgeSet().clear(); // removing nodes should be enough
 	}
 
@@ -276,6 +281,24 @@ public class Graph<V, E>
 	}
 
 	/**
+	 * The {@code nodeEdges(V)} method returns the adjacent edges of
+	 * specified node, as long as it belongs to the graph.
+	 * 
+	 * @since 1.0.1
+	 * 
+	 * @param node The node which we want to know the edges of
+	 * @return The array of edges having node as source or target
+	 */
+	@SuppressWarnings("unchecked")
+	public E[] nodeEdges(V node)
+	{
+		return (E[]) this.setToArray(
+				this.graph.edgesOf(node),
+				this.edgeClass
+		);
+	}
+
+	/**
 	 * The <code>nodeInEdges(V)</code> method returns the 'in' edges of
 	 * specified node, as long as it belongs to the graph.
 	 * <br>
@@ -287,9 +310,13 @@ public class Graph<V, E>
 	 * @param node The node which we want to know the 'in edges' of
 	 * @return The array of edges having node as target
 	 */
+	@SuppressWarnings("unchecked")
 	public E[] nodeInEdges(V node)
 	{
-		return this.edgeArrayFromSet(this.graph.incomingEdgesOf(node));
+		return (E[]) this.setToArray(
+				this.graph.incomingEdgesOf(node),
+				this.edgeClass
+		);
 	}
 
 	/**
@@ -304,9 +331,13 @@ public class Graph<V, E>
 	 * @param node The node which we want to know the 'out edges' of
 	 * @return The array of edges having node as source
 	 */
+	@SuppressWarnings("unchecked")
 	public E[] nodeOutEdges(V node)
 	{
-		return this.edgeArrayFromSet(this.graph.outgoingEdgesOf(node));
+		return (E[]) this.setToArray(
+				this.graph.outgoingEdgesOf(node),
+				this.edgeClass
+		);
 	}
 
 	/**
@@ -316,21 +347,12 @@ public class Graph<V, E>
 	 * 
 	 * @return The array of graph nodes
 	 */
+	@SuppressWarnings("unchecked")
 	public V[] nodeSet()
 	{
 		Set<V> nodeSet = this.graph.vertexSet();
 
-		@SuppressWarnings("unchecked")
-		V[] nodes = (V[]) Array.newInstance(
-				this.nodeClass,
-				nodeSet.size()
-		);
-		Iterator<V> setIterator = nodeSet.iterator();
-		IntStream
-				.range(0, nodes.length)
-				.forEach(i -> nodes[i] = setIterator.next());
-
-		return nodes;
+		return (V[]) this.setToArray(nodeSet, this.nodeClass);
 	}
 
 	/**
@@ -420,21 +442,12 @@ public class Graph<V, E>
 	 * 
 	 * @return The array of graph edges
 	 */
+	@SuppressWarnings("unchecked")
 	public E[] edgeSet()
 	{
 		Set<E> edgeSet = this.graph.edgeSet();
 
-		@SuppressWarnings("unchecked")
-		E[] edges = (E[]) Array.newInstance(
-				this.edgeClass,
-				edgeSet.size()
-		);
-		Iterator<E> setIterator = edgeSet.iterator();
-		IntStream
-				.range(0, edges.length)
-				.forEach(i -> edges[i] = setIterator.next());
-
-		return edges;
+		return (E[]) this.setToArray(edgeSet, this.edgeClass);
 	}
 
 	/**
@@ -573,7 +586,7 @@ public class Graph<V, E>
 	}
 
 	/*
-	 * Graph metrics
+	 * Graph measurement
 	 */
 
 	// TODO comment
@@ -593,7 +606,7 @@ public class Graph<V, E>
 				.getPath(source, target);
 		if (shortestPath == null)
 		{
-			return (E[]) Array.newInstance(this.edgeClass, 0);
+			return (E[]) null;
 		}
 		else {
 			return (E[]) shortestPath
@@ -612,7 +625,7 @@ public class Graph<V, E>
 	 */
 	public double getDiameter()
 	{
-		return GraphMetrics.getDiameter(this.graph);
+		return this.graphMeasurer().getDiameter();
 	}
 
 	// TODO comment
@@ -625,8 +638,55 @@ public class Graph<V, E>
 	 */
 	public double getRadius()
 	{
-		return GraphMetrics.getRadius(this.graph);
+		return this.graphMeasurer().getRadius();
 	}
+
+	/**
+	 * The {@code getCenter()} method ...
+	 * 
+	 * @since 1.0.1
+	 * 
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public V[] getCenter()
+	{
+		Set<V> center = this.graphMeasurer().getGraphCenter();
+
+		return (V[]) this.setToArray(center, this.nodeClass);
+	}
+
+	/**
+	 * The {@code getPeriphery()} method ...
+	 * 
+	 * @since 1.0.1
+	 * 
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public V[] getPeriphery()
+	{
+		Set<V> periphery = this.graphMeasurer().getGraphPeriphery();
+
+		return (V[]) this.setToArray(periphery, this.nodeClass);
+	}
+
+	/**
+	 * The {@code getNodeEccentricity(V)} method ...
+	 * 
+	 * @since 1.0.1
+	 * 
+	 * @param node
+	 * @return
+	 */
+	public double getNodeEccentricity(V node)
+	{
+		return this.graphMeasurer().getVertexEccentricityMap().get(node);
+	}
+
+	/*
+	 * Graph metrics
+	 */
 
 	// TODO comment
 	// /**
@@ -1395,25 +1455,14 @@ public class Graph<V, E>
 	 * @param node The node which we want to know the connected component of
 	 * @return the connected component given node belongs to
 	 */
+	@SuppressWarnings("unchecked")
 	public V[] nodeConnectedComponent(V node)
 	{
 		ConnectivityInspector<V, E> inspector =
 				new ConnectivityInspector<>(this.graph);
 
 		Set<V> nodeConnectedSet = inspector.connectedSetOf(node);
-		@SuppressWarnings("unchecked")
-		V[] nodeComponent = (V[]) Array.newInstance(
-				this.nodeClass,
-				nodeConnectedSet.size()
-		);
-		Iterator<V> setIterator = nodeConnectedSet.iterator();
-		IntStream
-				.range(0, nodeConnectedSet.size())
-				.forEach(i -> {
-					nodeComponent[i] = setIterator.next();
-				});
-
-		return nodeComponent;
+		return (V[]) this.setToArray(nodeConnectedSet, this.nodeClass);
 	}
 
 	/**
@@ -1449,9 +1498,7 @@ public class Graph<V, E>
 				Iterator<V> componentIterator = strongComponent.iterator();
 				IntStream // iterate over component nodes
 						.range(0, strongComponent.size())
-						.forEach(j -> {
-							nodes[j] = componentIterator.next();
-						});
+						.forEach(j -> nodes[j] = componentIterator.next());
 				strongComponents[i] = nodes;
 			});
 
@@ -1697,6 +1744,7 @@ public class Graph<V, E>
 	 * helper methods
 	 */
 
+	@SuppressWarnings("unchecked")
 	private E[] neighbourhoodEdges(V node)
 	{
 		Set<E> neighbourhoodEdgesSet = new HashSet<>();
@@ -1721,17 +1769,7 @@ public class Graph<V, E>
 		});
 
 		// now turn the set into array and return it
-		@SuppressWarnings("unchecked")
-		E[] neighbourhoodEdges = (E[]) Array.newInstance(
-				this.edgeClass,
-				neighbourhoodEdgesSet.size()
-		);
-		Iterator<E> setIterator = neighbourhoodEdgesSet.iterator();
-		IntStream
-				.range(0, neighbourhoodEdges.length)
-				.forEach(i -> neighbourhoodEdges[i] = setIterator.next());
-
-		return neighbourhoodEdges;
+		return (E[]) this.setToArray(neighbourhoodEdgesSet, this.edgeClass);
 	}
 
 	/**
@@ -1743,22 +1781,13 @@ public class Graph<V, E>
 	 * @param node The node which we want to know the neighbourhood of
 	 * @return The array of edges having node as source or target
 	 */
+	@SuppressWarnings("unchecked")
 	private V[] neighbourNodes(V node)
 	{
 		Set<V> nodesSet = Graphs.neighborSetOf(this.graph, node);
 
 		// convert set of nodes into array of nodes
-		@SuppressWarnings("unchecked")
-		V[] nodeArray = (V[]) Array.newInstance(
-				this.nodeClass,
-				nodesSet.size()
-		);
-		Iterator<V> setIterator = nodesSet.iterator();
-		IntStream
-				.range(0, nodeArray.length)
-				.forEach(i -> nodeArray[i] = setIterator.next());
-
-		return nodeArray;
+		return (V[]) this.setToArray(nodesSet, this.nodeClass);
 	}
 
 	private long naiveCountTriangles(List<V> vertexSubset)
@@ -1819,12 +1848,22 @@ public class Graph<V, E>
 		return numberTriplets[0];
 	}
 
+	private GraphMeasurer<V, E> graphMeasurer()
+	{
+		if (this.graphMeasurer == null)
+		{
+			this.graphMeasurer = new GraphMeasurer<>(this.graph);
+		}
+
+		return this.graphMeasurer;
+	}
+
 	// TODO comment
 	private ClusteringCoefficient<V, E> clusteringCoefficient()
 	{
 		if (this.clusteringCoefficient == null)
 		{
-			this.clusteringCoefficient = new ClusteringCoefficient<V, E>(this.graph);
+			this.clusteringCoefficient = new ClusteringCoefficient<>(this.graph);
 		}
 
 		return this.clusteringCoefficient;
@@ -1869,13 +1908,13 @@ public class Graph<V, E>
 		return this;
 	}
 
-	/*
-	 * The <code>addEdges(E...)</code> method ...
-	 * 
-	 * @since 1.0.0
-	 * 
-	 * @param edges The edges to add to graph
-	 */
+//	/**
+//	 * The <code>addEdges(E...)</code> method ...
+//	 * 
+//	 * @since 1.0.0
+//	 * 
+//	 * @param edges The edges to add to graph
+//	 */
 //	private void addEdges(E... edges)
 //	{
 //		List<E> edgesList = List.of(edges); // not in Java 8
@@ -1979,6 +2018,7 @@ public class Graph<V, E>
 	 * The <code>edgeArrayFromSet</code> helper method deals with creating an
 	 * array of edges from a specified set.
 	 * 
+	 * @deprecated
 	 * @since 1.0.0
 	 * 
 	 * @param edgeSet A set of edges
@@ -1994,9 +2034,7 @@ public class Graph<V, E>
 		Iterator<E> setIterator = edgeSet.iterator();
 		IntStream
 				.range(0, edgeArray.length)
-				.forEach(i -> {
-					edgeArray[i] = setIterator.next();
-				});
+				.forEach(i -> edgeArray[i] = setIterator.next());
 
 		return edgeArray;
 	}
@@ -2155,6 +2193,28 @@ public class Graph<V, E>
 		}
 
 		return dfsEdges;
+	}
+
+	/**
+	 * The {@code setToArray(Set)} method ...
+	 * 
+	 * @since 1.0.1
+	 * 
+	 * @param set
+	 * @return
+	 */
+	private Object[] setToArray(Set<?> set, Class<?> setClass)
+	{
+		Object[] array = (Object[]) Array.newInstance(
+				setClass,
+				set.size()
+		);
+		Iterator<?> setIterator = set.iterator();
+		IntStream
+				.range(0, array.length)
+				.forEach(i -> array[i] = setIterator.next());
+
+		return array;
 	}
 
 	/**
