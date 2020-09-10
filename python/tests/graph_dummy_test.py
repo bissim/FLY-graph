@@ -110,31 +110,13 @@ wdgraph.setEdgeWeight("a", "e", 2.0)
 wdgraph.setEdgeWeight("b", "d", 3.0)
 print(f"Weighted directed graph: {wdgraph}")
 
-#print("\nIMPORT/EXPORT")
-#data_path = "./../../../../../data/"
-#igraph = Graph.importGraph(data_path + "unweighted.edgelist", ' ')
-#idgraph = Graph.importGraph(data_path + "unweighted.edgelist", ' ', is_directed=True)
-#iwgraph = Graph.importGraph(data_path + "weighted.edgelist", ' ', is_weighted=True)
-#iwdgraph = Graph.importGraph(data_path + "weighted.edgelist", ' ', is_directed=True, is_weighted=True)
-#print(f"Undirected graph: {igraph}")
-#print(f"Directed graph: {idgraph}")
-#print(f"Weighted graph: {iwgraph}")
-#print(f"Directed weighted graph: {iwdgraph}")
-#del igraph
-#del idgraph
-#del iwgraph
-#del iwdgraph
-#Graph.exportGraph(graph, data_path + "graph.py.edgelist", ' ')
-#Graph.exportGraph(digraph, data_path + "digraph.py.edgelist", ' ', is_directed=True)
-#Graph.exportGraph(wgraph, data_path + "wgraph.py.edgelist", ' ', is_weighted=True)
-#Graph.exportGraph(wdgraph, data_path + "wdgraph.py.edgelist", ' ', is_directed=True, is_weighted=True)
-
-print("\nBFS & DFS")
+print("\nBREADTH FIRST SEARCH")
 root_node = "a"
 print(f"BFS nodes order: {graph.bfsNodes(root_node)}")
 print(f"BFS edges: {graph.bfsEdges(root_node)}")
 print(f"BFS tree: {graph.bfsTree(root_node)}")
 
+print("\nDEPTH FIRST SEARCH")
 print(f"DFS nodes order: {graph.dfsNodes(root_node)}")
 print(f"DFS edges: {graph.dfsEdges(root_node)}")
 print(f"DFS tree: {graph.dfsTree(root_node)}")
@@ -198,3 +180,6 @@ print(f"Topological sorting: {digraph.topologicalSort()}")
 
 print("\nMINIMUM SPANNING TREE")
 print(f"MST of weighted graph: {wgraph.getMST()}")
+
+print("\nLOWEST COMMON ANCESTOR")
+print(f"Lowest common ancestor of nodes 'd' and 'b': {digraph.getLCA('d', 'b')}")
