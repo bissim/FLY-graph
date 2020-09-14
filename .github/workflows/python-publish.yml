@@ -37,7 +37,7 @@ jobs:
         pwd
         cd $WS/python/
         pwd
-        python -m pip install requirements.txt
+        python -m pip install -r requirements.txt
         python -m fly.graph.tests
 
     - name: Build and publish
