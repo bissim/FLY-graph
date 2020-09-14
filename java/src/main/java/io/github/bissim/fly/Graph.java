@@ -403,7 +403,7 @@ public class Graph<V, E>
 	/**
 	 * The <code>addEdge(V, V)</code> method adds an edge to graph which
 	 * specified nodes are the source and target of.
-	 * <b>
+	 * <br>
 	 * In version 1.0.0 this method was not daisy-chainable.
 	 * 
 	 * @since 1.1.0
