@@ -47,9 +47,7 @@ public class GraphDummyTest
 		out.print("Graph nodes: [");
 		IntStream
 				.range(0, graphNodes.length)
-				.forEach(i -> {
-					out.print(graphNodes[i] + ",");
-				});
+				.forEach(i -> out.print(graphNodes[i] + ","));
 		out.print("]\n");
 		out.println("Number of nodes: " + graph.numNodes());
 		out.println("Node 'a' is in graph: " + graph.hasNode("a"));
@@ -58,21 +56,14 @@ public class GraphDummyTest
 		out.print("Graph edges: [");
 		IntStream
 				.range(0, graphEdges.length)
-				.forEach(i -> {
-					out.print(graphEdges[i] + ",");
-				});
+				.forEach(i -> out.print(graphEdges[i] + ","));
 		out.print("]\n");
 		out.println("Number of edges: " + graph.numEdges());
 		out.println("Edge (\"a\", \"c\") is in graph: " + graph.hasEdge("a", "c"));
 		out.println("Edge (\"a\", \"f\") is in graph: " + graph.hasEdge("a", "f"));
 		out.println("Degree of node 'a': " + graph.nodeDegree("a"));
 		out.println("Degree of node 'f': " + graph.nodeDegree("f"));
-		Object[] neighbourhoodA = graph.neighbourhood("a");
-		out.print("Neighbourhood of node 'a': [");
-		IntStream
-				.range(0, neighbourhoodA.length)
-				.forEach(i -> {out.print(neighbourhoodA[i] + ",");});
-		out.print("]\n");
+		out.println("Neighbourhood of node 'a': " + graph.neighbourhood("a"));
 
 		/*
 		 * create weighted graph
@@ -118,13 +109,13 @@ public class GraphDummyTest
 		Object[] inStar = digraph.nodeInEdges("b");
 		IntStream
 				.range(0, inStar.length)
-				.forEach(i -> {out.print(inStar[i] + ",");});
+				.forEach(i -> out.print(inStar[i] + ","));
 		out.print("]\n");
 		out.print("Out star of 'b': [");
 		Object[] outStar = digraph.nodeOutEdges("b");
 		IntStream
 				.range(0, outStar.length)
-				.forEach(i -> {out.print(outStar[i] + ",");});
+				.forEach(i -> out.print(outStar[i] + ","));
 		out.print("]\n");
 
 		/*
@@ -153,92 +144,66 @@ public class GraphDummyTest
 		out.println("Weighted directed graph: " + wdgraph);
 
 		/*
-		 * Import/Export graph
+		 * graph metrics
 		 */
-//		out.println("\nGRAPH I/O");
-//		Graph<String, Object> importedGraph = null;
-//		Graph<String, Object> importedDGraph = null;
-//		Graph<String, Object> importedWGraph = null;
-//		Graph<String, Object> importedWDGraph = null;
-//		String dataPath = "./../../../../../data/";
-//		try
-//		{
-//			importedGraph = Graph.importGraph(
-////					dataPath + "unweighted.edgelist", // edgelist path
-//					dataPath + "graph.py.edgelist",
-//					" ", // separator character
-//					String.class, // node class
-//					false, // is weighted?
-//					false // is directed?
-//			);
-//
-//			importedDGraph = Graph.importGraph(
-////					dataPath + "unweighted.edgelist",
-//					dataPath + "digraph.py.edgelist",
-//					" ",
-//					String.class,
-//					false,
-//					true
-//			);
-//
-//			importedWGraph = Graph.importGraph(
-////					dataPath + "weighted.edgelist",
-//					dataPath + "wgraph.py.edgelist",
-//					" ",
-//					String.class,
-//					true,
-//					false
-//			);
-//
-//			importedWDGraph = Graph.importGraph(
-////					dataPath + "weighted.edgelist",
-//					dataPath + "wdgraph.py.edgelist",
-//					" ",
-//					String.class,
-//					true,
-//					true
-//			);
-//
-//			Graph.exportGraph(graph, dataPath + "ugraph.edgelist", " ");
-//			Graph.exportGraph(digraph, dataPath + "udgraph.edgelist", " ");
-//			Graph.exportGraph(wgraph, dataPath + "wgraph.edgelist", " ");
-//			Graph.exportGraph(wdgraph, dataPath + "wdgraph.edgelist", " ");
-//		}
-//		catch (
-//				FileNotFoundException |
-//				ImportException |
-//				ExportException e
-//		)
-//		{
-//			err.println(
-//					e.getClass().getSimpleName() +
-//					": " +
-//					e.getLocalizedMessage()
-//			);
-//		}
-//		out.println("Imported graph: " + importedGraph);
-//		out.println("Imported directed graph: " + importedDGraph);
-//		out.println("Imported weighted graph: " + importedWGraph);
-//		out.println(
-//				"Weight of (\"a\", \"e\") edge from weighted graph: " +
-//				importedWGraph.getEdgeWeight("a", "e")
-//		);
-//		out.println("Imported weighted directed graph: " + importedWDGraph);
-//		out.println(
-//				"Weight of (\"a\", \"e\") edge from weighted directed graph: " +
-//				importedWDGraph.getEdgeWeight("a", "e")
-//		);
+		out.println("\nGRAPH METRICS");
+		out.println("Graph: " + graph);
+		Object[] shortestPathA2C = graph.shortestPath("a", "c");
+		out.print("Shortest path from 'a' to 'c': ");
+		IntStream
+				.range(0, shortestPathA2C.length)
+				.forEach(i -> out.print(shortestPathA2C[i] + ","));
+		out.println();
+		Object[] shortestPathA2D = graph.shortestPath("a", "d");
+		out.print("Shortest path from 'a' to 'd': ");
+		IntStream
+				.range(0, shortestPathA2D.length)
+				.forEach(i -> out.print(shortestPathA2D[i] + ","));
+		out.println();
+		Object[] shortestPathA2F = graph.shortestPath("a", "f");
+		out.print("Shortest path from 'a' to 'f': ");
+		if (shortestPathA2F != null)
+		{
+			IntStream
+				.range(0, shortestPathA2F.length)
+				.forEach(i -> out.print(shortestPathA2F[i] + ","));
+		}
+		else
+		{
+			out.print("Infinity");
+		}
+		out.println();
+		graph.removeNode("f");
+		out.println("Graph diameter: " + graph.getDiameter());
+		out.println("Graph radius: " + graph.getRadius());
+		graph.addNode("f");
+		double clusterScoreA = graph.getNodeClusteringCoefficient("a");
+		out.println("Clustering coefficient of node 'a': " + clusterScoreA);
+		double clusterScoreB = graph.getNodeClusteringCoefficient("b");
+		out.println("Clustering coefficient of node 'a': " + clusterScoreB);
+		double clusterScoreAvg = graph.getAverageClusteringCoefficient();
+		out.println("Average clustering coefficient for graph: " + clusterScoreAvg);
+		double clusterScoreGlobal = graph.getGlobalClusteringCoefficient();
+		out.println("Global clustering coefficient for graph: " + clusterScoreGlobal);
+		// long trianglesA = graph.getNumberOfTriangles("a");
+		// out.println("Number of triangles for node 'a': " + trianglesA);
+		// long triangles = graph.getNumberOfTriangles();
+		// out.println("Total number of triangles in graph: " + triangles);
+		// long triadsA = graph.getNumberOfTriplets("a");
+		// out.println("Number of triplets for node 'a': " + triadsA);
+		// long triads = graph.getNumberOfTriplets();
+		// out.println("Total number of triplets in graph: " + triads);
 
 		/*
 		 * find BFS nodes
 		 */
-		String rootNode = "a";
 		out.println("\nBREADTH FIRST SEARCH");
+		String rootNode = "a";
 		String[] bfsNodes = graph.bfsNodes(rootNode);
 		out.print("BFS nodes order: ");
 		IntStream
 				.range(0, bfsNodes.length)
-				.forEach(i -> {out.print(bfsNodes[i] + ",");});
+				.forEach(i -> out.print(bfsNodes[i] + ","));
 		out.println();
 
 		/*
@@ -248,7 +213,7 @@ public class GraphDummyTest
 		out.print("BFS edges: ");
 		IntStream
 				.range(0, bfsEdges.length)
-				.forEach(i -> {out.print(bfsEdges[i] + ",");});
+				.forEach(i -> out.print(bfsEdges[i] + ","));
 		out.println();
 
 		/*
@@ -273,7 +238,7 @@ public class GraphDummyTest
 		out.print("DFS nodes order: ");
 		IntStream
 				.range(0, dfsNodes.length)
-				.forEach(i -> {out.print(dfsNodes[i] + ",");});
+				.forEach(i -> out.print(dfsNodes[i] + ","));
 		out.println();
 
 		/*
@@ -283,7 +248,7 @@ public class GraphDummyTest
 		out.print("DFS edges: ");
 		IntStream
 				.range(0, dfsEdges.length)
-				.forEach(i -> {out.print(dfsEdges[i] + ",");});
+				.forEach(i -> out.print(dfsEdges[i] + ","));
 		out.println();
 
 		/*
@@ -316,9 +281,7 @@ public class GraphDummyTest
 					String[] component = (String[]) connectedComponents[i];
 					IntStream
 							.range(0, component.length)
-							.forEach(j -> {
-								out.print(component[j] + ",");
-							});
+							.forEach(j -> out.print(component[j] + ","));
 					out.print("],");
 				});
 		out.print("]\n");
@@ -326,24 +289,18 @@ public class GraphDummyTest
 		String[] connectedComponent = graph.nodeConnectedComponent("a");
 		IntStream
 			.range(0, connectedComponent.length)
-			.forEach(i -> {
-				out.print(connectedComponent[i] + ",");
-			});
+			.forEach(i -> out.print(connectedComponent[i] + ","));
 		out.print("]\n");
 		out.print("Conncted component of 'f': [");
 		String[] connectedComponent2 = graph.nodeConnectedComponent("f");
 		IntStream
 			.range(0, connectedComponent2.length)
-			.forEach(i -> {
-				out.print(connectedComponent2[i] + ",");
-			});
+			.forEach(i -> out.print(connectedComponent2[i] + ","));
 		out.print("]\n");
 		Graph<String, Object>[] connectedSubgraphs = graph.connectedSubgraphs();
 		IntStream
 				.range(0, connectedSubgraphs.length)
-				.forEach(i -> {
-					out.println("Subgraph " + i + ": " + connectedSubgraphs[i]);
-				});
+				.forEach(i -> out.println("Subgraph " + i + ": " + connectedSubgraphs[i]));
 		out.println("Removing nodes 'f' and 'g'...");
 		graph.removeNode("f");
 		graph.removeNode("g");
@@ -367,9 +324,7 @@ public class GraphDummyTest
 					String[] component = (String[]) stronglyConnectedComponents[i];
 					IntStream
 							.range(0, component.length)
-							.forEach(j -> {
-								out.print(component[j] + ",");
-							});
+							.forEach(j -> out.print(component[j] + ","));
 					out.print("],");
 				});
 		out.print("]\n");
@@ -404,9 +359,7 @@ public class GraphDummyTest
 		out.print("Topological sorting: [");
 		IntStream
 				.range(0, topSort.length)
-				.forEach(i -> {
-					out.print(topSort[i] + ",");
-				});
+				.forEach(i -> out.print(topSort[i] + ","));
 		out.print("]\n");
 
 		/*
@@ -416,6 +369,12 @@ public class GraphDummyTest
 		Graph<String, Object> mst = wgraph.getMST();
 		out.println("MST of weighted graph: " + mst);
 
+		/*
+		 * Lowest common ancestor
+		 */
+		out.println("\nLOWEST COMMON ANCESTOR");
+		String lca = digraph.getLCA("d", "e");
+		out.println("Lowest common ancestor of nodes 'd' and 'e': " + lca);
 	}
 
 }

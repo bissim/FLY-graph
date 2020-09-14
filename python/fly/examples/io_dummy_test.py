@@ -81,7 +81,7 @@ wdgraph.setEdgeWeight("b", "d", 3.0)
 print(f"Weighted directed graph: {wdgraph}")
 
 print("\nIMPORT/EXPORT")
-data_path = "./data/"
+data_path = "./fly/resources/"
 graph_path = data_path + "graph.py.edgelist"
 dgraph_path = data_path + "digraph.py.edgelist"
 wgraph_path = data_path + "wgraph.py.edgelist"
