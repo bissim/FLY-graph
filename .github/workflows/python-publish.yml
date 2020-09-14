@@ -32,6 +32,14 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install setuptools wheel twine
 
+    - name: Run tests
+      run: |
+        pwd
+        cd $WS/python/
+        pwd
+        python -m pip install requirements.txt
+        python -m fly.graph.tests
+
     - name: Build and publish
       env:
         TWINE_USERNAME: __token__

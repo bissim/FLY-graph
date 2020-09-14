@@ -11,4 +11,4 @@ ls -la dist/
 python3 -m pip install -r fly_graph.egg-info/requires.txt
 cd ..
 echo
-python3 -m python.fly.graph
+python3 -m python.fly.graph.tests
