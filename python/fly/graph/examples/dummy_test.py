@@ -6,18 +6,9 @@ Dummy test for FLY graph functionalities
 
 from fly.graph.graph import Graph
 
-graph = Graph()
-
 nodes = ["a", "b", "c", "d", "e", "f"]
 
-graph.addNodes(nodes)
-
-graph.addEdge("a", "b")
-graph.addEdge("a", "c")
-graph.addEdge("b", "c")
-graph.addEdge("b", "e")
-graph.addEdge("c", "d")
-graph.addEdge("d", "e")
+graph = Graph().addNodes(nodes).addEdge("a", "b").addEdge("a", "c").addEdge("b", "c").addEdge("b", "e").addEdge("c", "d").addEdge("d", "e")
 
 print("\nUNDIRECTED GRAPH")
 print(f"Undirected graph: {graph}")

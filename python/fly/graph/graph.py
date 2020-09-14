@@ -204,17 +204,24 @@ class Graph():
             to_string += ", weighted"
         return to_string
 
-    def clear(self) -> None:
+    def clear(self) -> object:
         """
         Empties graph nodes and edges sets.
+
+        Returns
+        -------
+        object
+            Graph with emptied node and edge sets
         """
         self.graph.clear()
+
+        return self
 
     #
     # Nodes
     #
 
-    def addNode(self, node: V) -> None:
+    def addNode(self, node: V) -> object:
         """
         Adds a node to graph.
 
@@ -223,8 +230,15 @@ class Graph():
         node : V
             The node to add to graph
 
+
+        Returns
+        -------
+        object
+            Graph with added node
         """
         self.graph.add_node(node)
+
+        return self
 
     def addNodes(self, nodes: list) -> None:
         """
@@ -234,14 +248,24 @@ class Graph():
         ----------
         nodes : list
             The list of nodes to add to graph
+
+
+        Returns
+        -------
+        object
+            Graph with added nodes
         """
         self.graph.add_nodes_from(nodes)
 
-#    def add_nodes(self, *nodes: V) -> None:
+        return self
+
+#    def add_nodes(self, *nodes: V) -> object:
 #        """
 #        """
 #        for node in nodes:
 #            self.add_node(node)
+#
+#        return self
 
     def nodeDegree(self, node: V) -> int:
         """
@@ -408,7 +432,7 @@ class Graph():
     # Edges
     #
 
-    def addEdge(self, first_node: V, second_node: V) -> None:
+    def addEdge(self, first_node: V, second_node: V) -> object:
         """
         Adds an edge between two specified nodes to graph.
 
@@ -419,8 +443,16 @@ class Graph():
 
         second_node : V
             Target node of edge
+
+
+        Returns
+        -------
+        object
+            Graph with added edge
         """
         self.graph.add_edge(first_node, second_node)
+
+        return self
 
     def getEdge(self, first_node: V, second_node: V) -> E:
         """

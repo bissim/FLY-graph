@@ -125,23 +125,75 @@ public class Graph<V, E>
 		);
 	}
 
+	/**
+	 * The <code>Graph(Class&lt;V&gt;, boolean, boolean)</code> constructs a
+	 * graph with node class the same specified as parameter and can be
+	 * directed, weighted or both according to boolean parameters.
+	 * 
+	 * @since 1.1.0
+	 * 
+	 * @param nodes The nodes to add to graph
+	 * @param nodeClass The class of the graph nodes
+	 * @param isDirected Denotes whether graph edges will be directed
+	 * @param isWeighted Denotes whether graph edges will be weighted
+	 */
+	public Graph(
+			V[] nodes,
+			Class<V> nodeClass,
+			boolean isDirected,
+			boolean isWeighted
+	)
+	{
+		this(nodeClass, isDirected, isWeighted);
+		this.addNodes(nodes);
+	}
+
+	/**
+	 * The <code>Graph(Class&lt;V&gt;, boolean, boolean)</code> constructs a
+	 * graph with node class the same specified as parameter and can be
+	 * directed, weighted or both according to boolean parameters.
+	 * 
+	 * @since 1.1.0
+	 * 
+	 * @param nodes The nodes to add to graph
+	 * @param edges The edges to add to graph
+	 * @param nodeClass The class of the graph nodes
+	 * @param isDirected Denotes whether graph edges will be directed
+	 * @param isWeighted Denotes whether graph edges will be weighted
+	 */
+	public Graph(
+			V[] nodes,
+			E[] edges,
+			Class<V> nodeClass,
+			boolean isDirected,
+			boolean isWeighted
+	)
+	{
+		this(nodes, nodeClass, isDirected, isWeighted);
+		this.addEdges(edges);
+	}
+
 	// public methods
 
 	/**
 	 * The <code>clear()</code> method deals with emptying both
 	 * graph node set and edge set.
+	 * <br>
+	 * In version 1.0.0 this method was not daisy-chainable.
 	 * 
-	 * @since 1.0.0
+	 * @since 1.1.0
 	 * 
+	 * @return The graph with emptied node and edge sets
 	 */
-	public void clear()
+	public Graph<V, E> clear()
 	{
 		Set<V> nodes = this.graph
 				.vertexSet()
 				.stream()
 				.collect(Collectors.toSet());
 		this.graph.removeAllVertices(nodes);
-//		this.graph.edgeSet().clear(); // removing nodes should be enough
+
+		return this;
 	}
 
 	/*
@@ -157,7 +209,7 @@ public class Graph<V, E>
 	 * @since 1.1.0
 	 * 
 	 * @param node The node to add to graph
-	 * @return graph with added node
+	 * @return The graph with added node
 	 */
 	public Graph<V, E> addNode(V node)
 	{
