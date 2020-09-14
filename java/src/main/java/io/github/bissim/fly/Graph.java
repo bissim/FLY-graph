@@ -49,7 +49,7 @@ import org.jgrapht.nio.csv.CSVFormat;
  * It basically wraps the JGraphT representation of graphs according to FLY
  * API for graphs.
  * 
- * @version 1.0.1
+ * @version 1.1.0
  * @author Simone Bisogno
  *&lt;<a href="mailto:s.bisogno10@studenti.unisa.it?cc=s.bisogno90@gmail.com&amp;subject=Java%20FLY%20graph%20library&amp;body=Hello,%0D%0A%0D%0Ayour%20message%20here">s.bisogno10@studenti.unisa.it</a>&gt;
  * 
@@ -87,12 +87,12 @@ public class Graph<V, E>
 	private boolean isDirected;
 	/**
 	 * Stores information about graph measurements
-	 * @since 1.0.1
+	 * @since 1.1.0
 	 */
 	private GraphMeasurer<V, E> graphMeasurer;
 	/**
 	 * Stores information about graph clustering
-	 * @since 1.0.1
+	 * @since 1.1.0
 	 */
 	private ClusteringCoefficient<V, E> clusteringCoefficient;
 
@@ -151,10 +151,10 @@ public class Graph<V, E>
 	/**
 	 * The <code>addNode(V)</code> method deals with adding specified node
 	 * to graph node set.
-	 * <b>
+	 * <br>
 	 * In version 1.0.0 this method was not daisy-chainable.
 	 * 
-	 * @since 1.0.1
+	 * @since 1.1.0
 	 * 
 	 * @param node The node to add to graph
 	 * @return graph with added node
@@ -169,10 +169,10 @@ public class Graph<V, E>
 	/**
 	 * The <code>addNodes(V[])</code> method deals with adding nodes from
 	 * specified array to graph node set.
-	 * <b>
+	 * <br>
 	 * In version 1.0.0 this method was not daisy-chainable.
 	 * 
-	 * @since 1.0.1
+	 * @since 1.1.0
 	 * 
 	 * @see #addNode(Object)
 	 * 
@@ -188,19 +188,19 @@ public class Graph<V, E>
 		return this;
 	}
 
-	/*
-	 * The <code>addNodes(V...)</code> method deals with adding specified nodes
-	 * to graph node set.
-	 * <b>
-	 * In version 1.0.0 this method was not daisy-chainable.
-	 * 
-	 * @since 1.0.1
-	 * 
-	 * @see #addNode(Object)
-	 * 
-	 * @param nodes The nodes to add to graph
-	 * @return graph with added nodes
-	 */
+//	/**
+//	 * The <code>addNodes(V...)</code> method deals with adding specified nodes
+//	 * to graph node set.
+//	 * <br>
+//	 * In version 1.0.0 this method was not daisy-chainable.
+//	 * 
+//	 * @since 1.1.0
+//	 * 
+//	 * @see #addNode(Object)
+//	 * 
+//	 * @param nodes The nodes to add to graph
+//	 * @return graph with added nodes
+//	 */
 //	public Graph<V, E> addNodes(V... nodes)
 //	{
 //		List<V> nodesList = List.of(nodes); // not in Java 8
@@ -263,7 +263,7 @@ public class Graph<V, E>
 	 * In version 1.0.0, it erroneously gave the list of edges the given node
 	 * was head or tail of.
 	 * 
-	 * @since 1.0.1
+	 * @since 1.1.0
 	 * 
 	 * @param node The node which we want to know the neighbourhood of
 	 * @return ...
@@ -284,7 +284,7 @@ public class Graph<V, E>
 	 * The {@code nodeEdges(V)} method returns the adjacent edges of
 	 * specified node, as long as it belongs to the graph.
 	 * 
-	 * @since 1.0.1
+	 * @since 1.1.0
 	 * 
 	 * @param node The node which we want to know the edges of
 	 * @return The array of edges having node as source or target
@@ -406,7 +406,7 @@ public class Graph<V, E>
 	 * <b>
 	 * In version 1.0.0 this method was not daisy-chainable.
 	 * 
-	 * @since 1.0.1
+	 * @since 1.1.0
 	 * 
 	 * @param firstNode One of the edge nodes
 	 * @param secondNode The other edge node
@@ -427,7 +427,7 @@ public class Graph<V, E>
 	 * 
 	 * @param firstNode One of the edge nodes
 	 * @param secondNode The other edge node
-	 * @return the edge of the graph where <code>firstNode</code> is source
+	 * @return The edge of the graph where <code>firstNode</code> is source
 	 * and <code>secondNode</code> is target
 	 */
 	public E getEdge(V firstNode, V secondNode)
@@ -469,8 +469,8 @@ public class Graph<V, E>
 	 * 
 	 * @since 1.0.0
 	 * 
-	 * @param e
-	 * @return
+	 * @param e The edge which source has to be extracted of
+	 * @return The edge source
 	 */
 	public V getEdgeSource(E e)
 	{
@@ -483,8 +483,8 @@ public class Graph<V, E>
 	 * 
 	 * @since 1.0.0
 	 * 
-	 * @param e
-	 * @param s
+	 * @param e The edge which source has to be set of
+	 * @param s The edge source to set
 	 */
 	public void setEdgeSource(E e, V s)
 	{
@@ -499,8 +499,8 @@ public class Graph<V, E>
 	 * 
 	 * @since 1.0.0
 	 * 
-	 * @param e
-	 * @return
+	 * @param e The edge which target has to be extracted of
+	 * @return The edge target
 	 */
 	public V getEdgeTarget(E e)
 	{
@@ -513,8 +513,8 @@ public class Graph<V, E>
 	 * 
 	 * @since 1.0.0
 	 * 
-	 * @param e
-	 * @param t
+	 * @param e The edge which target has to be set of
+	 * @param t The edge target to set
 	 */
 	public void setEdgeTarget(E e, V t)
 	{
@@ -591,18 +591,19 @@ public class Graph<V, E>
 
 	// TODO comment
 	/**
-	 * The ...
+	 * The {@code shortestPath(V, V)} method ...
 	 * 
-	 * @since 1.0.1
+	 * @since 1.1.0
 	 * 
-	 * @param source
-	 * @param target
-	 * @return
+	 * @param source The source of shortest path to find
+	 * @param target The target of shortest path to find
+	 * @return The shortest path from source to target
 	 */
 	@SuppressWarnings("unchecked")
 	public E[] shortestPath(V source, V target)
 	{
-		GraphPath<V, E> shortestPath = new DijkstraShortestPath<V, E>(this.graph)
+		GraphPath<V, E> shortestPath =
+				new DijkstraShortestPath<>(this.graph)
 				.getPath(source, target);
 		if (shortestPath == null)
 		{
@@ -617,11 +618,11 @@ public class Graph<V, E>
 
 	// TODO comment
 	/**
-	 * The ...
+	 * The {@code getDiameter()} method ...
 	 * 
-	 * @since 1.0.1
+	 * @since 1.1.0
 	 * 
-	 * @return
+	 * @return The graph diameter
 	 */
 	public double getDiameter()
 	{
@@ -630,11 +631,11 @@ public class Graph<V, E>
 
 	// TODO comment
 	/**
-	 * The ...
+	 * The {@code getRadius()} method ...
 	 * 
-	 * @since 1.0.1
+	 * @since 1.1.0
 	 * 
-	 * @return
+	 * @return The graph radius
 	 */
 	public double getRadius()
 	{
@@ -644,9 +645,9 @@ public class Graph<V, E>
 	/**
 	 * The {@code getCenter()} method ...
 	 * 
-	 * @since 1.0.1
+	 * @since 1.1.0
 	 * 
-	 * @return
+	 * @return The graph center
 	 */
 	@SuppressWarnings("unchecked")
 	public V[] getCenter()
@@ -659,9 +660,9 @@ public class Graph<V, E>
 	/**
 	 * The {@code getPeriphery()} method ...
 	 * 
-	 * @since 1.0.1
+	 * @since 1.1.0
 	 * 
-	 * @return
+	 * @return The graph periphery
 	 */
 	@SuppressWarnings("unchecked")
 	public V[] getPeriphery()
@@ -674,10 +675,10 @@ public class Graph<V, E>
 	/**
 	 * The {@code getNodeEccentricity(V)} method ...
 	 * 
-	 * @since 1.0.1
+	 * @since 1.1.0
 	 * 
-	 * @param node
-	 * @return
+	 * @param node The node whose eccentricity has to be found
+	 * @return The node eccentricity
 	 */
 	public double getNodeEccentricity(V node)
 	{
@@ -692,9 +693,9 @@ public class Graph<V, E>
 	// /**
 	//  * The ...
 	//  * 
-	//  * @since 1.0.1
+	//  * @since 1.1.0
 	//  * 
-	//  * @return
+	//  * @return The graph total number of triangles
 	//  */
 	// public long getNumberOfTriangles()
 	// {
@@ -711,13 +712,13 @@ public class Graph<V, E>
 	//  * For more details of this algorithm see Ullman, Jeffrey: "Mining of Massive Datasets",
 	//  * Cambridge University Press, Chapter 10
 	//  *
-	//  * @since 1.0.1
+	//  * @since 1.1.0
 	//  * @see org.jgrapht.GraphMetrics#getNumberOfTriangles(org.jgrapht.Graph)
 	//  * 
 	//  * @param graph the input graph
 	//  * @param <V> the graph vertex type
 	//  * @param <E> the graph edge type
-	//  * @return the number of triangles in the graph
+	//  * @return The number of triangles in the graph which node is part of
 	//  * @throws NullPointerException if {@code graph} is {@code null}
 	//  * @throws IllegalArgumentException if {@code graph} is not undirected
 	//  */
@@ -819,10 +820,10 @@ public class Graph<V, E>
 	// /**
 	//  * The {@code getNumberOfTriplets()} method ...
 	//  * 
-	//  * @since 1.0.1
+	//  * @since 1.1.0
 	//  * @see org.jgrapht.alg.scoring.ClusteringCoefficient#computeGlobalClusteringCoefficient()
 	//  * 
-	//  * @return
+	//  * @return The graph number of triplets
 	//  */
 	// public int getNumberOfTriplets()
 	// {
@@ -833,10 +834,10 @@ public class Graph<V, E>
 	// /**
 	//  * The {@code getNumberOfTriplets(V)} method ...
 	//  * 
-	//  * @since 1.0.1
+	//  * @since 1.1.0
 	//  * @see org.jgrapht.alg.scoring.ClusteringCoefficient#computeGlobalClusteringCoefficient()
 	//  * 
-	//  * @return
+	//  * @return The graph number of triplets which node is part of
 	//  */
 	// public int getNumberOfTriplets(V node)
 	// {
@@ -845,11 +846,11 @@ public class Graph<V, E>
 
 	// TODO comment
 	/**
-	 * The ...
+	 * The {@code getAverageClusteringCoefficient()} method ...
 	 * 
-	 * @since 1.0.1
+	 * @since 1.1.0
 	 * 
-	 * @return
+	 * @return The graph average clustering coefficient
 	 */
 	public double getAverageClusteringCoefficient()
 	{
@@ -859,11 +860,11 @@ public class Graph<V, E>
 
 	// TODO comment
 	/**
-	 * The ...
+	 * The {@code getGlobalClusteringCoefficient()} method ...
 	 * 
-	 * @since 1.0.1
+	 * @since 1.1.0
 	 * 
-	 * @return
+	 * @return The graph global clustering coefficient
 	 */
 	public double getGlobalClusteringCoefficient()
 	{
@@ -873,12 +874,12 @@ public class Graph<V, E>
 
 	// TODO comment
 	/**
-	 * The ...
+	 * The {@code getNodeClusteringCoefficient(V)} method ...
 	 * 
-	 * @since 1.0.1
+	 * @since 1.1.0
 	 * 
-	 * @param node
-	 * @return
+	 * @param node The graph node which clustering coefficient has to be found
+	 * @return The graph node clustering coefficient
 	 */
 	public double getNodeClusteringCoefficient(V node)
 	{
@@ -944,7 +945,6 @@ public class Graph<V, E>
 		// easy fix for real graph import
 		// as per https://stackoverflow.com/questions/61089620/
 		// effective since JGraphT 1.4.1
-		// remove imported graph conversion after enabling this line
 		importer.setVertexFactory(id -> (V) id);
 
 		// tell importer that graph to import is weighted
@@ -1565,7 +1565,7 @@ public class Graph<V, E>
 	 * 
 	 * @since 1.0.0
 	 * 
-	 * @return array of topological sorted nodes
+	 * @return The array of topological sorted nodes
 	 */
 	public V[] topologicalSort()
 	{
@@ -1586,9 +1586,9 @@ public class Graph<V, E>
 		return nodes;
 	}
 
-//	/*
-//	 * Minimum spanning tree
-//	 */
+	/*
+	 * Minimum spanning tree
+	 */
 
 	/**
 	 * The <code>getMST()</code> method returns the minimum spanning tree
@@ -1596,7 +1596,7 @@ public class Graph<V, E>
 	 * 
 	 * @since 1.0.0
 	 * 
-	 * @return minimum spanning tree of graph
+	 * @return The graph minimum spanning tree
 	 */
 	public Graph<V, E> getMST()
 	{
@@ -1630,13 +1630,13 @@ public class Graph<V, E>
 
 	// TODO comment
 	/**
-	 * The ...
+	 * The {@code getLCA(V, V)} method ...
 	 * 
-	 * @since 1.0.1
+	 * @since 1.1.0
 	 * 
-	 * @param node1
-	 * @param node2
-	 * @return
+	 * @param node1 The graph first node which LCA has to be found of
+	 * @param node2 The graph second node which LCA has to be found of
+	 * @return The LCA of nodes
 	 */
 	public V getLCA(V node1, V node2)
 	{
@@ -1776,7 +1776,7 @@ public class Graph<V, E>
 	 * The <code>neighbourNodes(V)</code> method returns the list of nodes
 	 * which are adjacent to given node.
 	 * 
-	 * @since 1.0.1
+	 * @since 1.1.0
 	 * 
 	 * @param node The node which we want to know the neighbourhood of
 	 * @return The array of edges having node as source or target
@@ -1790,6 +1790,16 @@ public class Graph<V, E>
 		return (V[]) this.setToArray(nodesSet, this.nodeClass);
 	}
 
+	/**
+	 * The {@code naiveCountTriangles(List<V>)} method ...
+	 * 
+	 * @since 1.1.0
+	 * 
+	 * @param vertexSubset The node set which number of triangles has
+	 * to be found of
+	 * @return The number of triangles for graph nodes subset
+	 */
+	@SuppressWarnings("unused")
 	private long naiveCountTriangles(List<V> vertexSubset)
 	{
 		long total = 0;
@@ -1819,6 +1829,15 @@ public class Graph<V, E>
 		return total;
 	}
 
+	/**
+	 * The {@code triplets(V)} method ...
+	 * 
+	 * @since 1.1.0
+	 * 
+	 * @param node The graph node which triplets number has to be found of
+	 * @return The graph node number of triplets
+	 */
+	@SuppressWarnings("unused")
 	private int triplets(V node)
 	{
 		org.jgrapht.Graph<V, E> graph;
@@ -1848,6 +1867,13 @@ public class Graph<V, E>
 		return numberTriplets[0];
 	}
 
+	/**
+	 * The {@code graphMeasurer()} method ...
+	 * 
+	 * @since 1.1.0
+	 * 
+	 * @return The graph measurer
+	 */
 	private GraphMeasurer<V, E> graphMeasurer()
 	{
 		if (this.graphMeasurer == null)
@@ -1859,6 +1885,13 @@ public class Graph<V, E>
 	}
 
 	// TODO comment
+	/**
+	 * The {@code clusteringCoefficient()} method ...
+	 * 
+	 * @since 1.1.0
+	 * 
+	 * @return Tge graph clustering coefficient object
+	 */
 	private ClusteringCoefficient<V, E> clusteringCoefficient()
 	{
 		if (this.clusteringCoefficient == null)
@@ -1876,7 +1909,7 @@ public class Graph<V, E>
 	 * <b>
 	 * In version 1.0.0 this method was not daisy-chainable.
 	 * 
-	 * @since 1.0.1
+	 * @since 1.1.0
 	 * 
 	 * @see #addEdge(Object, Object)
 	 * 
@@ -2024,6 +2057,7 @@ public class Graph<V, E>
 	 * @param edgeSet A set of edges
 	 * @return The array of edges
 	 */
+	@SuppressWarnings("unused")
 	private E[] edgeArrayFromSet(Set<E> edgeSet)
 	{
 		@SuppressWarnings("unchecked")
@@ -2198,10 +2232,11 @@ public class Graph<V, E>
 	/**
 	 * The {@code setToArray(Set)} method ...
 	 * 
-	 * @since 1.0.1
+	 * @since 1.1.0
 	 * 
-	 * @param set
-	 * @return
+	 * @param set The set to convert to array
+	 * @param setClass The class of elements of set to convert
+	 * @return The array of elements from set
 	 */
 	private Object[] setToArray(Set<?> set, Class<?> setClass)
 	{
