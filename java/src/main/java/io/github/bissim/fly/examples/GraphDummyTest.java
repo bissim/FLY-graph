@@ -1,8 +1,10 @@
-package io.github.bissim.fly;
+package io.github.bissim.fly.examples;
 
 import static java.lang.System.out;
 
 import java.util.stream.IntStream;
+
+import io.github.bissim.fly.Graph;
 
 public class GraphDummyTest
 {

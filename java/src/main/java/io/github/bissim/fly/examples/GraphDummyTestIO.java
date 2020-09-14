@@ -1,7 +1,9 @@
-package io.github.bissim.fly;
+package io.github.bissim.fly.examples;
 
 import static java.lang.System.err;
 import static java.lang.System.out;
+
+import io.github.bissim.fly.Graph;
 
 public class GraphDummyTestIO
 {
