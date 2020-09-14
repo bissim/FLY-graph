@@ -568,9 +568,13 @@ class Graph():
         """
         """
         try:
-            return shortest_path(self.graph, source=source, target=target)
+            path_nodes = shortest_path(self.graph, source=source, target=target)
+            path = [{} for x in range(0, len(path_nodes) - 1)]
+            for pos in range(0, len(path)):
+                path[pos] = {path_nodes[pos], path_nodes[pos + 1]}
+            return path
         except NetworkXNoPath:
-            return list()
+            return None
 
     def getDiameter(self) -> float:
         """
@@ -964,16 +968,3 @@ class Graph():
         """
         """
         return lowest_common_ancestor(self.graph, node1, node2)
-
-#
-# Run tests as standalone module
-#
-if __name__ == "__main__":
-    print("Run FLY Graph tests")
-
-    import os, sys
-    sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-    from ..tests import graph_test, graph_io_test
-
-    graph_test
-    graph_io_test
