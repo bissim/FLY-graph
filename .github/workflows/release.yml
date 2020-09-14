@@ -29,11 +29,10 @@ jobs:
 
     - name: Create signed annotated tag (${{ env.VERSION }})
       id: tag
-      uses: mathieudutour/github-tag-action@master # TODO change to stable version asap
+      uses: laputansoft/github-tag-action@v4.6
       with:
         github_token: ${{ secrets.AUTH_TOKEN }}
-        tag_prefix: ''
-        custom_tag: ${{ env.VERSION }}
+        tag: ${{ env.VERSION }}
         create_annotated_tag: true
 
     - name: Create Release
