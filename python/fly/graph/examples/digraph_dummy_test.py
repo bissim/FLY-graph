@@ -1,10 +1,10 @@
 #! python3
 
-import os, sys
-sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+# import os, sys
+# sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 from urllib.request import urlopen
-from fly.graph import Graph
+from fly.graph.graph import Graph
 
 remote_file = urlopen("https://raw.githubusercontent.com/bissim/FLY-graph/master/data/digraph.py.edgelist")
 digraph = Graph.importGraph(remote_file, ' ', is_directed=True)

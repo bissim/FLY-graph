@@ -4,7 +4,7 @@
 Dummy test for FLY graph functionalities
 '''
 
-from fly.graph import Graph
+from fly.graph.graph import Graph
 
 graph = Graph()
 

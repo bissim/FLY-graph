@@ -8,7 +8,7 @@ Dummy test for FLY Graph IO functionality
 # sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 from urllib.request import urlopen
-from fly.graph import Graph
+from fly.graph.graph import Graph
 
 nodes = ["a", "b", "c", "d", "e", "f"]
 

@@ -8,7 +8,7 @@ Dummy test for FLY Graph IO functionality
 # sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 from urllib.request import urlopen
-from fly.graph import Graph
+from fly.graph.graph import Graph
 
 nodes = ["a", "b", "c", "d", "e", "f"]
 
@@ -81,7 +81,7 @@ wdgraph.setEdgeWeight("b", "d", 3.0)
 print(f"Weighted directed graph: {wdgraph}")
 
 print("\nIMPORT/EXPORT")
-data_path = "./fly/resources/"
+data_path = "./fly/graph/resources/"
 graph_path = data_path + "graph.py.edgelist"
 dgraph_path = data_path + "digraph.py.edgelist"
 wgraph_path = data_path + "wgraph.py.edgelist"

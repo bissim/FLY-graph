@@ -1,6 +1,6 @@
 #! python3
 
-from fly.graph import Graph
+from fly.graph.graph import Graph
 
 class LowestCommonAncestor():
     @classmethod
