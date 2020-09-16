@@ -30,7 +30,9 @@ REQUIRED = [
 ]
 
 # Optional packages
-EXTRAS = {}
+EXTRAS = {
+    'coverage'
+}
 
 # The rest you shouldn't have to touch too much :)
 # ------------------------------------------------
