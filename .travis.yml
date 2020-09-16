@@ -44,7 +44,7 @@ jobs:
       language: python
       python: "3.6"
       after_success:
-        - bash <(curl -s https://codecov.io/bash) -F python -f "coverage.xml"
+        - bash <(curl -s https://codecov.io/bash) -F python -f "/home/travis/build/bissim/FLY-graph/python/coverage.xml"
       script: ./scripts/build_python.sh
 
     - name: Build Python project (3.7)
