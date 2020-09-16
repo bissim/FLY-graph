@@ -44,7 +44,7 @@ jobs:
       run: |
         mvn -B -T $(nproc) verify package -f $WS/java/pom.xml
         cd $WS/java/
-        bash <(curl -s https://codecov.io/bash)
+        bash <(curl -s https://codecov.io/bash) -cF java
         cd $WS
       env:
         GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}

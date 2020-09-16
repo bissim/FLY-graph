@@ -36,7 +36,7 @@ jobs:
     - name: Build Java project (OpenJDK 11)
       language: java
       after_success:
-        - bash <(curl -s https://codecov.io/bash)
+        - bash <(curl -s https://codecov.io/bash) -cF java
       jdk: openjdk11
       script: ./scripts/build_java.sh
 
@@ -54,5 +54,5 @@ jobs:
       language: python
       python: "3.8"
       after_success:
-        - bash <(curl -s https://codecov.io/bash)
+        - bash <(curl -s https://codecov.io/bash) -cF python
       script: ./scripts/build_python.sh
