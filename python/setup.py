@@ -31,7 +31,7 @@ REQUIRED = [
 
 # Optional packages
 EXTRAS = {
-    'coverage'
+    'Coverage': ['coverage']
 }
 
 # The rest you shouldn't have to touch too much :)
