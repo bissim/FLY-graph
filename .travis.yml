@@ -43,6 +43,8 @@ jobs:
     - name: Build Python project (3.6)
       language: python
       python: "3.6"
+      after_success:
+        - bash <(curl -s https://codecov.io/bash) -cF python
       script: ./scripts/build_python.sh
 
     - name: Build Python project (3.7)
@@ -53,6 +55,4 @@ jobs:
     - name: Build Python project (3.8)
       language: python
       python: "3.8"
-      after_success:
-        - bash <(curl -s https://codecov.io/bash) -cF python
       script: ./scripts/build_python.sh
