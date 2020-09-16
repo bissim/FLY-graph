@@ -19,6 +19,6 @@ python3 -m pip install coverage
 python3 -m coverage run fly/graph/tests/
 
 echo -e "\nReport FLY Graph code coverage"
-python3 -m coverage report -i fly/graph/*
-python3 -m coverage xml -i fly/graph/*
+python3 -m coverage report -i fly/graph/graph.py
+python3 -m coverage xml -i fly/graph/graph.py
 ls -la
