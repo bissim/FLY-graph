@@ -1,6 +1,6 @@
 # FLY Graph
 
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/bissim/FLY-graph)](https://github.com/bissim/FLY-graph/releases) [![Travis CI Build Status](https://travis-ci.com/bissim/FLY-graph.svg?branch=master)](https://travis-ci.com/bissim/FLY-graph) [![Release](https://github.com/bissim/FLY-graph/workflows/Release/badge.svg)](https://github.com/bissim/FLY-graph/releases) [![GitHub license](https://img.shields.io/github/license/bissim/FLY-graph?logo=open-source-initiative)](https://github.com/bissim/FLY-graph/blob/master/LICENCE)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/bissim/FLY-graph)](https://github.com/bissim/FLY-graph/releases) [![Travis CI Build Status](https://travis-ci.com/bissim/FLY-graph.svg?branch=master)](https://travis-ci.com/bissim/FLY-graph) [![codecov](https://codecov.io/gh/bissim/FLY-graph/branch/master/graph/badge.svg)](https://codecov.io/gh/bissim/FLY-graph) [![Release](https://github.com/bissim/FLY-graph/workflows/Release/badge.svg)](https://github.com/bissim/FLY-graph/releases) [![GitHub license](https://img.shields.io/github/license/bissim/FLY-graph?logo=open-source-initiative)](https://github.com/bissim/FLY-graph/blob/master/LICENCE)
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.bissim/fly-graph)](https://search.maven.org/search?q=g:io.github.bissim%20AND%20a:fly-graph) [![Java Deploy](https://github.com/bissim/FLY-graph/workflows/Java%20Deploy/badge.svg)](https://github.com/bissim/FLY-graph/packages)
 
