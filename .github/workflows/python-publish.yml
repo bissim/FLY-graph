@@ -42,7 +42,7 @@ jobs:
         python -m pip install coverage
         python -m coverage report -i fly/graph/*
         python -m coverage xml -i fly/graph/*
-        bash <(curl -s https://codecov.io/bash) -F python
+        bash <(curl -s https://codecov.io/bash)
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
