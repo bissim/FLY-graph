@@ -12,3 +12,4 @@
 **/.factorypath
 **/*.pyc
 **/.coverage
+**/coverage.xml
