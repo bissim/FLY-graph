@@ -608,6 +608,11 @@ class Graph():
         except NetworkXNoPath:
             return None
 
+    def shortestPathLength(self, source: V, target: V) -> int:
+        """
+        """
+        return len(self.shortestPath(source, target))
+
     def getDiameter(self) -> float:
         """
         """

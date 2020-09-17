@@ -668,6 +668,20 @@ public class Graph<V, E>
 		}
 	}
 
+	/**
+	 * The {@code shortestPathLength(V, V)} method...
+	 * 
+	 * @since 1.1.0
+	 * 
+	 * @param source The source of shortest path length to find
+	 * @param target The target of shortest path length to find
+	 * @return The shortest path length from source to target
+	 */
+	public int shortestPathLength(V source, V target)
+	{
+		return this.shortestPath(source, target).length;
+	}
+
 	// TODO comment
 	/**
 	 * The {@code getDiameter()} method ...
