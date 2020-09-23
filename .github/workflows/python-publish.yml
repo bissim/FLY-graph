@@ -39,12 +39,12 @@ jobs:
         pwd
         python -m pip install -r requirements.txt
         python -m fly.graph.tests
-        python -m pip install coverage
-        python -m coverage report -i fly/graph/*
-        python -m coverage xml -i fly/graph/*
-        bash <(curl -s https://codecov.io/bash)
-      env:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        # python -m pip install coverage
+        # python -m coverage report -i fly/graph/*
+        # python -m coverage xml -i fly/graph/*
+        # bash <(curl -s https://codecov.io/bash)
+      # env:
+      #   CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
     - name: Build and publish
       env:

@@ -43,12 +43,12 @@ jobs:
     - name: Build FLY Graph project
       run: |
         mvn -B -T $(nproc) verify package -f $WS/java/pom.xml
-        cd $WS/java/
-        bash <(curl -s https://codecov.io/bash)
-        cd $WS
+        # cd $WS/java/
+        # bash <(curl -s https://codecov.io/bash)
+        # cd $WS
       env:
         GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        # CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
     - name: Set up cache
       uses: actions/cache@v2

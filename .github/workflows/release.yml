@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@master
       with:
         fetch-depth: 0
 
@@ -42,9 +42,9 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.AUTH_TOKEN }}
       with:
-        tag_name: ${{ env.VERSION }} #${{ github.ref }}
-        release_name: FLY graph ${{ env.VERSION }} #${{ github.ref }}
+        tag_name: ${{ env.VERSION }}
+        release_name: FLY graph ${{ env.VERSION }}
         body: |
           FLY graph release
         draft: false
-        prerelease: true
+        prerelease: false
