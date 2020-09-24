@@ -12,10 +12,13 @@ It is based on common graph libraries like [JGraphT](https://github.com/jgrapht/
 
 - basic graph creation and manipulation;
 - graph serialization;
+- graph measurement (diameter, radius);
+- graph metrics (clustering);
 - graph tours (breadth-first, depth-first);
 - connectivity and strong connectivity;
 - directed acyclic graphs and topological order;
-- minimum-spanning tree.
+- minimum-spanning tree;
+- lowest common ancestor of two given nodes.
 
 ## ⚠️ WARNING ⚠️
 
