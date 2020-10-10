@@ -5,11 +5,11 @@ import static java.lang.System.err;
 
 import io.github.bissim.fly.Graph;
 
-public class LCA
+public class Diameter
 {
     public static void main(String[] args)
     {
-        Graph<String, Object> dag = (Graph<String, Object>) null;
+        Graph<String, Object> graph = (Graph<String, Object>) null;
         String[] nodes = { "a", "b", "c", "d", "e" };
 
         if (args.length > 3)
@@ -20,7 +20,7 @@ public class LCA
             final boolean IS_WEIGHTED = Boolean.parseBoolean(args[3]);
             try
             {
-                dag = Graph.importGraph(PATH, SEPARATOR, String.class, IS_WEIGHTED, IS_DIRECTED);
+                graph = Graph.importGraph(PATH, SEPARATOR, String.class, IS_WEIGHTED, IS_DIRECTED);
             }
             catch (Exception e)
             {
@@ -30,7 +30,7 @@ public class LCA
                     e.getLocalizedMessage()
                 );
             }
-            nodes = dag.nodeSet();
+            nodes = graph.nodeSet();
         }
         else
         {
@@ -39,8 +39,8 @@ public class LCA
                 "java Diameter <path_to_edgelist> \"<separator>\" " +
                 "<boolean_is_directed> <boolean_is_weighted>"
             );
-            dag =
-                    new Graph<>(String.class, true, false)
+            graph =
+                    new Graph<>(String.class, false, false)
                     .addNodes(nodes)
                     .addEdge("a", "b")
                     .addEdge("a", "c")
@@ -50,13 +50,7 @@ public class LCA
         }
 
         final long START_TIME = System.currentTimeMillis();
-        for (String first: dag.nodeSet())
-        {
-            for (String second: dag.nodeSet())
-            {
-                dag.getLCA(first, second);
-            }
-        }
-        out.println((System.currentTimeMillis() - START_TIME) / 1000.00);
+        graph.getDiameter();
+        out.println((System.currentTimeMillis() - START_TIME) / 1000.0);
     }
 }
