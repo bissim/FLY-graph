@@ -39,7 +39,7 @@ yspan = GPVAL_DATA_Y_MAX - GPVAL_DATA_Y_MIN
 
 # define axis units
 xequiv = 1024
-yequiv = 1
+yequiv = 1 # 2 for LCA graph
 
 # aspect ratio
 ar = yspan/xspan * xequiv/yequiv
@@ -72,7 +72,7 @@ set grid ls 1
 
 # graph style
 set style data lines
-set style line 2 lw 2 lc rgb "red" dt "_"
+set style line 2 lw 2 lc rgb "red"# dt "_"
 set style line 22 lw 0 pt "×"
 set style line 3 lw 2 lc rgb "#26DFD0"
 set style line 33 lw 0 pt "¤"
