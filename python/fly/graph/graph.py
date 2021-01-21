@@ -6,23 +6,29 @@
 Graphs for FLY language
 '''
 
-from typing import TypeVar, Generic
+from __future__ import annotations # since Python 3.7, until Python 3.10
+from typing import TypeVar, Generic, Iterable, Any, Union, Optional, Literal
 
 import networkx as nx
+from networkx.algorithms.bipartite.matching import INFINITY
 from networkx.classes.function import induced_subgraph, neighbors, subgraph
 from networkx.algorithms.shortest_paths import shortest_path
 from networkx.algorithms.distance_measures import center, diameter, eccentricity, periphery, radius
 from networkx.algorithms.cluster import average_clustering, clustering, transitivity, triangles
-from networkx.exception import NetworkXNoPath
 from networkx.algorithms.lowest_common_ancestors import lowest_common_ancestor
+from networkx.classes.reportviews import DegreeView, DiDegreeView, InDegreeView, OutDegreeView
+from networkx.exception import NetworkXNoPath
 
 # The type used to represent nodes (or 'vertices') into a graph.
-V = TypeVar('V')
+V = TypeVar('V', dict[Any, Any], Any)
 
 # The type used to represent edges into a graph.
-E = TypeVar('E')
+E = TypeVar('E', tuple[Any, Any], tuple[Any, Any, Any], Any)
 
-class Graph():
+# Define 'Unknown' type
+Unknown = Any
+
+class Graph(Generic[V, E]):
     """
     A class used to represent a graph for use into FLY language.
 
@@ -31,7 +37,7 @@ class Graph():
 
     Attributes
     ----------
-    graph : object
+    graph : nx.Graph | nx.DiGraph
         the Graph object from NetworkX library
 
     isDirected : bool
@@ -205,13 +211,13 @@ class Graph():
 
         return to_string
 
-    def clear(self) -> object:
+    def clear(self) -> Graph[V, E]:
         """
         Empties graph nodes and edges sets.
 
         Returns
         -------
-        object
+        Graph[V, E]
             Graph with emptied node and edge sets
         """
         self.graph.clear()
@@ -222,7 +228,7 @@ class Graph():
     # Nodes
     #
 
-    def addNode(self, node: V) -> object:
+    def addNode(self, node: V) -> Graph[V, E]:
         """
         Adds a node to graph.
 
@@ -231,36 +237,34 @@ class Graph():
         node : V
             The node to add to graph
 
-
         Returns
         -------
-        object
+        Graph[V, E]
             Graph with added node
         """
         self.graph.add_node(node)
 
         return self
 
-    def addNodes(self, nodes: list) -> object:
+    def addNodes(self, nodes: list[V]) -> Graph[V, E]:
         """
         Adds a list of nodes to graph.
 
         Parameters
         ----------
-        nodes : list
+        nodes : list[V]
             The list of nodes to add to graph
-
 
         Returns
         -------
-        object
+        Graph[V, E]
             Graph with added nodes
         """
         self.graph.add_nodes_from(nodes)
 
         return self
 
-#    def add_nodes(self, *nodes: V) -> object:
+#    def addNodes(self, *nodes: V) -> Graph[V, E]:
 #        """
 #        """
 #        for node in nodes:
@@ -268,7 +272,7 @@ class Graph():
 #
 #        return self
 
-    def nodeDegree(self, node: V) -> int:
+    def nodeDegree(self, node: V) -> Union[DegreeView, DiDegreeView, int]:
         """
         Gets the number of edges the node is part of.
 
@@ -284,7 +288,7 @@ class Graph():
         """
         return self.graph.degree(node)
 
-    def nodeInDegree(self, node: V) -> int:
+    def nodeInDegree(self, node: V) -> Union[InDegreeView, int, Unknown]:
         """
         Gets the number of edges the specified node is target of.
 
@@ -298,9 +302,12 @@ class Graph():
         int
             Number of edges the node is target of
         """
-        return self.graph.in_degree(node)
+        if isinstance(self.graph, nx.DiGraph):
+            return self.graph.in_degree(node)
+        else:
+            return self.graph.degree(node)
 
-    def nodeOutDegree(self, node: V) -> int:
+    def nodeOutDegree(self, node: V) -> Union[OutDegreeView, int, Unknown]:
         """
         Gets the number of edges the specified node is source of.
 
@@ -314,9 +321,12 @@ class Graph():
         int
             Number of edges the node is souce of
         """
-        return self.graph.out_degree(node)
+        if isinstance(self.graph, nx.DiGraph):
+            return self.graph.out_degree(node)
+        else:
+            return self.graph.degree(node)
 
-    def neighbourhood(self, node: V) -> object:
+    def neighbourhood(self, node: V) -> Graph[V, E]:
         """
         Gets the subraph induced nodes the specified node is adjacent of
         and the edges among them.
@@ -328,11 +338,10 @@ class Graph():
 
         Returns
         -------
-        object
+        Graph[V, E]
             Neighbourhood of specified node
-
         """
-        neighbours: list = [node] + list(self.graph.adj[node])
+        neighbours: list[V] = [node] + list(self.graph.adj[node])
         subg: Graph = Graph(
             node_set=neighbours,
             is_directed=self.isDirected,
@@ -347,7 +356,19 @@ class Graph():
         return subg
 
     def nodeEdges(self, node: V) -> list:
-        # TODO document
+        """
+        Gets the edges the specified node is part of.
+
+        Parameters
+        ----------
+        node : V
+            The node which we want the incident edges of
+
+        Returns
+        -------
+        list
+            Incident edges of specified node
+        """
         return list(self.graph.edges(nbunch=node))
 
     def nodeInEdges(self, node: V) -> list:
@@ -363,9 +384,11 @@ class Graph():
         -------
         list
             Incoming edges of specified node
-            
         """
-        return list(self.graph.in_edges(nbunch=node))
+        if isinstance(self.graph, nx.DiGraph):
+            return list(self.graph.in_edges(nbunch=node))
+        else:
+            return list(self.graph.edges(nbunch=node))
 
     def nodeOutEdges(self, node: V) -> list:
         """
@@ -381,15 +404,18 @@ class Graph():
         list
             Outgoing edges of specified node
         """
-        return list(self.graph.out_edges(nbunch=node))
+        if isinstance(self.graph, nx.DiGraph):
+            return list(self.graph.out_edges(nbunch=node))
+        else:
+            return list(self.graph.edges(nbunch=node))
 
-    def nodeSet(self) -> list:
+    def nodeSet(self) -> list[V]:
         """
         Gets the nodes of graph.
 
         Returns
         -------
-        list
+        list[V]
             Graph nodes set
         """
         return list(self.graph.nodes)
@@ -405,7 +431,7 @@ class Graph():
         """
         return self.graph.order()
 
-    def removeNode(self, node: V) -> object:
+    def removeNode(self, node: V) -> Graph[V, E]:
         """
         Removes a specified node from graph.
 
@@ -414,12 +440,10 @@ class Graph():
         node : V
             The node we want to remove from graph
 
-
         Returns
         -------
-        object
+        Graph[V, E]
             Graph with removed node and adjacent edges
-
         """
         self.graph.remove_node(node)
 
@@ -445,7 +469,7 @@ class Graph():
     # Edges
     #
 
-    def addEdge(self, first_node: V, second_node: V) -> object:
+    def addEdge(self, first_node: V, second_node: V) -> Graph[V, E]:
         """
         Adds an edge between two specified nodes to graph.
 
@@ -457,17 +481,16 @@ class Graph():
         second_node : V
             Target node of edge
 
-
         Returns
         -------
-        object
+        Graph[V, E]
             Graph with added edge
         """
         self.graph.add_edge(first_node, second_node)
 
         return self
 
-    def getEdge(self, first_node: V, second_node: V) -> E:
+    def getEdge(self, first_node: V, second_node: V) -> Optional[E]:
         """
         Gets the edge of graph between two specified nodes.
 
@@ -491,18 +514,18 @@ class Graph():
                 return pair
         return None
 
-    def edgeSet(self) -> list:
+    def edgeSet(self) -> list[E]:
         """
         Gets the edges of graph.
 
         Returns
         -------
-        list
+        list[E]
             Graph edge set
         """
         return list(self.graph.edges)
 
-    def numEdges(self) -> int:
+    def numEdges(self) -> Union[int, float, Unknown]:
         """
         Gets the number of edges of graph.
 
@@ -510,7 +533,6 @@ class Graph():
         -------
         int
             The number of graph edges
-        
         """
         return self.graph.size()
 
@@ -572,7 +594,7 @@ class Graph():
         """
         self.graph[first_node][second_node]['weight'] = weight #if self.isWeighted else 1.0
 
-    def removeEdge(self, first_node: V, second_node: V) -> object:
+    def removeEdge(self, first_node: V, second_node: V) -> Graph[V, E]:
         """
         Removes the edge of graph between two specified nodes.
 
@@ -586,9 +608,8 @@ class Graph():
 
         Returns
         -------
-        object
+        Graph[V, E]
             Graph with removed edge
-
         """
         self.graph.remove_edge(first_node, second_node)
 
@@ -617,7 +638,7 @@ class Graph():
     # Measurement
     #
 
-    def shortestPath(self, source: V, target: V) -> list:
+    def shortestPath(self, source: V, target: V) -> Optional[list]:
         """
         """
         try:
@@ -632,29 +653,33 @@ class Graph():
     def shortestPathLength(self, source: V, target: V) -> int:
         """
         """
-        return len(self.shortestPath(source, target))
+        path = self.shortestPath(source, target)
+        if path is not None:
+            return len(path)
+        else:
+            return int(INFINITY)
 
-    def getDiameter(self) -> float:
+    def getDiameter(self) -> Union[int, list[Unknown], dict[Unknown, Literal[0]], float, Any, None]:
         """
         """
         return diameter(self.graph)
 
-    def getRadius(self) -> float:
+    def getRadius(self) -> Union[int, list[Unknown], dict[Unknown, Literal[0]], float, Any, None]:
         """
         """
         return radius(self.graph)
 
-    def getCenter(self) -> list:
+    def getCenter(self) -> Union[int, list[Unknown], dict[Unknown, Literal[0]], float, Any, None]:
         """
         """
         return center(self.graph)
 
-    def getPeriphery(self) -> list:
+    def getPeriphery(self) -> Union[int, list[Unknown], dict[Unknown, Literal[0]], float, Any, None]:
         """
         """
         return periphery(self.graph)
 
-    def getNodeEccentricity(self, node: V) -> float:
+    def getNodeEccentricity(self, node: V) -> Union[int, list[Unknown], dict[Unknown, Literal[0]], float, Any, None]:
         """
         """
         return eccentricity(self.graph, v=node)
@@ -696,7 +721,7 @@ class Graph():
         """
         return transitivity(self.graph)
 
-    def getNodeClusteringCoefficient(self, node: V) -> float:
+    def getNodeClusteringCoefficient(self, node: V) -> Union[Any, int, float, dict[Any, Union[Any, int]]]:
         """
         """
         return clustering(self.graph, node)
@@ -706,7 +731,7 @@ class Graph():
     #
 
     @staticmethod
-    def importGraph(path, separator: str, is_directed=False, is_weighted=False) -> object:
+    def importGraph(path: Union[str, Any], separator: str, is_directed=False, is_weighted=False) -> Graph[V, E]:
         """
         Imports a graph from a CSV file.
 
@@ -715,7 +740,7 @@ class Graph():
 
         Parameters
         ----------
-        path : str
+        path : str | Any
             Path of source file
 
         separator : str
@@ -729,24 +754,24 @@ class Graph():
 
         Returns
         -------
-        object
+        Graph[V, E]
             FLY graph read from file
         """
-        fly_graph: Graph = Graph(is_directed=is_directed, is_weighted=is_weighted)
+        fly_graph: Graph[V, E] = Graph(is_directed=is_directed, is_weighted=is_weighted)
         fly_graph.graph = nx.read_weighted_edgelist(path, delimiter=separator, create_using=nx.DiGraph if is_directed else nx.Graph) #if fly_graph.isWeighted else nx.read_edgelist(path, delimiter=separator, data=False)
         return fly_graph
 
     @staticmethod
-    def exportGraph(fly_graph: object, path, separator: str) -> None:
+    def exportGraph(fly_graph: Graph[V, E], path: Union[str, Any], separator: str) -> None:
         """
         Exports a graph to file.
 
         Parameters
         ----------
-        fly_graph : object
+        fly_graph : Graph[V, E]
             FLY graph to save in file
 
-        path : str
+        path : str | Any
             Path of destination file
 
         separator : str
@@ -774,7 +799,7 @@ class Graph():
         """
         return list(nx.bfs_edges(self.graph, root_node))
 
-    def bfsNodes(self, root_node: V) -> list:
+    def bfsNodes(self, root_node: V) -> list[V]:
         """
         Gets nodes of BFS rooted in specified node.
 
@@ -785,12 +810,12 @@ class Graph():
 
         Returns
         -------
-        list
+        list[V]
             Nodes o BFS tree extracted from graph
         """
         return [root_node] + [v for u, v in nx.bfs_edges(self.graph, root_node)]
 
-    def bfsTree(self, root_node: V) -> object:
+    def bfsTree(self, root_node: V) -> Graph[V, E]:
         """
         Gets the BFS rooted in specified node.
 
@@ -801,10 +826,10 @@ class Graph():
 
         Returns
         -------
-        object
+        Graph[V, E]
             BFS tree extracted from graph
         """
-        tree: Graph = Graph(is_directed=self.isDirected, is_weighted=self.isWeighted)
+        tree: Graph[V, E] = Graph(is_directed=self.isDirected, is_weighted=self.isWeighted)
         tree.graph.add_edges_from(self.bfsEdges(root_node))
         tree.graph.add_nodes_from(self.bfsNodes(root_node))
         return tree
@@ -825,7 +850,7 @@ class Graph():
         """
         return list(nx.dfs_edges(self.graph, source=root_node))
 
-    def dfsNodes(self, root_node: V) -> list:
+    def dfsNodes(self, root_node: V) -> list[V]:
         """
         Gets nodes of DFS rooted in specified node.
 
@@ -836,12 +861,12 @@ class Graph():
 
         Returns
         -------
-        list
+        list[V]
             Nodes of DFS tree extracted from graph
         """
         return [root_node] + [v for u, v in nx.dfs_edges(self.graph, source=root_node)]
 
-    def dfsTree(self, root_node: V) -> object:
+    def dfsTree(self, root_node: V) -> Graph[V, E]:
         """
         Gets the DFS rooted in specified node.
 
@@ -852,10 +877,10 @@ class Graph():
 
         Returns
         -------
-        object
+        Graph[V, E]
             DFS tree exrcted from graph
         """
-        tree: Graph = Graph(is_directed=self.isDirected, is_weighted=self.isWeighted)
+        tree: Graph[V, E] = Graph(is_directed=self.isDirected, is_weighted=self.isWeighted)
         tree.graph.add_edges_from(self.dfsEdges(root_node))
         tree.graph.add_nodes_from(self.dfsNodes(root_node))
         return tree
@@ -928,7 +953,7 @@ class Graph():
         """
         return nx.number_connected_components(self.graph)
 
-    def nodeConnectedComponent(self, node: V) -> list:
+    def nodeConnectedComponent(self, node: V) -> list[V]:
         """
         Gets connected component for specified node.
 
@@ -939,7 +964,7 @@ class Graph():
 
         Returns
         -------
-        list
+        list[V]
             Connected component of specified node
         """
         return nx.node_connected_component(self.graph, node)
@@ -955,18 +980,18 @@ class Graph():
         """
         return list(set for set in nx.kosaraju_strongly_connected_components(self.graph))
 
-    def stronglyConnectedSubgraphs(self) -> list:
+    def stronglyConnectedSubgraphs(self) -> list[Graph[V, E]]:
         """
         Gets strongly connected subgraphs of graph.
 
         Returns
         -------
-        list
-            Graph strngly connected components
+        list[Graph[V, E]]
+            Graph strongly connected components
         """
-        subgraphs: list = list()
+        subgraphs: list[Graph[V, E]] = list()
         for set in nx.kosaraju_strongly_connected_components(self.graph):
-            subgraph: Graph = Graph(is_directed = self.isDirected, is_weighted = self.isWeighted)
+            subgraph: Graph[V, E] = Graph(is_directed = self.isDirected, is_weighted = self.isWeighted)
             subgraph.addNodes(set)
             for edge in self.graph.edges:
                 if edge[0] in set and edge[1] in set:
@@ -990,13 +1015,13 @@ class Graph():
         """
         return nx.is_directed_acyclic_graph(self.graph)
 
-    def topologicalSort(self) -> list:
+    def topologicalSort(self) -> list[V]:
         """
         Gets a topological sort for graph.
 
         Returns
         -------
-        list
+        list[V]
             Graph topological-sorted nodes
         """
         return list(nx.topological_sort(self.graph))
@@ -1005,16 +1030,16 @@ class Graph():
     # Minimum spanning tree
     #
 
-    def getMST(self) -> object:
+    def getMST(self) -> Graph[V, E]:
         """
         Gets minimum spanning tree from graph by running Prim's algorithm on it.
 
         Returns
         -------
-        object
+        Graph
             Graph minimum spanning tree
         """
-        mst: Graph = Graph(is_directed=self.isDirected, is_weighted=self.isWeighted)
+        mst: Graph[V, E] = Graph(is_directed=self.isDirected, is_weighted=self.isWeighted)
         mst.graph = nx.minimum_spanning_tree(self.graph, algorithm='prim')
         return mst
 
