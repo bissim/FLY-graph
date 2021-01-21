@@ -42,7 +42,7 @@ class GraphConnectivityTest(TestCase):
         """
         """
         num_nodes = self.graph.numNodes()
-        if num_nodes is not 0:
+        if num_nodes != 0:
             self.graph.clear()
 
     @classmethod
