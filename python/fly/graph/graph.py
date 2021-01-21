@@ -186,22 +186,23 @@ class Graph():
         self.graph = nx.DiGraph() if is_directed else nx.Graph()
         if node_set: self.graph.add_nodes_from(node_set)
         if edge_set: self.graph.add_edges_from(edge_set)
-        self.isDirected = isinstance(self.graph, nx.DiGraph)
-        self.isWeighted = is_weighted
+        self.isDirected: bool = isinstance(self.graph, nx.DiGraph)
+        self.isWeighted: bool = is_weighted
 
     def __repr__(self):
         return f"Graph(node_set={self.graph.nodes}, edge_set={self.graph.edges}, is_directed={self.isDirected}, is_weighted={self.isWeighted})"
 
     def __str__(self):
-        nodes = str(self.graph.nodes).replace('\'', '')
-        edges = str(self.graph.edges).replace('\'', '')
-        to_string = f"({nodes}, "
+        nodes: str = str(self.graph.nodes).replace('\'', '')
+        edges: str = str(self.graph.edges).replace('\'', '')
+        to_string: str = f"({nodes}, "
         if self.isDirected:
             to_string += f"{edges}), directed"
         else:
             to_string += f"{edges.replace('(', '{').replace(')', '}')})"
         if self.isWeighted:
             to_string += ", weighted"
+
         return to_string
 
     def clear(self) -> object:
@@ -240,7 +241,7 @@ class Graph():
 
         return self
 
-    def addNodes(self, nodes: list) -> None:
+    def addNodes(self, nodes: list) -> object:
         """
         Adds a list of nodes to graph.
 
@@ -331,8 +332,8 @@ class Graph():
             Neighbourhood of specified node
 
         """
-        neighbours = [node] + list(self.graph.adj[node])
-        subg = Graph(
+        neighbours: list = [node] + list(self.graph.adj[node])
+        subg: Graph = Graph(
             node_set=neighbours,
             is_directed=self.isDirected,
             is_weighted=self.isWeighted
@@ -344,6 +345,10 @@ class Graph():
         )
         subg.graph.update(self.graph.graph)
         return subg
+
+    def nodeEdges(self, node: V) -> list:
+        # TODO document
+        return list(self.graph.edges(nbunch=node))
 
     def nodeInEdges(self, node: V) -> list:
         """
@@ -400,7 +405,7 @@ class Graph():
         """
         return self.graph.order()
 
-    def removeNode(self, node: V) -> None:
+    def removeNode(self, node: V) -> object:
         """
         Removes a specified node from graph.
 
@@ -409,8 +414,16 @@ class Graph():
         node : V
             The node we want to remove from graph
 
+
+        Returns
+        -------
+        object
+            Graph with removed node and adjacent edges
+
         """
         self.graph.remove_node(node)
+
+        return self
 
     def hasNode(self, node: V) -> bool:
         """
@@ -503,7 +516,7 @@ class Graph():
 
     def getEdgeSource(self, edge: E) -> V:
         # TODO document
-        (source, target) = edge
+        (source, _) = edge
         return source
 
     def setEdgeSource(self, edge: E, new_source: V) -> None:
@@ -514,7 +527,7 @@ class Graph():
 
     def getEdgeTarget(self, edge: E) -> V:
         # TODO document
-        (source, target) = edge
+        (_, target) = edge
         return target
 
     def setEdgeTarget(self, edge: E, new_target: V) -> None:
@@ -559,7 +572,7 @@ class Graph():
         """
         self.graph[first_node][second_node]['weight'] = weight #if self.isWeighted else 1.0
 
-    def removeEdge(self, first_node: V, second_node: V) -> None:
+    def removeEdge(self, first_node: V, second_node: V) -> object:
         """
         Removes the edge of graph between two specified nodes.
 
@@ -570,8 +583,16 @@ class Graph():
 
         second_node : V
             Target node of edge
+
+        Returns
+        -------
+        object
+            Graph with removed edge
+
         """
         self.graph.remove_edge(first_node, second_node)
+
+        return self
 
     def hasEdge(self, first_node: V, second_node: V) -> bool:
         """
@@ -601,7 +622,7 @@ class Graph():
         """
         try:
             path_nodes = shortest_path(self.graph, source=source, target=target)
-            path = [{} for x in range(0, len(path_nodes) - 1)]
+            path: list = [{} for x in range(0, len(path_nodes) - 1)]
             for pos in range(0, len(path)):
                 path[pos] = {path_nodes[pos], path_nodes[pos + 1]}
             return path
@@ -636,7 +657,7 @@ class Graph():
     def getNodeEccentricity(self, node: V) -> float:
         """
         """
-        return eccentricity(self.graph, v=node);
+        return eccentricity(self.graph, v=node)
 
     #
     # Metrics
@@ -711,7 +732,7 @@ class Graph():
         object
             FLY graph read from file
         """
-        fly_graph = Graph(is_directed=is_directed, is_weighted=is_weighted)
+        fly_graph: Graph = Graph(is_directed=is_directed, is_weighted=is_weighted)
         fly_graph.graph = nx.read_weighted_edgelist(path, delimiter=separator, create_using=nx.DiGraph if is_directed else nx.Graph) #if fly_graph.isWeighted else nx.read_edgelist(path, delimiter=separator, data=False)
         return fly_graph
 
@@ -783,7 +804,7 @@ class Graph():
         object
             BFS tree extracted from graph
         """
-        tree = Graph()
+        tree: Graph = Graph(is_directed=self.isDirected, is_weighted=self.isWeighted)
         tree.graph.add_edges_from(self.bfsEdges(root_node))
         tree.graph.add_nodes_from(self.bfsNodes(root_node))
         return tree
@@ -834,7 +855,7 @@ class Graph():
         object
             DFS tree exrcted from graph
         """
-        tree = Graph()
+        tree: Graph = Graph(is_directed=self.isDirected, is_weighted=self.isWeighted)
         tree.graph.add_edges_from(self.dfsEdges(root_node))
         tree.graph.add_nodes_from(self.dfsNodes(root_node))
         return tree
@@ -885,9 +906,9 @@ class Graph():
         list
             Graph connected subgraphs
         """
-        subgraphs = list()
+        subgraphs: list = list()
         for set in nx.connected_components(self.graph):
-            subgraph = Graph(is_directed = self.isDirected, is_weighted = self.isWeighted)
+            subgraph: Graph = Graph(is_directed = self.isDirected, is_weighted = self.isWeighted)
             subgraph.addNodes(set)
             for edge in self.graph.edges:
                 if edge[0] in set and edge[1] in set:
@@ -943,9 +964,9 @@ class Graph():
         list
             Graph strngly connected components
         """
-        subgraphs = list()
+        subgraphs: list = list()
         for set in nx.kosaraju_strongly_connected_components(self.graph):
-            subgraph = Graph(is_directed = self.isDirected, is_weighted = self.isWeighted)
+            subgraph: Graph = Graph(is_directed = self.isDirected, is_weighted = self.isWeighted)
             subgraph.addNodes(set)
             for edge in self.graph.edges:
                 if edge[0] in set and edge[1] in set:
@@ -993,7 +1014,7 @@ class Graph():
         object
             Graph minimum spanning tree
         """
-        mst = self.__class__()
+        mst: Graph = Graph(is_directed=self.isDirected, is_weighted=self.isWeighted)
         mst.graph = nx.minimum_spanning_tree(self.graph, algorithm='prim')
         return mst
 
