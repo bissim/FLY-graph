@@ -423,14 +423,19 @@ public class Graph<V, E>
 	/**
 	 * The <code>removeNode(V)</code> method deals with removing specified
 	 * node from graph, if it belongs to it.
+	 * <br>
+	 * In version 1.1.0 this method was not daisy-chainable.
 	 * 
-	 * @since 1.0.0
+	 * @since 1.1.1
 	 * 
 	 * @param node The node to remove
+	 * @return The graph deprived of {@code node} and its incident edges
 	 */
-	public void removeNode(V node)
+	public Graph<V, E> removeNode(V node)
 	{
 		this.graph.removeVertex(node);
+
+		return this;
 	}
 
 	/**
@@ -610,15 +615,19 @@ public class Graph<V, E>
 	/**
 	 * The <code>removeEdge(V, V)</code> method removes the edge
 	 * between specified nodes.
+	 * <br>
+	 * In version 1.1.0 this method was not daisy-chainable.
 	 * 
-	 * @since 1.0.0
+	 * @since 1.1.1
 	 * 
 	 * @param firstNode One of the edge nodes
 	 * @param secondNode The other edge node
 	 */
-	public void removeEdge(V firstNode, V secondNode)
+	public Graph<V, E> removeEdge(V firstNode, V secondNode)
 	{
 		this.graph.removeEdge(firstNode, secondNode);
+
+		return this;
 	}
 
 	/**
@@ -1583,12 +1592,11 @@ public class Graph<V, E>
 	{
 		KosarajuStrongConnectivityInspector<V, E> inspector =
 				new KosarajuStrongConnectivityInspector<>(this.graph);
-		List<Set<V>> strConnSets = inspector.stronglyConnectedSets();
-		int nComps = strConnSets.size();
-		@SuppressWarnings("unchecked")
-		Graph<V, E>[] subgraphs = new Graph[nComps];
 		List<org.jgrapht.Graph<V, E>> strongGraphs =
 				inspector.getStronglyConnectedComponents();
+		int nComps = strongGraphs.size();
+		@SuppressWarnings("unchecked")
+		Graph<V, E>[] subgraphs = new Graph[nComps];
 
 		// add subgraph nodes and edges
 		IntStream
@@ -2177,8 +2185,8 @@ public class Graph<V, E>
 					nodeLevels[i] = iterator.getDepth(bfsNodes[i]);
 				});
 
-		// unfortunate algorithm to find edges
-		// within adjacency matrix
+		// poor unfortunate naïve algorithm
+		// to find edges within adjacency matrix
 		int edgeCounter = 0;
 		int jStartPoint = 0;
 		for (int i = 0; i < nodeLevels.length - 1; i++)
@@ -2190,6 +2198,7 @@ public class Graph<V, E>
 			// diagonal simmetry
 			if (!this.isDirected) jStartPoint = i + 1;
 
+			// populate edge set with edges from level i to i+1
 			for (int j = jStartPoint; j < nodeLevels.length; j++)
 			{
 				if (edgeCounter == bfsEdges.length) break;
@@ -2252,15 +2261,9 @@ public class Graph<V, E>
 			// one from previous couple
 			// if this is the first iteration, extract
 			// first element from iterator
-			if (firstNode == null)
-			{
-				firstNode = iterator.next();
-			}
-			else
-			{
-				firstNode = secondNode;
-			}
-
+			firstNode = firstNode == null?
+					iterator.next():
+					secondNode;
 			secondNode = iterator.next();
 
 			if (this.hasEdge(firstNode, secondNode))
