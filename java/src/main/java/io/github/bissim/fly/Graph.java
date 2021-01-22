@@ -229,7 +229,7 @@ public class Graph<V, E>
 	 * @see #addNode(Object)
 	 * 
 	 * @param nodes The nodes to add to graph
-	 * @return graph with added nodes
+	 * @return The graph with added nodes
 	 */
 	public Graph<V, E> addNodes(V[] nodes)
 	{
@@ -318,7 +318,7 @@ public class Graph<V, E>
 	 * @since 1.1.0
 	 * 
 	 * @param node The node which we want to know the neighbourhood of
-	 * @return ...
+	 * @return The graph with neighbour nodes and the edges among them
 	 */
 	public Graph<V, E> neighbourhood(V node)
 	{
@@ -445,8 +445,8 @@ public class Graph<V, E>
 	 * @since 1.0.0
 	 * 
 	 * @param node The node to check for
-	 * @return <code>true</code> if the node belongs to graph,
-	 * <code>false</code> otherwise
+	 * @return {@code true} if the node belongs to graph,
+	 * {@code false} otherwise
 	 */
 	public boolean hasNode(V node)
 	{
@@ -467,7 +467,7 @@ public class Graph<V, E>
 	 * 
 	 * @param firstNode One of the edge nodes
 	 * @param secondNode The other edge node
-	 * @return graph with added edge
+	 * @return The graph with added edge
 	 */
 	public Graph<V, E> addEdge(V firstNode, V secondNode)
 	{
@@ -622,6 +622,8 @@ public class Graph<V, E>
 	 * 
 	 * @param firstNode One of the edge nodes
 	 * @param secondNode The other edge node
+	 * @return The graph deprived of edge among {@code firstNode}
+	 * and {@code secondNode} 
 	 */
 	public Graph<V, E> removeEdge(V firstNode, V secondNode)
 	{
