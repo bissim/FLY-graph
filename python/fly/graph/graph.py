@@ -7,7 +7,7 @@ Graphs for FLY language
 '''
 
 from __future__ import annotations # since Python 3.7, until Python 3.10
-from typing import TypeVar, Generic, Iterable, Any, Union, Optional, Literal
+from typing import TypeVar, Generic, Any, Union, Optional
 
 import networkx as nx
 from networkx.algorithms.bipartite.matching import INFINITY
@@ -20,10 +20,10 @@ from networkx.classes.reportviews import DegreeView, DiDegreeView, InDegreeView,
 from networkx.exception import NetworkXNoPath
 
 # The type used to represent nodes (or 'vertices') into a graph.
-V = TypeVar('V', dict[Any, Any], Any)
+V = TypeVar('V', dict, Any)
 
 # The type used to represent edges into a graph.
-E = TypeVar('E', tuple[Any, Any], tuple[Any, Any, Any], Any)
+E = TypeVar('E', tuple, Any)
 
 # Define 'Unknown' type
 Unknown = Any
@@ -659,27 +659,27 @@ class Graph(Generic[V, E]):
         else:
             return int(INFINITY)
 
-    def getDiameter(self) -> Union[int, list[Unknown], dict[Unknown, Literal[0]], float, Any, None]:
+    def getDiameter(self) -> Union[int, list[Unknown], dict[Unknown, Any], float, Any, None]:
         """
         """
         return diameter(self.graph)
 
-    def getRadius(self) -> Union[int, list[Unknown], dict[Unknown, Literal[0]], float, Any, None]:
+    def getRadius(self) -> Union[int, list[Unknown], dict[Unknown, Any], float, Any, None]:
         """
         """
         return radius(self.graph)
 
-    def getCenter(self) -> Union[int, list[Unknown], dict[Unknown, Literal[0]], float, Any, None]:
+    def getCenter(self) -> Union[int, list[Unknown], dict[Unknown, Any], float, Any, None]:
         """
         """
         return center(self.graph)
 
-    def getPeriphery(self) -> Union[int, list[Unknown], dict[Unknown, Literal[0]], float, Any, None]:
+    def getPeriphery(self) -> Union[int, list[Unknown], dict[Unknown, Any], float, Any, None]:
         """
         """
         return periphery(self.graph)
 
-    def getNodeEccentricity(self, node: V) -> Union[int, list[Unknown], dict[Unknown, Literal[0]], float, Any, None]:
+    def getNodeEccentricity(self, node: V) -> Union[int, list[Unknown], dict[Unknown, Any], float, Any, None]:
         """
         """
         return eccentricity(self.graph, v=node)
