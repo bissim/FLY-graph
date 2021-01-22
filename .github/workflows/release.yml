@@ -9,6 +9,7 @@ on:
       - 'master'
     paths:
       - 'VERSION' # create a release when 'VERSION' file gets changed
+  workflow_dispatch:
 
 jobs:
   release:
