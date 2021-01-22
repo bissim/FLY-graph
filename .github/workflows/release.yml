@@ -23,7 +23,7 @@ jobs:
     - name: Extract version from VERSION file
       id: version
       run: |
-        echo "::set-env name=VERSION::$(cat $WS/VERSION)"
+        echo "VERSION=$(cat $WS/VERSION)" >> $GITHUB_ENV
       env:
         WS: ${{ github.workspace }}
 
