@@ -6,6 +6,7 @@ name: Java Deploy
 on:
   release:
     types: [created]
+  workflow_dispatch:
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
@@ -33,7 +34,7 @@ jobs:
     - name: Extract version from VERSION file
       id: version
       run: |
-        echo "::set-env name=VERSION::$(cat $WS/VERSION)"
+        echo "VERSION=$(cat $WS/VERSION)" >> $GITHUB_ENV
 
     - name: Set ${{ env.VERSION }} as project version in POM
       run: |
