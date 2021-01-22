@@ -43,13 +43,14 @@ jobs:
     - name: Build Python project (3.6)
       language: python
       python: "3.6"
-      after_success:
-        - bash <(curl -s https://codecov.io/bash) -f "/home/travis/build/bissim/FLY-graph/python/coverage.xml"
+      env: FAIL="yes"
       script: ./scripts/build_python.sh
 
     - name: Build Python project (3.7)
       language: python
       python: "3.7"
+      after_success:
+        - bash <(curl -s https://codecov.io/bash) -f "/home/travis/build/bissim/FLY-graph/python/coverage.xml"
       script: ./scripts/build_python.sh
 
     - name: Build Python project (3.8)
