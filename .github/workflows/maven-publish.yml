@@ -85,13 +85,24 @@ jobs:
 
     - name: Get latest FLY Graph release
       id: release
-      uses: bruceadams/get-release@v1.2.2
+      uses: octokit/request-action@v2.x
+      with:
+        route: GET /repos/:repository/releases/latest
+        repository: ${{ github.repository }}
+
+    - name: Get release URL
+      id: release-url
+      run: |
+        url=$(echo "$response" | jq -r '.upload_url')
+        echo "::set-output name=url::$url"
+      env:
+        response: ${{ steps.release.outputs.data }}
 
     - name: Upload JAR with dependencies as Release Asset
       id: upload-jar-with-deps
       uses: actions/upload-release-asset@latest
       with:
-        upload_url: ${{ steps.release.outputs.upload_url }}
+        upload_url: ${{ steps.release-url.outputs.url }}
         asset_path: ./java/target/fly-graph-${{ env.TAG }}-jar-with-deps.jar
         asset_name: fly-graph-${{ env.TAG }}-jar-with-deps.jar
         asset_content_type: application/java-archive
@@ -100,7 +111,7 @@ jobs:
       id: upload-jar-with-deps-sig
       uses: actions/upload-release-asset@latest
       with:
-        upload_url: ${{ steps.release.outputs.upload_url }}
+        upload_url: ${{ steps.release-url.outputs.url }}
         asset_path: ./java/target/fly-graph-${{ env.TAG }}-jar-with-deps.jar.asc
         asset_name: fly-graph-${{ env.TAG }}-jar-with-deps.jar.asc
         asset_content_type: application/java-archive
@@ -109,7 +120,7 @@ jobs:
       id: upload-lib
       uses: actions/upload-release-asset@latest
       with:
-        upload_url: ${{ steps.release.outputs.upload_url }}
+        upload_url: ${{ steps.release-url.outputs.url }}
         asset_path: ./java/target/fly-graph-${{ env.TAG }}.jar
         asset_name: fly-graph-${{ env.TAG }}.jar
         asset_content_type: application/java-archive
@@ -118,7 +129,7 @@ jobs:
       id: upload-lib-sig
       uses: actions/upload-release-asset@latest
       with:
-        upload_url: ${{ steps.release.outputs.upload_url }}
+        upload_url: ${{ steps.release-url.outputs.url }}
         asset_path: ./java/target/fly-graph-${{ env.TAG }}.jar.asc
         asset_name: fly-graph-${{ env.TAG }}.jar.asc
         asset_content_type: application/java-archive
@@ -127,7 +138,7 @@ jobs:
       id: upload-sources
       uses: actions/upload-release-asset@latest
       with:
-        upload_url: ${{ steps.release.outputs.upload_url }}
+        upload_url: ${{ steps.release-url.outputs.url }}
         asset_path: ./java/target/fly-graph-${{ env.TAG }}-sources.jar
         asset_name: fly-graph-${{ env.TAG }}-sources.jar
         asset_content_type: application/java-archive
@@ -136,7 +147,7 @@ jobs:
       id: upload-sources-sig
       uses: actions/upload-release-asset@latest
       with:
-        upload_url: ${{ steps.release.outputs.upload_url }}
+        upload_url: ${{ steps.release-url.outputs.url }}
         asset_path: ./java/target/fly-graph-${{ env.TAG }}-sources.jar.asc
         asset_name: fly-graph-${{ env.TAG }}-sources.jar.asc
         asset_content_type: application/java-archive
@@ -145,7 +156,7 @@ jobs:
       id: upload-javadoc
       uses: actions/upload-release-asset@latest
       with:
-        upload_url: ${{ steps.release.outputs.upload_url }}
+        upload_url: ${{ steps.release-url.outputs.url }}
         asset_path: ./java/target/fly-graph-${{ env.TAG }}-javadoc.jar
         asset_name: fly-graph-${{ env.TAG }}-javadoc.jar
         asset_content_type: application/java-archive
@@ -154,7 +165,7 @@ jobs:
       id: upload-javadoc-sig
       uses: actions/upload-release-asset@latest
       with:
-        upload_url: ${{ steps.release.outputs.upload_url }}
+        upload_url: ${{ steps.release-url.outputs.url }}
         asset_path: ./java/target/fly-graph-${{ env.TAG }}-javadoc.jar.asc
         asset_name: fly-graph-${{ env.TAG }}-javadoc.jar.asc
         asset_content_type: application/java-archive
