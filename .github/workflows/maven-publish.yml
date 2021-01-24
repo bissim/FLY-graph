@@ -11,7 +11,7 @@ on:
 env:
   GITHUB_TOKEN: ${{ github.token }}
   JAVA_VERSION: '11'
-  TAG: ${{ github.event.release.tag_name }}
+#  TAG: ${{ github.event.release.tag_name }}
   WS: ${{ github.workspace }}
 
 jobs:
@@ -90,11 +90,13 @@ jobs:
         route: GET /repos/:repository/releases/latest
         repository: ${{ github.repository }}
 
-    - name: Get release URL
+    - name: Get release URL and tag
       id: release-url
       run: |
         url=$(echo "$response" | jq -r '.upload_url')
         echo "::set-output name=url::$url"
+        tag=$(echo "$response" | jq -r '.tag_name')
+        echo "TAG=$tag" >> $GITHUB_ENV
       env:
         response: ${{ steps.release.outputs.data }}
 
