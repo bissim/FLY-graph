@@ -190,8 +190,10 @@ class Graph(Generic[V, E]):
             Denotes whether graph is weighted or not (default: False)
         """
         self.graph = nx.DiGraph() if is_directed else nx.Graph()
-        if node_set: self.graph.add_nodes_from(node_set)
-        if edge_set: self.graph.add_edges_from(edge_set)
+        if node_set:
+            self.graph.add_nodes_from(node_set)
+        if edge_set:
+            self.graph.add_edges_from(edge_set)
         self.isDirected: bool = isinstance(self.graph, nx.DiGraph)
         self.isWeighted: bool = is_weighted
 
@@ -304,8 +306,7 @@ class Graph(Generic[V, E]):
         """
         if isinstance(self.graph, nx.DiGraph):
             return self.graph.in_degree(node)
-        else:
-            return self.graph.degree(node)
+        return self.graph.degree(node)
 
     def nodeOutDegree(self, node: V) -> Union[OutDegreeView, int, Unknown]:
         """
@@ -323,8 +324,7 @@ class Graph(Generic[V, E]):
         """
         if isinstance(self.graph, nx.DiGraph):
             return self.graph.out_degree(node)
-        else:
-            return self.graph.degree(node)
+        return self.graph.degree(node)
 
     def neighbourhood(self, node: V) -> Graph[V, E]:
         """
@@ -387,8 +387,7 @@ class Graph(Generic[V, E]):
         """
         if isinstance(self.graph, nx.DiGraph):
             return list(self.graph.in_edges(nbunch=node))
-        else:
-            return list(self.graph.edges(nbunch=node))
+        return list(self.graph.edges(nbunch=node))
 
     def nodeOutEdges(self, node: V) -> list:
         """
@@ -406,8 +405,7 @@ class Graph(Generic[V, E]):
         """
         if isinstance(self.graph, nx.DiGraph):
             return list(self.graph.out_edges(nbunch=node))
-        else:
-            return list(self.graph.edges(nbunch=node))
+        return list(self.graph.edges(nbunch=node))
 
     def nodeSet(self) -> list[V]:
         """
@@ -644,7 +642,7 @@ class Graph(Generic[V, E]):
         try:
             path_nodes = shortest_path(self.graph, source=source, target=target)
             path: list = [{} for x in range(0, len(path_nodes) - 1)]
-            for pos in range(0, len(path)):
+            for pos, _ in enumerate(path):
                 path[pos] = {path_nodes[pos], path_nodes[pos + 1]}
             return path
         except NetworkXNoPath:
@@ -656,8 +654,7 @@ class Graph(Generic[V, E]):
         path = self.shortestPath(source, target)
         if path is not None:
             return len(path)
-        else:
-            return int(INFINITY)
+        return int(INFINITY)
 
     def getDiameter(self) -> Union[int, list[Unknown], dict[Unknown, Any], float, Any, None]:
         """
@@ -920,7 +917,7 @@ class Graph(Generic[V, E]):
         list
             Graph connected components
         """
-        return list(set for set in nx.connected_components(self.graph))
+        return list(nodeSet for nodeSet in nx.connected_components(self.graph))
 
     def connectedSubgraphs(self) -> list:
         """
@@ -932,11 +929,11 @@ class Graph(Generic[V, E]):
             Graph connected subgraphs
         """
         subgraphs: list = list()
-        for set in nx.connected_components(self.graph):
+        for nodeSet in nx.connected_components(self.graph):
             subgraph: Graph = Graph(is_directed = self.isDirected, is_weighted = self.isWeighted)
-            subgraph.addNodes(set)
+            subgraph.addNodes(nodeSet)
             for edge in self.graph.edges:
-                if edge[0] in set and edge[1] in set:
+                if edge[0] in nodeSet and edge[1] in nodeSet:
                     subgraph.addEdge(edge[0], edge[1])
             subgraphs.append(subgraph)
         return subgraphs
@@ -978,7 +975,7 @@ class Graph(Generic[V, E]):
         list
             Strongly connected component of specified node
         """
-        return list(set for set in nx.kosaraju_strongly_connected_components(self.graph))
+        return list(nodeSet for nodeSet in nx.kosaraju_strongly_connected_components(self.graph))
 
     def stronglyConnectedSubgraphs(self) -> list[Graph[V, E]]:
         """
@@ -990,11 +987,11 @@ class Graph(Generic[V, E]):
             Graph strongly connected components
         """
         subgraphs: list[Graph[V, E]] = list()
-        for set in nx.kosaraju_strongly_connected_components(self.graph):
+        for nodeSet in nx.kosaraju_strongly_connected_components(self.graph):
             subgraph: Graph[V, E] = Graph(is_directed = self.isDirected, is_weighted = self.isWeighted)
-            subgraph.addNodes(set)
+            subgraph.addNodes(nodeSet)
             for edge in self.graph.edges:
-                if edge[0] in set and edge[1] in set:
+                if edge[0] in nodeSet and edge[1] in nodeSet:
                     subgraph.addEdge(edge[0], edge[1])
             subgraphs.append(subgraph)
         return subgraphs
