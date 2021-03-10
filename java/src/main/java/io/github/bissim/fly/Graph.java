@@ -48,7 +48,7 @@ import io.github.bissim.fly.util.CustomGraphBuilder;
  * It basically wraps the JGraphT representation of graphs according to FLY
  * API for graphs.
  * 
- * @version 1.1.0
+ * @version 1.1.2
  * @author Simone Bisogno
  *&lt;<a href="mailto:s.bisogno10@studenti.unisa.it?cc=s.bisogno90@gmail.com&amp;subject=Java%20FLY%20graph%20library&amp;body=Hello,%0D%0A%0D%0Ayour%20message%20here">s.bisogno10@studenti.unisa.it</a>&gt;
  * 
@@ -519,9 +519,8 @@ public class Graph<V, E>
 		return this.graph.edgeSet().size();
 	}
 
-	// TODO comment
 	/**
-	 * The {@code getEdgeSource(E)} method ...
+	 * The {@code getEdgeSource(E)} method returns the source of given edge.
 	 * 
 	 * @since 1.0.0
 	 * 
@@ -533,9 +532,8 @@ public class Graph<V, E>
 		return this.graph.getEdgeSource(e);
 	}
 
-	// TODO comment
 	/**
-	 * The {@code setEdgeSource(E, V)} method ...
+	 * The {@code setEdgeSource(E, V)} method sets the source of given edge.
 	 * 
 	 * @since 1.0.0
 	 * 
@@ -549,9 +547,8 @@ public class Graph<V, E>
 		this.graph.addEdge(s, t);
 	}
 
-	// TODO comment
 	/**
-	 * The {@code getEdgeTarget(E)} method ...
+	 * The {@code getEdgeTarget(E)} method returns the target of given edge.
 	 * 
 	 * @since 1.0.0
 	 * 
@@ -563,9 +560,8 @@ public class Graph<V, E>
 		return this.graph.getEdgeTarget(e);
 	}
 
-	// TODO comment
 	/**
-	 * The {@code setEdgeTarget(E, V)} method ...
+	 * The {@code setEdgeTarget(E, V)} method sets the target of given edge.
 	 * 
 	 * @since 1.0.0
 	 * 
@@ -651,15 +647,18 @@ public class Graph<V, E>
 	 * Graph measurement
 	 */
 
-	// TODO comment
 	/**
-	 * The {@code shortestPath(V, V)} method ...
+	 * The {@code shortestPath(V, V)} method looks for a path that leads from
+	 * given source node to given target node, if there's one.
+	 * <br />
+	 * It uses Dijkstra's shortest path algorithm to find the path.
 	 * 
 	 * @since 1.1.0
 	 * 
 	 * @param source The source of shortest path to find
 	 * @param target The target of shortest path to find
-	 * @return The shortest path from source to target
+	 * @return The array of nodes composing the shortest path ({@code null} if
+	 * there's no path)
 	 */
 	@SuppressWarnings("unchecked")
 	public E[] shortestPath(V source, V target)
@@ -679,9 +678,11 @@ public class Graph<V, E>
 	}
 
 	/**
-	 * The {@code shortestPathLength(V, V)} method...
+	 * The {@code shortestPathLength(V, V)} method calculates the number of hops
+	 * required to go from givn source node to given destination node; if no
+	 * path exists from source to target, {@code Integer.MAX_VALUE} is returned.
 	 * 
-	 * @since 1.1.0
+	 * @since 1.1.2
 	 * 
 	 * @param source The source of shortest path length to find
 	 * @param target The target of shortest path length to find
@@ -689,12 +690,14 @@ public class Graph<V, E>
 	 */
 	public int shortestPathLength(V source, V target)
 	{
-		return this.shortestPath(source, target).length;
+		E[] path = this.shortestPath(source, target);
+		return path != null?
+			path.length:
+			Integer.MAX_VALUE;
 	}
 
-	// TODO comment
 	/**
-	 * The {@code getDiameter()} method ...
+	 * The {@code getDiameter()} method returns the diameter of graph.
 	 * 
 	 * @since 1.1.0
 	 * 
@@ -705,9 +708,8 @@ public class Graph<V, E>
 		return this.graphMeasurer().getDiameter();
 	}
 
-	// TODO comment
 	/**
-	 * The {@code getRadius()} method ...
+	 * The {@code getRadius()} method returns the tadius of graph.
 	 * 
 	 * @since 1.1.0
 	 * 
@@ -719,7 +721,7 @@ public class Graph<V, E>
 	}
 
 	/**
-	 * The {@code getCenter()} method ...
+	 * The {@code getCenter()} method returns the enter of graph.
 	 * 
 	 * @since 1.1.0
 	 * 
@@ -734,7 +736,7 @@ public class Graph<V, E>
 	}
 
 	/**
-	 * The {@code getPeriphery()} method ...
+	 * The {@code getPeriphery()} method returns the periphery of graph.
 	 * 
 	 * @since 1.1.0
 	 * 
@@ -749,7 +751,8 @@ public class Graph<V, E>
 	}
 
 	/**
-	 * The {@code getNodeEccentricity(V)} method ...
+	 * The {@code getNodeEccentricity(V)} method returns the eccentricity of
+	 * given node.
 	 * 
 	 * @since 1.1.0
 	 * 
@@ -765,7 +768,6 @@ public class Graph<V, E>
 	 * Graph metrics
 	 */
 
-	// TODO comment
 	// /**
 	//  * The ...
 	//  * 
@@ -778,7 +780,6 @@ public class Graph<V, E>
 	// 	return GraphMetrics.getNumberOfTriangles(this.graph);
 	// }
 
-	// TODO comment
 	// /**
 	//  * An $O(|E|^{3/2})$ algorithm for counting the number of non-trivial triangles in an undirected
 	//  * graph. A non-trivial triangle is formed by three distinct vertices all connected to each
@@ -892,7 +893,6 @@ public class Graph<V, E>
 	// 	return numberTriangles;
 	// }
 
-	// TODO comment
 	// /**
 	//  * The {@code getNumberOfTriplets()} method ...
 	//  * 
@@ -906,7 +906,6 @@ public class Graph<V, E>
 	// 	return this.triplets(null);
 	// }
 
-	// TODO comment
 	// /**
 	//  * The {@code getNumberOfTriplets(V)} method ...
 	//  * 
@@ -920,9 +919,10 @@ public class Graph<V, E>
 	// 	return this.triplets(node);
 	// }
 
-	// TODO comment
 	/**
-	 * The {@code getAverageClusteringCoefficient()} method ...
+	 * The {@code getAverageClusteringCoefficient()} method returns the average
+	 * clustering coefficient of graph, calculated as the average of clustering
+	 * coefficient of its nodes. 
 	 * 
 	 * @since 1.1.0
 	 * 
@@ -934,9 +934,9 @@ public class Graph<V, E>
 				.getAverageClusteringCoefficient();
 	}
 
-	// TODO comment
 	/**
-	 * The {@code getGlobalClusteringCoefficient()} method ...
+	 * The {@code getGlobalClusteringCoefficient()} method returns the global
+	 * clustering coefficient of graph.
 	 * 
 	 * @since 1.1.0
 	 * 
@@ -948,9 +948,9 @@ public class Graph<V, E>
 				.getGlobalClusteringCoefficient();
 	}
 
-	// TODO comment
 	/**
-	 * The {@code getNodeClusteringCoefficient(V)} method ...
+	 * The {@code getNodeClusteringCoefficient(V)} method returns the clustering
+	 * coefficient of given node.
 	 * 
 	 * @since 1.1.0
 	 * 
@@ -1703,9 +1703,9 @@ public class Graph<V, E>
 	 * Lowest common ancestor
 	 */
 
-	// TODO comment
 	/**
-	 * The {@code getLCA(V, V)} method ...
+	 * The {@code getLCA(V, V)} method finds the lowest common ancestor node of
+	 * given pair of nodes.
 	 * 
 	 * @since 1.1.0
 	 * 
@@ -1943,7 +1943,8 @@ public class Graph<V, E>
 	}
 
 	/**
-	 * The {@code graphMeasurer()} method ...
+	 * The {@code graphMeasurer()} method creates the graph measurer class
+	 * responsible for graph measurement.
 	 * 
 	 * @since 1.1.0
 	 * 
@@ -1959,19 +1960,20 @@ public class Graph<V, E>
 		return this.graphMeasurer;
 	}
 
-	// TODO comment
 	/**
-	 * The {@code clusteringCoefficient()} method ...
+	 * The {@code clusteringCoefficient()} method creates the clustering
+	 * coefficient calculating class for graph.
 	 * 
 	 * @since 1.1.0
 	 * 
-	 * @return Tge graph clustering coefficient object
+	 * @return The graph clustering coefficient object
 	 */
 	private ClusteringCoefficient<V, E> clusteringCoefficient()
 	{
 		if (this.clusteringCoefficient == null)
 		{
-			this.clusteringCoefficient = new ClusteringCoefficient<>(this.graph);
+			this.clusteringCoefficient =
+					new ClusteringCoefficient<>(this.graph);
 		}
 
 		return this.clusteringCoefficient;
@@ -2231,7 +2233,8 @@ public class Graph<V, E>
 	}
 
 	/**
-	 * The {@code setToArray(Set)} method ...
+	 * The {@code setToArray(Set)} method transforms given set of elements
+	 * into an array of such elements.
 	 * 
 	 * @since 1.1.0
 	 * 
