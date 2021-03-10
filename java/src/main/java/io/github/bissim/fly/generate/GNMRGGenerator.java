@@ -3,18 +3,18 @@ package io.github.bissim.fly.generate;
 import static java.lang.System.err;
 
 import java.io.File;
-import java.util.function.Supplier;
 
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.jgrapht.graph.builder.GraphTypeBuilder;
 import org.jgrapht.nio.ExportException;
 import org.jgrapht.nio.GraphExporter;
 import org.jgrapht.nio.csv.CSVExporter;
 import org.jgrapht.nio.csv.CSVFormat;
-import org.jgrapht.util.SupplierUtil;
+
 import org.jgrapht.generate.GnmRandomGraphGenerator;
+
+import io.github.bissim.fly.util.CustomGraphBuilder;
 
 /**
  * The {@code GNMRGGenerator} class ...
@@ -109,7 +109,7 @@ public class GNMRGGenerator<V, E> {
 	)
 		throws IllegalArgumentException
 	{
-		Graph<V, E> graph = this.graphBuilder(
+		Graph<V, E> graph = (new CustomGraphBuilder<V, E>()).build(
 			nodeClass,
 			this.determineEdgeClass(isWeighted),
 			isDirected,
@@ -119,75 +119,6 @@ public class GNMRGGenerator<V, E> {
 				.generateGraph(graph, null);
 
 		return graph;
-	}
-
-	/**
-	 * The <code>graphBuilder()</code> helper method constructs an instance
-	 * of <code>org.jgrapht.Graph&lt;V, E&gt;</code> by specifying the
-	 * node class, the edge class, whether graph is directed, whether graph
-	 * is weighted.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @see org.jgrapht.Graph
-	 *
-	 * @param nodeClass Class of nodes
-	 * @param edgeClass Class of edges
-	 * @param isDirected Denotes whether graph edges will be directed
-	 * @param isWeighted Denotes whether graph edges will be weighted
-	 * @return a JGraphT <code>org.jgrapht.Graph&lt;V, E&gt;</code> object
-	 */
-	@SuppressWarnings("unchecked")
-	private Graph<V, E> graphBuilder(
-			Class<V> nodeClass,
-			Class<E> edgeClass,
-			boolean isDirected,
-			boolean isWeighted
-	)
-	{
-		GraphTypeBuilder<V, E> builder = null;
-
-		if (isDirected)
-		{
-			builder = GraphTypeBuilder.<V, E>directed();
-		}
-		else
-		{
-			builder = GraphTypeBuilder.<V, E>undirected();
-		}
-
-		// apply other graph attributed
-		builder
-				.weighted(isWeighted)
-				.edgeClass(edgeClass)
-				.vertexClass(nodeClass)
-				.edgeSupplier(SupplierUtil.createSupplier(edgeClass));
-
-		// determine the node supplier to use
-		if (nodeClass == String.class)
-		{
-			builder.vertexSupplier(
-					(Supplier<V>) SupplierUtil.createStringSupplier()
-			);
-		}
-		else if (nodeClass == Integer.class)
-		{
-			builder.vertexSupplier(
-					(Supplier<V>) SupplierUtil.createIntegerSupplier()
-			);
-		}
-		else if (nodeClass == Long.class)
-		{
-			builder.vertexSupplier(
-					(Supplier<V>) SupplierUtil.createLongSupplier()
-			);
-		}
-		else
-		{
-			builder.vertexSupplier(SupplierUtil.createSupplier(nodeClass));
-		}
-
-		return builder.buildGraph();
 	}
 
 	/**

@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.Spliterator;
 import java.util.Spliterators;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
@@ -29,11 +28,9 @@ import org.jgrapht.alg.spanning.PrimMinimumSpanningTree;
 import org.jgrapht.alg.util.NeighborCache;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.jgrapht.graph.builder.GraphTypeBuilder;
 import org.jgrapht.traverse.BreadthFirstIterator;
 import org.jgrapht.traverse.DepthFirstIterator;
 import org.jgrapht.traverse.TopologicalOrderIterator;
-import org.jgrapht.util.SupplierUtil;
 
 import org.jgrapht.nio.ImportException;
 import org.jgrapht.nio.ExportException;
@@ -41,6 +38,8 @@ import org.jgrapht.nio.GraphExporter;
 import org.jgrapht.nio.csv.CSVImporter;
 import org.jgrapht.nio.csv.CSVExporter;
 import org.jgrapht.nio.csv.CSVFormat;
+
+import io.github.bissim.fly.util.CustomGraphBuilder;
 
 /**
  * <code>Graph&lt;V, E&gt;</code> is a class used to represent a graph for
@@ -117,7 +116,7 @@ public class Graph<V, E>
 		this.isWeighted = isWeighted;
 		this.nodeClass = nodeClass;
 		this.edgeClass = this.setEdgeClass(isWeighted);
-		this.graph = this.graphBuilder(
+		this.graph = (new CustomGraphBuilder<V, E>()).build(
 				nodeClass,
 				this.edgeClass,
 				isDirected,
@@ -2029,75 +2028,6 @@ public class Graph<V, E>
 //		List<E> edgesList = List.of(edges); // not in Java 8
 //		edgesList.stream().forEach(e -> this.addEdge(firstNode, secondNode));
 //	}
-
-	/**
-	 * The <code>graphBuilder()</code> helper method constructs an instance
-	 * of <code>org.jgrapht.Graph&lt;V, E&gt;</code> by specifying the
-	 * node class, the edge class, whether graph is directed, whether graph
-	 * is weighted.
-	 * 
-	 * @since 1.0.0
-	 * 
-	 * @see org.jgrapht.Graph
-	 * 
-	 * @param nodeClass Class of nodes
-	 * @param edgeClass Class of edges
-	 * @param isDirected Denotes whether graph edges will be directed
-	 * @param isWeighted Denotes whether graph edges will be weighted
-	 * @return a JGraphT <code>org.jgrapht.Graph&lt;V, E&gt;</code> object
-	 */
-	@SuppressWarnings("unchecked")
-	private org.jgrapht.Graph<V, E> graphBuilder(
-			Class<V> nodeClass,
-			Class<E> edgeClass,
-			boolean isDirected,
-			boolean isWeighted
-	)
-	{
-		GraphTypeBuilder<V, E> builder = null;
-
-		if (isDirected)
-		{
-			builder = GraphTypeBuilder.<V, E>directed();
-		}
-		else
-		{
-			builder = GraphTypeBuilder.<V, E>undirected();
-		}
-
-		// apply other graph attributed
-		builder
-				.weighted(isWeighted)
-				.edgeClass(edgeClass)
-				.vertexClass(nodeClass)
-				.edgeSupplier(SupplierUtil.createSupplier(edgeClass));
-
-		// determine the node supplier to use
-		if (nodeClass == String.class)
-		{
-			builder.vertexSupplier(
-					(Supplier<V>) SupplierUtil.createStringSupplier()
-			);
-		}
-		else if (nodeClass == Integer.class)
-		{
-			builder.vertexSupplier(
-					(Supplier<V>) SupplierUtil.createIntegerSupplier()
-			);
-		}
-		else if (nodeClass == Long.class)
-		{
-			builder.vertexSupplier(
-					(Supplier<V>) SupplierUtil.createLongSupplier()
-			);
-		}
-		else
-		{
-			builder.vertexSupplier(SupplierUtil.createSupplier(nodeClass));
-		}
-
-		return builder.buildGraph();
-	}
 
 	/**
 	 * The <code>setEdgeClass</code> helper method deals with choosing the
