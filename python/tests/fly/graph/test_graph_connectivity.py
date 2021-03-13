@@ -1,21 +1,21 @@
 #! python3
 
 '''
-Graph metrics test
+Graph connectivity test
 '''
 
 import unittest
 from unittest import main
 from fly.graph.graph import Graph
-from fly.graph.tests.test_graph import GraphTestCase
+from test_graph import GraphTestCase
 
-class GraphMetricsTest(GraphTestCase):
+class GraphConnectivityTest(GraphTestCase):
     """
     """
 
-    _TEST_TITLE = "GRAPH METRICS TEST"
+    _TEST_TITLE = "GRAPH CONNECTIVITY TEST"
 
-    def test_getAverageClusteringCoefficient(self):
+    def test_isConnected(self):
         """
         """
         pass

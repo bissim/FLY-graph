@@ -4,7 +4,7 @@
 Unit tests for Graph class
 '''
 
-from unittest import main, TestLoader
+from unittest import TestLoader
 from unittest.runner import TextTestRunner
 
 if __name__ == '__main__':

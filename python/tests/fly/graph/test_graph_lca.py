@@ -1,21 +1,21 @@
 #! python3
 
 '''
-Graph connectivity test
+Graph lowest common ancestor test
 '''
 
 import unittest
 from unittest import main
 from fly.graph.graph import Graph
-from fly.graph.tests.test_graph import GraphTestCase
+from test_graph import GraphTestCase
 
-class GraphConnectivityTest(GraphTestCase):
+class GraphLCATest(GraphTestCase):
     """
     """
 
-    _TEST_TITLE = "GRAPH CONNECTIVITY TEST"
+    _TEST_TITLE = "GRAPH LOWEST COMMON ANCESTOR TEST"
 
-    def test_isConnected(self):
+    def test_getLCA(self):
         """
         """
         pass

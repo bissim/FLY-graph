@@ -7,7 +7,7 @@ Graph manipulation test
 import unittest
 from unittest import main
 from fly.graph.graph import Graph
-from fly.graph.tests.test_graph import GraphTestCase
+from test_graph import GraphTestCase
 
 class GraphManipulationTest(GraphTestCase):
     """

@@ -1,21 +1,21 @@
 #! python3
 
 '''
-Graph minimum spanning tree test
+Graph metrics test
 '''
 
 import unittest
 from unittest import main
 from fly.graph.graph import Graph
-from fly.graph.tests.test_graph import GraphTestCase
+from test_graph import GraphTestCase
 
-class GraphMSTTest(GraphTestCase):
+class GraphMetricsTest(GraphTestCase):
     """
     """
 
-    _TEST_TITLE = "GRAPH MINIMUM SPANNING TREE TEST"
+    _TEST_TITLE = "GRAPH METRICS TEST"
 
-    def test_getMST(self):
+    def test_getAverageClusteringCoefficient(self):
         """
         """
         pass
