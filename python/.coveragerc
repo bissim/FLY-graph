@@ -1,6 +1,10 @@
 [run]
 branch = True
-source = fly/graph/
+
+[paths]
+source =
+    fly/graph
+    **/site-packages/fly/graph
 
 [report]
 exclude_lines =
@@ -10,5 +14,5 @@ exclude_lines =
     if __name__ == .__main__.:
 ignore_errors = True
 omit =
-    examples/*
-    tests/*
+    **/__init__.py
+    **/examples/*
