@@ -650,7 +650,7 @@ public class Graph<V, E>
 	/**
 	 * The {@code shortestPath(V, V)} method looks for a path that leads from
 	 * given source node to given target node, if there's one.
-	 * <br />
+	 * <br>
 	 * It uses Dijkstra's shortest path algorithm to find the path.
 	 * 
 	 * @since 1.1.0
@@ -2258,7 +2258,7 @@ public class Graph<V, E>
 
 	/**
 	 * This class models a pair of generic objects.
-	 * <br />
+	 * <br>
 	 * For purposes within <code>{@link Graph}</code> class,
 	 * instances of <code>Pair</code> will be immutable; in
 	 * particular, class itself will be immutable.
